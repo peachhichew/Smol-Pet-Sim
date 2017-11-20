@@ -10,4 +10,4 @@ First off, to make the project successful, I will need to learn the syntax for t
 
 ### Sketches
 
-Will be updated soon.
+Please visit ![here](https://github.com/peachhichew/Smol-Pet-Sim/blob/master/images/proposal/proposal-imgs.md) for the Sketches.
