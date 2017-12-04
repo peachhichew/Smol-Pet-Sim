@@ -51,18 +51,36 @@ function setup() {
 
     // stage.addChild(pupper);
     // renderer.render(stage);
-    pupper();
-    renderer.render(stage);
+    pupper(0, 0);
+    // renderer.render(stage);
+
+    // start the game loop
+    gameLoop();
 }
 
-function pupper() {
-    var xLoc;
-    var yLoc;
+function pupper(xPos, yPos) {
+    var xLoc = xPos;
+    var yLoc = yPos;
     var walkFrames = 12;
     // frame number in the animation, starts at 0 every time 
     var curFrame = 0;
     var frameWidth = 38;
     var frameHeight = 25;
+
+    var fsm = [
+        [1],
+        [2],
+        [3],
+        [4],
+        [5],
+        [6],
+        [7],
+        [8],
+        [9],
+        [10],
+        [11],
+        [12]
+    ];
 
     // load the image as a texture and then use the rectangle function
     // to "crop it" and then generate a sprite from it 
@@ -73,8 +91,8 @@ function pupper() {
     // pupperTexture.frame = rectangle;
     // var pupper = new Sprite(pupperTexture);
 
-    // array that takes in the images of each frame
-    // size of the array is the number of frames
+    // array that takes in the images of each frame where size of the array is the number 
+    // of frames
     var walkAnim = new Array(walkFrames);
 
     // create new sprites and fill them into each slot of the array
@@ -89,11 +107,27 @@ function pupper() {
     walkAnim[8] = new Sprite(resources["../images/pupper/walk/shiba_9.png"].texture);
     walkAnim[9] = new Sprite(resources["../images/pupper/walk/shiba_10.png"].texture);
     walkAnim[10] = new Sprite(resources["../images/pupper/walk/shiba_11.png"].texture);
-    walkAnim[11] = new Sprite(resources["../images/pupper/walk/shiba_12.png"].texture);
+    walkAnim[11] = new Sprite(resources[".+./images/pupper/walk/shiba_12.png"].texture);
 
     // add the sprites to the stage
     for (let i = 0; i < walkFrames; i++) {
         walkAnim[i].x = (i * 4) + 100;
         stage.addChild(walkAnim[i]);
     }
+
+    var currFrame = fsm[currFrame];
+
+
+}
+
+function gameLoop(){
+    
+    //Loop this function 60 times per second
+    requestAnimationFrame(gameLoop);
+
+    //Move the cat 1 pixel per frame
+    cat.x += 1;
+
+    //Render the stage
+    renderer.render(stage);
 }
