@@ -30,8 +30,10 @@ renderer.render(stage);
 renderer.view.style.position = "absolute";
 renderer.view.style.display = "block";
 renderer.autoResize = true;
+renderer.backgroundColor = 0xffffff;
 // make the renderer size equal to the size of the window
-renderer.resize(window.innerWidth, window.innerHeight);
+// renderer.resize(window.innerWidth, window.innerHeight);
+renderer.resize(500, 500);
 
 // load the sprites
 loader
@@ -62,10 +64,11 @@ var dogWalkWidth = 35;
 var dogSit;
 var sit = [];
 var dogSitTexture;
-var dogSitY = 26;
+var dogSitY = 28;
 var dogSitWidth = 35;
 var dogSitHeight = 28;
 
+// PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
 function setup() {
     // // // load the image as a texture and then use the rectangle function
@@ -109,10 +112,19 @@ function setup() {
     // create a new dog sprite based on the texture that was just created
     dogWalk = new Sprite(dogWalkTexture);
     // move the dog sprite to the center of the window
-    dogWalk.x = window.innerWidth/2;
-    dogWalk.y = window.innerHeight/2;
+    // dogWalk.x = window.innerWidth/2;
+    // dogWalk.y = window.innerHeight/2;
+    dogWalk.x = 225;
+    dogWalk.y = 225;
+    // opt-in to interactivity
+    dogWalk.interactive = true;
+    // show hand cursor
+    dogWalk.buttonMode = true;
+    // pointers normalize touch and mouse
+    dogWalk.on('pointerdown', onClick);
     // add the dog to the stage and render it
     stage.addChild(dogWalk);
+
     // renderer.render(stage);
 
     // dog sitting frames
@@ -120,19 +132,19 @@ function setup() {
 
     // add sitting frames to the sit array
     sit.push(
-        new Rectangle(0, dogSitY, dogSitWidth, dogSitHeight),
-        new Rectangle(39, dogSitY, dogSitWidth, dogSitHeight),
-        new Rectangle(73, dogSitY, dogSitWidth, dogSitHeight),
-        new Rectangle(115, dogSitY, dogSitWidth, dogSitHeight),
-        new Rectangle(153, dogSitY, dogSitWidth, dogSitHeight),
-        new Rectangle(191, dogSitY, dogSitWidth, dogSitHeight),
-        new Rectangle(229, dogSitY, dogSitWidth, dogSitHeight),
-        new Rectangle(267, dogSitY, dogSitWidth, dogSitHeight),
-        new Rectangle(305, dogSitY, dogSitWidth, dogSitHeight),
-        new Rectangle(343, dogSitY, dogSitWidth, dogSitHeight),
-        new Rectangle(381, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(3, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(40, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(74, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(116, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(154, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(192, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(230, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(268, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(306, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(344, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(382, dogSitY, dogSitWidth, dogSitHeight),
         new Rectangle(419, dogSitY, dogSitWidth, dogSitHeight),
-        new Rectangle(457, dogSitY, dogSitWidth, dogSitHeight),
+        new Rectangle(458, dogSitY, dogSitWidth, dogSitHeight),
     );
 
     // start from first frame
@@ -210,8 +222,11 @@ function gameLoop(){
     dogWalkTexture.frame = run[Math.floor((f % 120)/12)];
     stage.removeChild(dogWalk);
     dogWalk = new Sprite(dogWalkTexture);
-    dogWalk.x = window.innerWidth/2;
-    dogWalk.y = window.innerHeight/2;
+    // originally window.innerHeight/Width / 2
+    dogWalk.x = 225;
+    dogWalk.y = 225;
+    // dogWalk.scale.x = 1.2;
+    // dogWalk.scale.y = 1.2;
     stage.addChild(dogWalk);
     // renderer.render(stage);
 
@@ -223,7 +238,25 @@ function gameLoop(){
     dogSit.scale.x = 1.2;
     dogSit.scale.y = 1.2;
     stage.addChild(dogSit);
-    renderer.render(stage);
+    renderer.render(stage);    
+}
+
+// let makeSit = document.querySelector("sitButton");
+// makeSit.onclick = function(e) {
+//     dogWalkTexture.frame = sit[Math.floor((f % 120)/12)];
+//     stage.removeChild(dogSit);
+//     dogSit = new Sprite(dogSitTexture);
+//     dogSit.x = 0;
+//     dogSit.y = 0;
+//     dogSit.scale.x = 1.2;
+//     dogSit.scale.y = 1.2;
+//     stage.addChild(dogSit);
+//     renderer.render(stage);
+// }
+
+function onClick() {
+    dogWalk.scale.x *= 1.2;
+    dogWalk.scale.y *= 1.2;
 }
 
 // start the game loop
