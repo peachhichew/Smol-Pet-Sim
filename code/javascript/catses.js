@@ -30,58 +30,55 @@ renderer.render(stage);
 renderer.view.style.position = "absolute";
 renderer.view.style.display = "block";
 renderer.autoResize = true;
-renderer.backgroundColor = 0xffffff;
+renderer.backgroundColor = 0x78c380;
 // make the renderer size equal to the size of the window
 // renderer.resize(window.innerWidth, window.innerHeight);
 renderer.resize(500, 500);
 
 // load the sprites
 loader
-    .add("bunny", "../images/bun/bun.png")
+    .add("cat", "../images/catses/catses.png")
     .load(setup);
 
 // bun hopping
-var bun;
-var hop = [];
-var bunTexture;
+var cat;
+var catWalk = [];
+var catTexture;
 // var bunY = 240;
-var bunWidth = 500;
-var bunHeight = 270;
+var catWidth = 32;
+var catHeight = 32;
 // var bunWidth = 100;
 // var bunHeight = 170;
 
 // PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
 function setup() {
-    bunTexture = loader.resources["bunny"].texture;
+    catTexture = loader.resources["cat"].texture;
     // add new "cropped" parts of the sprite into the run array of frames
-    hop.push(
-        new Rectangle(0, 0, bunWidth, bunHeight), // frame 0
-        new Rectangle(270, 0, bunWidth, bunHeight), // frame 1
-        new Rectangle(0, 270, bunWidth, bunHeight), // frame 2
-        new Rectangle(270, 270, bunWidth, bunHeight), // frame 3
-        new Rectangle(0, 540, bunWidth, bunHeight), // frame 4
-        new Rectangle(270, 540, bunWidth, bunHeight), // frame 5
-        new Rectangle(0, 810, bunWidth, bunHeight), // frame 6
-        new Rectangle(270, 810, bunWidth, bunHeight), // frame 7
-        new Rectangle(0, 1080, bunWidth, bunHeight), // frame 8
-        new Rectangle(270, 1080, bunWidth, bunHeight), // frame 9
-        new Rectangle(0, 1350, bunWidth, bunHeight), // frame 10
-        new Rectangle(270, 1350, bunWidth, bunHeight), // frame 11
-        new Rectangle(0, 1620, bunWidth, bunHeight), // frame 12
-        new Rectangle(270, 1620, bunWidth, bunHeight), // frame 13
-        // new Rectangle(456, 238, 38, 25) // frame 12
+    catWalk.push(
+        new Rectangle(0, 64, catWidth, catHeight), // frame 0
+        new Rectangle(32, 64, catWidth, catHeight), // frame 1
+        new Rectangle(64, 64, catWidth, catHeight), // frame 2
+        new Rectangle(96, 64, catWidth, catHeight), // frame 3
+        new Rectangle(128, 64, catWidth, catHeight), // frame 4
+        new Rectangle(160, 64, catWidth, catHeight), // frame 5
+        new Rectangle(192, 64, catWidth, catHeight), // frame 6
+        new Rectangle(224, 64, catWidth, catHeight), // frame 7
+        new Rectangle(256, 64, catWidth, catHeight), // frame 8
+        new Rectangle(288, 64, catWidth, catHeight), // frame 9
+        new Rectangle(320, 64, catWidth, catHeight), // frame 10
+        new Rectangle(352, 64, catWidth, catHeight), // frame 11
     );
 
     // make the frame of the texture start from the first frame
-    bunTexture.frame = hop[0];
+    catTexture.frame = catWalk[0];
     // create a new dog sprite based on the texture that was just created
-    bun = new Sprite(bunTexture);
+    cat = new Sprite(catTexture);
     // move the dog sprite to the center of the window
     // dogWalk.x = window.innerWidth/2;
     // dogWalk.y = window.innerHeight/2;
-    bun.x = 0;
-    bun.y = 0;
+    cat.x = 0;
+    cat.y = 0;
     // // opt-in to interactivity
     // dogWalk.interactive = true;
     // // show hand cursor
@@ -89,7 +86,7 @@ function setup() {
     // // pointers normalize touch and mouse
     // dogWalk.on('pointerdown', onClick);
     // // add the dog to the stage and render it
-    stage.addChild(bun);
+    stage.addChild(cat);
     renderer.render(stage);
 }
 
@@ -97,16 +94,14 @@ function gameLoop(){
     // loop this function 60 times per second
     var f = requestAnimationFrame(gameLoop);
     // make the entire animation loop, not just a part of it
-    bunTexture.frame = hop[Math.floor((f % 360)/48)];
+    catTexture.frame = catWalk[Math.floor((f % 120)/12)];
     // bunTexture.frame = hop[0];
-    stage.removeChild(bun);
-    bun = new Sprite(bunTexture);
+    stage.removeChild(cat);
+    cat = new Sprite(catTexture);
     // originally window.innerHeight/Width / 2
-    bun.x = 0;
-    bun.y = 0;
-    bun.scale.x = 0.5;
-    bun.scale.y = 0.5;
-    stage.addChild(bun);
+    cat.x = 0;
+    cat.y = 0;
+    stage.addChild(cat);
     renderer.render(stage);
 }
 
