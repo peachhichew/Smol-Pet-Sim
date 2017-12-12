@@ -17,14 +17,12 @@ Sprite = PIXI.Sprite,
 Graphics = PIXI.Graphics
 Rectangle = PIXI.Rectangle;
 
-// texture for walking dog 
-var walkTexture;
-// texture for sitting dog
-var sitTexture;
-// actual walking dog sprite
-let walkingDog;
-// sitting dog sprite
-let sittingDog;
+// texture and sprite for walking dog 
+var walkTexture, walkingDog;
+// texture and sprite for sitting dog
+var sitTexture, sittingDog;
+// texture and sprite for barking dog
+var barkTexture, barkingDog;
 
 // container to hold the sprites
 var dogScene;
@@ -40,7 +38,7 @@ let stage;
 // renderer.render(stage);
 
 loader
-    .add("dog", "../images/pupper/shiba.png")
+    .add("dogWalking", "../images/pupper/shiba.png")
     .add("dogSitting", "../images/pupper/shiba.png")
     .load(setup);
 
@@ -51,16 +49,18 @@ function setup() {
     // load the sprite sheets into the window 
     walkTexture = loadSpriteSheet();
     sitTexture = loadSittingSprite();
+    barkTexture = loadBarkingSprite();
     // call the animation functions
     walkAnim(0, 0);
     sitAnim(100, 100);
+    barkAnim(50, 50);
     // call the gameLoop function to make the animation work 
     app.ticker.add(gameLoop);
 }
 
 //  load sprite sheet for walking 
 function loadSpriteSheet() {
-    let dogWalkSheet = PIXI.BaseTexture.fromImage("dog");
+    let dogWalkSheet = PIXI.BaseTexture.fromImage("dogWalking");
     let dogWalkWidth = 35;
     let dogWalkHeight = 25;
     let numFrames = 12;
@@ -79,11 +79,25 @@ function loadSittingSprite() {
     let dogSitHeight = 25;
     let numFrames = 15;
     let sit = [];
-    for(let i = 0; i < numFrames; i++) {
+    for (let i = 0; i < numFrames; i++) {
         let frame = new Texture(dogSitSheet, new Rectangle(i * dogSitWidth, 28, dogSitWidth, dogSitHeight));
         sit.push(frame);
     }
     return sit;
+}
+
+// load sprite sheet for barking
+function loadBarkingSprite() {
+    let dogBarkSheet = PIXI.BaseTexture.fromImage("dogSitting");
+    let dogBarkWidth = 35;
+    let dogBarkHeight = 25;
+    let numFrames = 13;
+    let bark = [];
+    for (let i = 0; i < numFrames; i++) {
+        let frame = new Texture(dogBarkSheet, new Rectangle(i * dogBarkWidth, 60, dogBarkWidth, dogBarkHeight));
+        bark.push(frame);
+    }
+    return bark;
 }
 
 // walking animation
@@ -110,6 +124,18 @@ function sitAnim(x, y) {
     // add the texture onto the stage
     dogScene.addChild(sittingDog);
     sittingDog.play();
+}
+
+function barkAnim(x, y) {
+    barkingDog = new PIXI.extras.AnimatedSprite(barkTexture);
+    barkingDog.x = x;
+    barkingDog.y = y;
+    barkingDog.animationSpeed = 1/5;
+    barkingDog.loop = true;
+
+    // add texture onto stage
+    dogScene.addChild(barkingDog);
+    barkingDog.play();
 }
 
 function gameLoop() {
