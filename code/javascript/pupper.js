@@ -19,6 +19,10 @@ Rectangle = PIXI.Rectangle,
 BaseTexture = PIXI.BaseTexture,
 extras = PIXI.extras;
 
+// width and height of the canvas
+var canvasWidth = 500;
+var canvasHeight = 500;
+
 // texture and sprite for walking dog 
 var walkTexture, walkingDog;
 // texture and sprite for sitting dog
@@ -29,7 +33,7 @@ var barkTexture, barkingDog;
 // container to hold the sprites
 var dogScene;
 
-const app = new PIXI.Application(500,500);
+const app = new PIXI.Application(canvasWidth,canvasHeight);
 // renderer = autoDetectRenderer(500, 500);
 
 // add the canvas to the HTML document
@@ -48,6 +52,7 @@ function setup() {
     stage = app.stage;
     dogScene = new Container();
     stage.addChild(dogScene);
+    changeBackground(0xFFFFFF);
     // load the sprite sheets into the window 
     walkTexture = loadSpriteSheet();
     sitTexture = loadSittingSprite();
@@ -150,6 +155,18 @@ function randomInt(min, max) {
     let num = Math.floor(Math.random() * (max - min)) + min;
     
     return num;
+}
+
+// changes the background color by drawing a rectangle
+function changeBackground(color){
+    const bg = new Graphics();
+    bg.beginFill(color);
+    bg.lineStyle(1, color, 1);  // stroke width, color, alpha
+    bg.drawRect(0, 0, canvasWidth, canvasHeight);
+    bg.endFill();
+    bg.x = 0;
+    bg.y = 0;
+    dogScene.addChild(bg);
 }
 
 function gameLoop() {
