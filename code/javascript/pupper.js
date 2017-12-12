@@ -52,9 +52,9 @@ function setup() {
     stage = app.stage;
     dogScene = new Container();
     stage.addChild(dogScene);
-    changeBackground(0xFFFFFF);
+    changeBackground(0xFFFFFF, 0x000000);
     // load the sprite sheets into the window 
-    walkTexture = loadSpriteSheet();
+    walkTexture = loadWalkingSprite();
     sitTexture = loadSittingSprite();
     barkTexture = loadBarkingSprite();
     // call the animation functions
@@ -62,12 +62,14 @@ function setup() {
     walkAnim(randomInt(0, 465), randomInt(0, 475));
     sitAnim(100, 100);
     barkAnim(50, 50);
+
+    makeButton(5, 5, 60, 25, 0xcccccc, 0x000000);
     // call the gameLoop function to make the animation work 
     app.ticker.add(gameLoop);
 }
 
 //  load sprite sheet for walking 
-function loadSpriteSheet() {
+function loadWalkingSprite() {
     let dogWalkSheet = BaseTexture.fromImage("dogWalking");
     let dogWalkWidth = 35;
     let dogWalkHeight = 25;
@@ -158,15 +160,26 @@ function randomInt(min, max) {
 }
 
 // changes the background color by drawing a rectangle
-function changeBackground(color){
+function changeBackground(color, stroke){
     const bg = new Graphics();
     bg.beginFill(color);
-    bg.lineStyle(1, color, 1);  // stroke width, color, alpha
-    bg.drawRect(0, 0, canvasWidth, canvasHeight);
+    bg.lineStyle(1, stroke, 1);  // stroke width, color, alpha
+    bg.drawRect(1, 0, canvasWidth - 1, canvasHeight - 1);
     bg.endFill();
     bg.x = 0;
     bg.y = 0;
     dogScene.addChild(bg);
+}
+
+function makeButton(x, y, width, height, color, stroke) {
+    let button = new Graphics();
+    button.beginFill(color);
+    button.lineStyle(1, stroke, 1); // stroke width, color, alpha
+    button.drawRect(x, y, width, height);
+    button.endFill();
+    button.x = x;
+    button.y = y;
+    dogScene.addChild(button);
 }
 
 function gameLoop() {
