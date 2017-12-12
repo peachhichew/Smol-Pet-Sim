@@ -94,7 +94,7 @@ function walkAnim(x, y, frameWidth, frameHeight) {
     walkingDog.x = 0;
     walkingDog.y = 0;
     // walkingDog.y = y - h2;
-    walkingDog.animationSpeed = 1;
+    walkingDog.animationSpeed = 1/7;
     walkingDog.loop = true;
 
     // add the texture into the stage 
