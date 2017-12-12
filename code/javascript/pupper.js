@@ -17,7 +17,8 @@ Sprite = PIXI.Sprite,
 Graphics = PIXI.Graphics
 Rectangle = PIXI.Rectangle,
 BaseTexture = PIXI.BaseTexture,
-extras = PIXI.extras;
+extras = PIXI.extras,
+text = PIXI.Text;
 
 // width and height of the canvas
 var canvasWidth = 500;
@@ -63,7 +64,7 @@ function setup() {
     sitAnim(100, 100);
     barkAnim(50, 50);
 
-    makeButton(5, 5, 60, 25, 0xcccccc, 0x000000);
+    makeButton(5, 5, 60, 25, 0xcccccc, 0x000000, "test");
     // call the gameLoop function to make the animation work 
     app.ticker.add(gameLoop);
 }
@@ -171,7 +172,7 @@ function changeBackground(color, stroke){
     dogScene.addChild(bg);
 }
 
-function makeButton(x, y, width, height, color, stroke) {
+function makeButton(x, y, width, height, color, stroke, text) {
     let button = new Graphics();
     button.beginFill(color);
     button.lineStyle(1, stroke, 1); // stroke width, color, alpha
@@ -180,6 +181,21 @@ function makeButton(x, y, width, height, color, stroke) {
     button.x = x;
     button.y = y;
     dogScene.addChild(button);
+
+    let textStyle = new PIXI.TextStyle({
+        fill: 0x000000,
+        fontSize: 18,
+        fontFamily: "Futura",   // changing later
+    });
+
+    let buttonText = new PIXI.Text(text);
+    buttonText.style = textStyle;
+    buttonText.x = x + 10;
+    buttonText.y = y + 5;
+    buttonText.interactive = true;
+    buttonText.buttonMode = true;
+    // functions to make this part interactive?
+    dogScene.addChild(buttonText);
 }
 
 function gameLoop() {
