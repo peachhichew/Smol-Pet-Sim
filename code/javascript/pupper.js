@@ -18,14 +18,18 @@ Graphics = PIXI.Graphics
 Rectangle = PIXI.Rectangle;
 
 var walkTexture;
+var dogScene;
+let walkingDog;
 
-var stage = new Container(),
-renderer = autoDetectRenderer(500, 500);
+const app = new PIXI.Application(500,500);
+// renderer = autoDetectRenderer(500, 500);
 
 // add the canvas to the HTML document
 document.body.appendChild(app.view);
 
-renderer.render(stage);
+let stage;
+
+// renderer.render(stage);
 
 loader
     .add("dog", "../images/pupper/shiba.png")
@@ -72,8 +76,12 @@ function loadSpriteSheet() {
 }
 
 function setup() {
+    stage = app.stage;
+    dogScene = new Container();
+    stage.addChild(dogScene);
     // load the sprite sheet into the window 
     walkTexture = loadSpriteSheet();
+    walkAnim(0, 0, 35, 25);
     // call the gameLoop function to make the animation work 
     app.ticker.add(gameLoop);
 }
@@ -81,18 +89,18 @@ function setup() {
 function walkAnim(x, y, frameWidth, frameHeight) {
     // let w2 = frameWidth/2;
     // let h2 = frameHeight/2;
-    let walkingDog = new PIXI.extras.AnimatedSprite(walkTexture);
+    walkingDog = new PIXI.extras.AnimatedSprite(walkTexture);
     // walkingDog.x = x - w2;
     walkingDog.x = 0;
     walkingDog.y = 0;
     // walkingDog.y = y - h2;
-    walkingDog.animationSpeed = 1/7;
+    walkingDog.animationSpeed = 1;
     walkingDog.loop = true;
 
     // add the texture into the stage 
-    stage.addChild(walkingDog);
+    dogScene.addChild(walkingDog);
     walkingDog.play();
-    debugger;
+    
 }
 
 function gameLoop() {
@@ -100,6 +108,6 @@ function gameLoop() {
     // accordingly
     let dt = 1/app.ticker.FPS;
     if (dt > 1/12) dt = 1/12;
-    walkAnim(0, 0, 35, 25);
-    renderer.render(stage);
+   // walkAnim(0, 0, 35, 25);
+    // renderer.render(stage);
 }
