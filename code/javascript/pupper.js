@@ -45,8 +45,9 @@ let stage;
 // renderer.render(stage);
 
 loader
+    .add("dog", "../images/pupper/shiba.png")
     .add("dogWalking", "../images/pupper/shiba.png")
-    .add("dogSitting", "../images/pupper/shiba.png")
+    // .add("dogSitting", "../images/pupper/shiba.png")
     .load(setup);
 
 function setup() {
@@ -71,9 +72,9 @@ function setup() {
 
 //  load sprite sheet for walking 
 function loadWalkingSprite() {
-    let dogWalkSheet = BaseTexture.fromImage("dogWalking");
+    let dogWalkSheet = BaseTexture.fromImage("dog");
     let dogWalkWidth = 35;
-    let dogWalkHeight = 25;
+    let dogWalkHeight = 24;
     let numFrames = 12;
     let walk = [];
     for (let i = 0; i < numFrames; i++) {
@@ -85,13 +86,13 @@ function loadWalkingSprite() {
 
 // load sprite sheet for sitting 
 function loadSittingSprite() {
-    let dogSitSheet = BaseTexture.fromImage("dogSitting");
-    let dogSitWidth = 35;
-    let dogSitHeight = 25;
-    let numFrames = 15;
+    let dogSitSheet = BaseTexture.fromImage("dog");
+    let dogSitWidth = 38;   // alter between 38 and 39?
+    let dogSitHeight = 28;
+    let numFrames = 15; // 15 frames
     let sit = [];
     for (let i = 0; i < numFrames; i++) {
-        let frame = new Texture(dogSitSheet, new Rectangle(i * dogSitWidth, 28, dogSitWidth, dogSitHeight));
+        let frame = new Texture(dogSitSheet, new Rectangle(i * dogSitWidth, 27, dogSitWidth, dogSitHeight));
         sit.push(frame);
     }
     return sit;
@@ -99,13 +100,13 @@ function loadSittingSprite() {
 
 // load sprite sheet for barking
 function loadBarkingSprite() {
-    let dogBarkSheet = BaseTexture.fromImage("dogSitting");
-    let dogBarkWidth = 35;
-    let dogBarkHeight = 25;
+    let dogBarkSheet = BaseTexture.fromImage("dog");
+    let dogBarkWidth = 37;  // originally 35
+    let dogBarkHeight = 28; // originally 25
     let numFrames = 13;
     let bark = [];
     for (let i = 0; i < numFrames; i++) {
-        let frame = new Texture(dogBarkSheet, new Rectangle(i * dogBarkWidth, 60, dogBarkWidth, dogBarkHeight));
+        let frame = new Texture(dogBarkSheet, new Rectangle(i * dogBarkWidth, 58, dogBarkWidth, dogBarkHeight));
         bark.push(frame);
     }
     return bark;
@@ -118,6 +119,9 @@ function walkAnim(x, y) {
     walkingDog.y = y;
     walkingDog.animationSpeed = 1/3;
     walkingDog.loop = true;
+    walkingDog.interactive = true;
+    // walkingDog.cursor = 'wait';
+    walkingDog.button = true;
 
     // add the texture into the stage 
     dogScene.addChild(walkingDog);
@@ -175,7 +179,7 @@ function changeBackground(color, stroke){
 function makeButton(x, y, width, height, color, stroke, text) {
     let button = new Graphics();
     button.beginFill(color);
-    button.lineStyle(1, stroke, 1); // stroke width, color, alpha
+    button.lineStyle(1, stroke, 0.6); // stroke width, color, alpha
     button.drawRect(x, y, width, height);
     button.endFill();
     button.x = x;
