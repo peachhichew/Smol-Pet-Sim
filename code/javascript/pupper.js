@@ -15,7 +15,9 @@ TextureCache = PIXI.utils.TextureCache,
 Texture = PIXI.Texture,
 Sprite = PIXI.Sprite,
 Graphics = PIXI.Graphics
-Rectangle = PIXI.Rectangle;
+Rectangle = PIXI.Rectangle,
+BaseTexture = PIXI.BaseTexture,
+extras = PIXI.extras;
 
 // texture and sprite for walking dog 
 var walkTexture, walkingDog;
@@ -51,7 +53,8 @@ function setup() {
     sitTexture = loadSittingSprite();
     barkTexture = loadBarkingSprite();
     // call the animation functions
-    walkAnim(0, 0);
+    walkAnim(randomInt(0, 465), randomInt(0, 475));
+    walkAnim(randomInt(0, 465), randomInt(0, 475));
     sitAnim(100, 100);
     barkAnim(50, 50);
     // call the gameLoop function to make the animation work 
@@ -60,7 +63,7 @@ function setup() {
 
 //  load sprite sheet for walking 
 function loadSpriteSheet() {
-    let dogWalkSheet = PIXI.BaseTexture.fromImage("dogWalking");
+    let dogWalkSheet = BaseTexture.fromImage("dogWalking");
     let dogWalkWidth = 35;
     let dogWalkHeight = 25;
     let numFrames = 12;
@@ -74,7 +77,7 @@ function loadSpriteSheet() {
 
 // load sprite sheet for sitting 
 function loadSittingSprite() {
-    let dogSitSheet = PIXI.BaseTexture.fromImage("dogSitting");
+    let dogSitSheet = BaseTexture.fromImage("dogSitting");
     let dogSitWidth = 35;
     let dogSitHeight = 25;
     let numFrames = 15;
@@ -88,7 +91,7 @@ function loadSittingSprite() {
 
 // load sprite sheet for barking
 function loadBarkingSprite() {
-    let dogBarkSheet = PIXI.BaseTexture.fromImage("dogSitting");
+    let dogBarkSheet = BaseTexture.fromImage("dogSitting");
     let dogBarkWidth = 35;
     let dogBarkHeight = 25;
     let numFrames = 13;
@@ -102,7 +105,7 @@ function loadBarkingSprite() {
 
 // walking animation
 function walkAnim(x, y) {
-    walkingDog = new PIXI.extras.AnimatedSprite(walkTexture);
+    walkingDog = new extras.AnimatedSprite(walkTexture);
     walkingDog.x = x;
     walkingDog.y = y;
     walkingDog.animationSpeed = 1/3;
@@ -115,7 +118,7 @@ function walkAnim(x, y) {
 
 // sitting animation
 function sitAnim(x, y) {
-    sittingDog = new PIXI.extras.AnimatedSprite(sitTexture);
+    sittingDog = new extras.AnimatedSprite(sitTexture);
     sittingDog.x = x;
     sittingDog.y = y;
     sittingDog.animationSpeed = 1/5;
@@ -136,6 +139,17 @@ function barkAnim(x, y) {
     // add texture onto stage
     dogScene.addChild(barkingDog);
     barkingDog.play();
+}
+
+function randomInt(min, max) {
+    // Math.ceil returns the smallest int greater than or equal to the given number
+    min = Math.ceil(min);
+    max = Math.floor(max);
+
+    // [min, max)
+    let num = Math.floor(Math.random() * (max - min)) + min;
+    
+    return num;
 }
 
 function gameLoop() {
