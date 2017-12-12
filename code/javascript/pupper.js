@@ -177,14 +177,31 @@ function changeBackground(color, stroke){
 }
 
 function makeButton(x, y, width, height, color, stroke, text) {
-    let button = new Graphics();
-    button.beginFill(color);
-    button.lineStyle(1, stroke, 0.6); // stroke width, color, alpha
-    button.drawRect(x, y, width, height);
-    button.endFill();
-    button.x = x;
-    button.y = y;
-    dogScene.addChild(button);
+    // let button = new Graphics();
+    // button.beginFill(color);
+    // button.lineStyle(1, stroke, 0.6); // stroke width, color, alpha
+    // button.drawRect(x, y, width, height);
+    // button.endFill();
+    // button.x = x;
+    // button.y = y;
+    // dogScene.addChild(button);
+
+    let backButton = new PIXI.Graphics();
+    backButton.lineStyle(1, stroke, 1); // stroke width, color, alpha
+    backButton.beginFill(0x000000);
+    backButton.moveTo(0, 20);
+    backButton.lineTo(20, 0);
+    backButton.lineTo(20, 10);
+    backButton.lineTo(45, 10);
+    backButton.lineTo(45, 30);
+    backButton.lineTo(20, 30);
+    backButton.lineTo(20, 40);
+    backButton.endFill();
+    backButton.x = x;
+    backButton.y = y;
+    backButton.scale.x = 0.7;
+    backButton.scale.y = 0.7;
+    dogScene.addChild(backButton);
 
     let textStyle = new PIXI.TextStyle({
         fill: 0x000000,
@@ -192,14 +209,14 @@ function makeButton(x, y, width, height, color, stroke, text) {
         fontFamily: "Futura",   // changing later
     });
 
-    let buttonText = new PIXI.Text(text);
-    buttonText.style = textStyle;
-    buttonText.x = x + 10;
-    buttonText.y = y + 5;
-    buttonText.interactive = true;
-    buttonText.buttonMode = true;
-    // functions to make this part interactive?
-    dogScene.addChild(buttonText);
+//     let buttonText = new PIXI.Text(text);
+//     buttonText.style = textStyle;
+//     buttonText.x = x + 10;
+//     buttonText.y = y + 5;
+//     buttonText.interactive = true;
+//     buttonText.buttonMode = true;
+//     // functions to make this part interactive?
+//     dogScene.addChild(buttonText);
 }
 
 function gameLoop() {
