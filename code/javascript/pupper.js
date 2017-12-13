@@ -31,8 +31,11 @@ var sitTexture, sittingDog;
 // texture and sprite for barking dog
 var barkTexture, barkingDog;
 
+// variable for the bg
+const bg = new Graphics();
+
 // container to hold the sprites
-var dogScene;
+var dogPage, startPage, bunPage, catPage;
 
 const app = new PIXI.Application(canvasWidth,canvasHeight);
 // renderer = autoDetectRenderer(500, 500);
@@ -52,9 +55,122 @@ loader
 
 function setup() {
     stage = app.stage;
-    dogScene = new Container();
-    stage.addChild(dogScene);
+    // START PAGE
+    startPage = new Container();
+    stage.addChild(startPage);
+
+    // DOG PAGE
+    dogPage = new Container();
+    dogPage.visible = false;
+    stage.addChild(dogPage);
+
+    // BUN PAGE
+    bunPage = new Container();
+    bunPage.visible = false;
+    stage.addChild(bunPage);
+
+    // CAT PAGE
+    catPage = new Container();
+    catPage.visible = false;
+    stage.addChild(catPage);
+
     changeBackground(0xFFFFFF, 0x000000);
+    startPage.addChild(bg);
+
+    createStartPage();
+    
+    // // load the sprite sheets into the window 
+    // walkTexture = loadWalkingSprite();
+    // sitTexture = loadSittingSprite();
+    // barkTexture = loadBarkingSprite();
+    // // call the animation functions
+    // walkAnim(randomInt(0, 465), randomInt(0, 475));
+    // walkAnim(randomInt(0, 465), randomInt(0, 475));
+    // sitAnim(100, 100);
+    // barkAnim(50, 50);
+
+    // makeButton(5, 5, 60, 25, 0xcccccc, 0x000000, "test");
+    // call the gameLoop function to make the animation work 
+    app.ticker.add(gameLoop);
+}
+
+function createStartPage() {
+    startPage.visible = true;
+    dogPage.visible = false;
+    bunPage.visible = false;
+    catPage.visible = true;
+
+    let buttonWidth = 60;
+    let buttonHeight = 25;
+
+    changeBackground(0xFFFFFF, 0x000000);
+    startPage.addChild(bg);
+
+    // DOG BUTTON
+    let dogButton = new Graphics();
+    dogButton.beginFill(0xcccccc);
+    dogButton.lineStyle(1, 0x000000, 0.6); // stroke width, color, alpha
+    dogButton.drawRect(0, 0, buttonWidth, buttonHeight);
+    dogButton.endFill();
+    dogButton.x = (canvasWidth/2)-(buttonWidth/2);
+    dogButton.y = 300;
+    dogButton.interactive = true;
+    dogButton.buttonMode = true;
+    dogButton.on("pointerup", createDogPage);
+    // dogButton.on('pointerover', e => e.target.alpha = 0.7);
+    // dogButton.on('pointerout', e => e.target.alpha = 1.0);
+    
+    startPage.addChild(dogButton);
+
+    let textStyle = new PIXI.TextStyle({
+        fill: 0x000000,
+        fontSize: 20,
+        fontFamily: "VT323",   // changing later
+    });
+
+    let dogButtonText = new PIXI.Text("Dog");
+    dogButtonText.style = textStyle;
+    dogButtonText.x = dogButton.x + 5;
+    dogButtonText.y = dogButton.y + 5;
+    dogButtonText.interactive = true;
+    dogButtonText.buttonMode = true;
+    dogButtonText.on("pointerup", createDogPage);
+    // dogButtonText.on('pointerover', e => e.target.alpha = 0.7);
+    // dogButtonText.on('pointerout', e => e.target.alpha = 1.0);
+    startPage.addChild(dogButtonText);
+
+    // BUN BUTTON
+    let bunButton = new Graphics();
+    bunButton.beginFill(0xcccccc);
+    bunButton.lineStyle(1, 0x000000, 0.6); // stroke width, color, alpha
+    bunButton.drawRect(0, 0, buttonWidth, buttonHeight);
+    bunButton.endFill();
+    bunButton.x = (canvasWidth/2)-(buttonWidth/2);
+    bunButton.y = dogButton.y + 35;
+    bunButton.on("pointerup", createDogPage);
+    startPage.addChild(bunButton);
+
+    let bunButtonText = new PIXI.Text("Bun");
+    bunButtonText.style = textStyle;
+    bunButtonText.x = (canvasWidth/2)-(buttonWidth/2);
+    bunButtonText.y = bunButton.y + 5;
+    bunButtonText.interactive = true;
+    bunButtonText.buttonMode = true;
+    // functions to make this part interactive?
+    // bunButtonText.on("pointerup", createDogPage);
+    // bunButtonText.on('pointerover', e => e.target.alpha = 0.7);
+    // bunButtonText.on('pointerout', e => e.target.alpha = 1.0);
+    startPage.addChild(bunButtonText);
+}
+
+function createDogPage() {
+    startPage.visible = false;
+    dogPage.visible = true;
+    bunPage.visible = false;
+    catPage.visible = false;
+
+    changeBackground(0xFFFFFF, 0x000000);
+    dogPage.addChild(bg);
     // load the sprite sheets into the window 
     walkTexture = loadWalkingSprite();
     sitTexture = loadSittingSprite();
@@ -66,8 +182,6 @@ function setup() {
     barkAnim(50, 50);
 
     makeButton(5, 5, 60, 25, 0xcccccc, 0x000000, "test");
-    // call the gameLoop function to make the animation work 
-    app.ticker.add(gameLoop);
 }
 
 //  load sprite sheet for walking 
@@ -87,7 +201,7 @@ function loadWalkingSprite() {
 // load sprite sheet for sitting 
 function loadSittingSprite() {
     let dogSitSheet = BaseTexture.fromImage("dog");
-    let dogSitWidth = 38;   // alter between 38 and 39?
+    let dogSitWidth = 39;   // alter between 38 and 39?
     let dogSitHeight = 28;
     let numFrames = 15; // 15 frames
     let sit = [];
@@ -120,12 +234,14 @@ function walkAnim(x, y) {
     walkingDog.animationSpeed = 1/3;
     walkingDog.loop = true;
     walkingDog.interactive = true;
-    // walkingDog.cursor = 'wait';
     walkingDog.button = true;
+    // walkingDog.on("pointerup", sitAnim(x, y));
 
     // add the texture into the stage 
-    dogScene.addChild(walkingDog);
+    dogPage.addChild(walkingDog);
     walkingDog.play();
+    // dogPage.removeChild(walkingDog);
+    // walkingDog.on("pointerup", sitAnim(x, y));
 }
 
 // sitting animation
@@ -137,7 +253,7 @@ function sitAnim(x, y) {
     sittingDog.loop = true;
 
     // add the texture onto the stage
-    dogScene.addChild(sittingDog);
+    dogPage.addChild(sittingDog);
     sittingDog.play();
 }
 
@@ -149,7 +265,7 @@ function barkAnim(x, y) {
     barkingDog.loop = true;
 
     // add texture onto stage
-    dogScene.addChild(barkingDog);
+    dogPage.addChild(barkingDog);
     barkingDog.play();
 }
 
@@ -166,14 +282,14 @@ function randomInt(min, max) {
 
 // changes the background color by drawing a rectangle
 function changeBackground(color, stroke){
-    const bg = new Graphics();
+    // bg = new Graphics();
     bg.beginFill(color);
     bg.lineStyle(1, stroke, 1);  // stroke width, color, alpha
     bg.drawRect(1, 0, canvasWidth - 1, canvasHeight - 1);
     bg.endFill();
     bg.x = 0;
     bg.y = 0;
-    dogScene.addChild(bg);
+    // dogPage.addChild(bg);
 }
 
 function makeButton(x, y, width, height, color, stroke, text) {
@@ -184,7 +300,7 @@ function makeButton(x, y, width, height, color, stroke, text) {
     // button.endFill();
     // button.x = x;
     // button.y = y;
-    // dogScene.addChild(button);
+    // dogPage.addChild(button);
 
     let backButton = new PIXI.Graphics();
     backButton.lineStyle(1, stroke, 1); // stroke width, color, alpha
@@ -201,12 +317,17 @@ function makeButton(x, y, width, height, color, stroke, text) {
     backButton.y = y;
     backButton.scale.x = 0.7;
     backButton.scale.y = 0.7;
-    dogScene.addChild(backButton);
+    backButton.interactive = true;
+    backButton.buttonMode = true;
+    backButton.on("pointerup", createStartPage);
+    // backButton.on('pointerover', e => e.target.alpha = 0.7);
+    // backButton.on('pointerout', e => e.target.alpha = 1.0);
+    dogPage.addChild(backButton);
 
     let textStyle = new PIXI.TextStyle({
         fill: 0x000000,
         fontSize: 18,
-        fontFamily: "Futura",   // changing later
+        fontFamily: "VT323",   // changing later
     });
 
 //     let buttonText = new PIXI.Text(text);
@@ -216,7 +337,7 @@ function makeButton(x, y, width, height, color, stroke, text) {
 //     buttonText.interactive = true;
 //     buttonText.buttonMode = true;
 //     // functions to make this part interactive?
-//     dogScene.addChild(buttonText);
+//     dogPage.addChild(buttonText);
 }
 
 function gameLoop() {
