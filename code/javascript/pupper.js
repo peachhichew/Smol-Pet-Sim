@@ -25,7 +25,7 @@ var canvasWidth = 500;
 var canvasHeight = 500;
 
 // texture and sprite for walking dog 
-var walkTexture, walkingDog;
+var walkTexture, wd1, wd2;
 // texture and sprite for sitting dog
 var sitTexture, sittingDog;
 // texture and sprite for barking dog
@@ -36,6 +36,10 @@ const bg = new Graphics();
 
 // container to hold the sprites
 var dogPage, startPage, bunPage, catPage;
+
+let sit;
+
+let dogs;
 
 const app = new PIXI.Application(canvasWidth,canvasHeight);
 // renderer = autoDetectRenderer(500, 500);
@@ -134,7 +138,7 @@ function createStartPage() {
     dogButtonText.y = dogButton.y + 5;
     dogButtonText.interactive = true;
     dogButtonText.buttonMode = true;
-    dogButtonText.on("pointerup", createDogPage);
+    // dogButtonText.on("pointerup", createDogPage);
     // dogButtonText.on('pointerover', e => e.target.alpha = 0.7);
     // dogButtonText.on('pointerout', e => e.target.alpha = 1.0);
     startPage.addChild(dogButtonText);
@@ -147,12 +151,14 @@ function createStartPage() {
     bunButton.endFill();
     bunButton.x = (canvasWidth/2)-(buttonWidth/2);
     bunButton.y = dogButton.y + 35;
-    bunButton.on("pointerup", createDogPage);
+    // bunButton.interactive = true;
+    // bunButton.buttonMode = true;
+    bunButton.on("pointerup", createDogPage);   // change function later
     startPage.addChild(bunButton);
 
     let bunButtonText = new PIXI.Text("Bun");
     bunButtonText.style = textStyle;
-    bunButtonText.x = (canvasWidth/2)-(buttonWidth/2);
+    bunButtonText.x = bunButton.x + 5;
     bunButtonText.y = bunButton.y + 5;
     bunButtonText.interactive = true;
     bunButtonText.buttonMode = true;
@@ -176,8 +182,11 @@ function createDogPage() {
     sitTexture = loadSittingSprite();
     barkTexture = loadBarkingSprite();
     // call the animation functions
-    walkAnim(randomInt(0, 465), randomInt(0, 475));
-    walkAnim(randomInt(0, 465), randomInt(0, 475));
+    wd1 = walkAnim(randomInt(0, 465), randomInt(0, 475));
+    wd2 = walkAnim(randomInt(0, 465), randomInt(0, 475));
+
+    dogs = [wd1, wd2];
+
     sitAnim(100, 100);
     barkAnim(50, 50);
 
@@ -204,7 +213,7 @@ function loadSittingSprite() {
     let dogSitWidth = 39;   // alter between 38 and 39?
     let dogSitHeight = 28;
     let numFrames = 15; // 15 frames
-    let sit = [];
+    sit = [];
     for (let i = 0; i < numFrames; i++) {
         let frame = new Texture(dogSitSheet, new Rectangle(i * dogSitWidth, 27, dogSitWidth, dogSitHeight));
         sit.push(frame);
@@ -228,20 +237,22 @@ function loadBarkingSprite() {
 
 // walking animation
 function walkAnim(x, y) {
-    walkingDog = new extras.AnimatedSprite(walkTexture);
+    let walkingDog = new extras.AnimatedSprite(walkTexture);
     walkingDog.x = x;
     walkingDog.y = y;
     walkingDog.animationSpeed = 1/3;
     walkingDog.loop = true;
     walkingDog.interactive = true;
     walkingDog.button = true;
-    // walkingDog.on("pointerup", sitAnim(x, y));
+    // walkingDog.on("pointerup", sitAnim(x, y));   // add event to sprite
+    walkingDog.on("pointerup", function(){walkingDog.textures = sit; walkingDog.play();});   // add event to sprite
 
     // add the texture into the stage 
     dogPage.addChild(walkingDog);
     walkingDog.play();
     // dogPage.removeChild(walkingDog);
     // walkingDog.on("pointerup", sitAnim(x, y));
+    return walkingDog;
 }
 
 // sitting animation
@@ -345,4 +356,10 @@ function gameLoop() {
     // accordingly
     let dt = 1/app.ticker.FPS;
     if (dt > 1/12) dt = 1/12;
+
+    if (dogPage.visible) {
+        for (let dog of dogs) {
+            dog.x += 100 * dt;
+        }
+    }
 }
