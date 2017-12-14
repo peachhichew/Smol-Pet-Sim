@@ -30,6 +30,8 @@ var walkTexture, wd1, wd2;
 var sitTexture, sittingDog;
 // texture and sprite for barking dog
 var barkTexture, barkingDog;
+// texture and sprite for bunny
+var hopTexture, hoppingBun;
 
 // variable for the bg
 const bg = new Graphics();
@@ -41,8 +43,8 @@ let sit;
 
 let dogs;
 
-let buttonWidth = 60;
-let buttonHeight = 25;
+let buttonWidth = 90; // originally 60, 25
+let buttonHeight = 30;
 
 const app = new PIXI.Application(canvasWidth,canvasHeight);
 // renderer = autoDetectRenderer(500, 500);
@@ -57,6 +59,7 @@ let stage;
 loader
     .add("dog", "../images/pupper/shiba1.png")
     .add("dogWalking", "../images/pupper/shiba.png")
+    .add("bunny", "../images/bun/bun.png")
     // .add("dogSitting", "../images/pupper/shiba.png")
     .load(setup);
 
@@ -120,6 +123,8 @@ function createStartPage() {
     dogPage.visible = false;
     bunPage.visible = false;
     catPage.visible = true;
+    creditsPage.visible = false;
+    notesPage.visible = false;
 
     changeBackground(0xFFFFFF, 0x000000);
     startPage.addChild(bg);
@@ -168,64 +173,95 @@ function createStartPage() {
     notes.on("pointerup", createNotesPage);
     startPage.addChild(notes);
 
-    // DOG BUTTON
-    let dogButton = new Graphics();
-    dogButton.beginFill(0xcccccc);
-    dogButton.lineStyle(1, 0x000000, 0.6); // stroke width, color, alpha
-    dogButton.drawRect(0, 0, buttonWidth, buttonHeight);
-    dogButton.endFill();
-    dogButton.x = (canvasWidth/2)-(buttonWidth/2);
-    dogButton.y = 300;
-    dogButton.interactive = true;
-    dogButton.buttonMode = true;
-    dogButton.on("pointerup", createDogPage);
-    // dogButton.on('pointerover', e => e.target.alpha = 0.7);
-    // dogButton.on('pointerout', e => e.target.alpha = 1.0);
+    // ANIMAL IMAGES
+    let bunWidth = 500;  // originally 35
+    let bunHeight = 270;
+    let bunStart = TextureCache["bunny"];
+    let clipBun = new Rectangle(0, 0, bunWidth, bunHeight);
+    bunStart.frame = clipBun;
+    let bunStartSprite = new Sprite(bunStart);
+    bunStartSprite.x = 100;
+    bunStartSprite.y = 143;
+    bunStartSprite.scale.x = 0.25;
+    bunStartSprite.scale.y = 0.25;
+    bunStartSprite.interactive = true;
+    bunStartSprite.buttonMode = true;
+    bunStartSprite.on("pointerup", createBunPage);
+    startPage.addChild(bunStartSprite);
+
+    let dogStart = TextureCache["dog"];
+    let dogWidth = 40.12;   // alter between 38 and 39? 39.6
+    let dogHeight = 28;
+    let clipDog = new Rectangle(6 * dogWidth, 27, dogWidth, dogHeight);
+    dogStart.frame = clipDog;
+    let dogStartSprite = new Sprite(dogStart);
+    dogStartSprite.x = 190;
+    dogStartSprite.y = 160;
+    dogStartSprite.scale.x = 1.8;
+    dogStartSprite.scale.y = 1.8;
+    dogStartSprite.interactive = true;
+    dogStartSprite.buttonMode = true;
+    dogStartSprite.on("pointerup", createDogPage);
+    startPage.addChild(dogStartSprite);
+
+    makeButton((canvasWidth/2)-(buttonWidth/2), 350, 23, 0x2C7FB, "Start", startPage, createDogPage);
+
+    // // DOG BUTTON
+    // let dogButton = new Graphics();
+    // dogButton.beginFill(0xcccccc);
+    // dogButton.lineStyle(1, 0x000000, 0.6); // stroke width, color, alpha
+    // dogButton.drawRect(0, 0, buttonWidth, buttonHeight);
+    // dogButton.endFill();
+    // dogButton.x = (canvasWidth/2)-(buttonWidth/2);
+    // dogButton.y = 300;
+    // dogButton.interactive = true;
+    // dogButton.buttonMode = true;
+    // dogButton.on("pointerup", createDogPage);
+    // // dogButton.on('pointerover', e => e.target.alpha = 0.7);
+    // // dogButton.on('pointerout', e => e.target.alpha = 1.0);
     
-    startPage.addChild(dogButton);
+    // startPage.addChild(dogButton);
 
-    let textStyle = new PIXI.TextStyle({
-        fill: 0x000000,
-        fontSize: 20,
-        fontFamily: "VT323",   // changing later
-    });
+    // let textStyle = new PIXI.TextStyle({
+    //     fill: 0x000000,
+    //     fontSize: 20,
+    //     fontFamily: "VT323",   // changing later
+    // });
 
-    let dogButtonText = new PIXI.Text("Dog");
-    dogButtonText.style = textStyle;
-    dogButtonText.x = dogButton.x + 5;
-    dogButtonText.y = dogButton.y + 5;
-    dogButtonText.interactive = true;
-    dogButtonText.buttonMode = true;
-    dogButtonText.on("pointerup", createDogPage);
-    // dogButtonText.on('pointerover', e => e.target.alpha = 0.7);
-    // dogButtonText.on('pointerout', e => e.target.alpha = 1.0);
-    startPage.addChild(dogButtonText);
+    // let dogButtonText = new PIXI.Text("Dog");
+    // dogButtonText.style = textStyle;
+    // dogButtonText.x = dogButton.x + 5;
+    // dogButtonText.y = dogButton.y + 5;
+    // dogButtonText.interactive = true;
+    // dogButtonText.buttonMode = true;
+    // dogButtonText.on("pointerup", createDogPage);
+    // // dogButtonText.on('pointerover', e => e.target.alpha = 0.7);
+    // // dogButtonText.on('pointerout', e => e.target.alpha = 1.0);
+    // startPage.addChild(dogButtonText);
 
-    // BUN BUTTON
-    let bunButton = new Graphics();
-    bunButton.beginFill(0xcccccc);
-    bunButton.lineStyle(1, 0x000000, 0.6); // stroke width, color, alpha
-    bunButton.drawRect(0, 0, buttonWidth, buttonHeight);
-    bunButton.endFill();
-    bunButton.x = (canvasWidth/2)-(buttonWidth/2);
-    bunButton.y = dogButton.y + 35;
-    bunButton.interactive = true;
-    bunButton.buttonMode = true;
-    bunButton.on("pointerup", createDogPage);   // change function later
-    startPage.addChild(bunButton);
+    // // BUN BUTTON
+    // let bunButton = new Graphics();
+    // bunButton.beginFill(0xcccccc);
+    // bunButton.lineStyle(1, 0x000000, 0.6); // stroke width, color, alpha
+    // bunButton.drawRect(0, 0, buttonWidth, buttonHeight);
+    // bunButton.endFill();
+    // bunButton.x = (canvasWidth/2)-(buttonWidth/2);
+    // bunButton.y = dogButton.y + 35;
+    // bunButton.interactive = true;
+    // bunButton.buttonMode = true;
+    // bunButton.on("pointerup", createBunPage);   // change function later
+    // startPage.addChild(bunButton);
 
-    let bunButtonText = new PIXI.Text("Bun");
-    bunButtonText.style = textStyle;
-    bunButtonText.x = bunButton.x + 5;
-    bunButtonText.y = bunButton.y + 5;
-    bunButtonText.interactive = true;
-    bunButtonText.buttonMode = true;
-    bunButtonText.on("pointerup", createDogPage);
-    // bunButtonText.on('pointerover', e => e.target.alpha = 0.7);
-    // bunButtonText.on('pointerout', e => e.target.alpha = 1.0);
-    startPage.addChild(bunButtonText);
-
-
+    // let bunButtonText = new PIXI.Text("Bun");
+    // bunButtonText.style = textStyle;
+    // bunButtonText.x = bunButton.x + 5;
+    // bunButtonText.y = bunButton.y + 5;
+    // bunButtonText.interactive = true;
+    // bunButtonText.buttonMode = true;
+    // bunButtonText.on("pointerup", createBunPage);
+    // // bunButtonText.on('pointerover', e => e.target.alpha = 0.7);
+    // // bunButtonText.on('pointerout', e => e.target.alpha = 1.0);
+    // startPage.addChild(bunButtonText);
 }
 
 /*****************************
@@ -253,44 +289,35 @@ function createDogPage() {
     sitAnim(100, 100);
     barkAnim(50, 50);
 
-    // makeButton(5, 5, 60, 25, 0xcccccc, 0x000000, "test");
-    // MENU BUTTON
-    let menuButton = new Graphics();
-    menuButton.beginFill(0xcccccc);
-    menuButton.lineStyle(1, 0x000000, 0.9); // stroke width, color, alpha
-    menuButton.drawRect(0, 0, buttonWidth, buttonHeight);
-    menuButton.endFill();
-    menuButton.x = 10;
-    menuButton.y = 10;
-    menuButton.interactive = true;
-    menuButton.buttonMode = true;
-    menuButton.on("pointerup", createStartPage);
-    // dogButton.on('pointerover', e => e.target.alpha = 0.7);
-    // dogButton.on('pointerout', e => e.target.alpha = 1.0);
-    
-    dogPage.addChild(menuButton);
-
-    let textStyle = new PIXI.TextStyle({
-        fill: 0x000000,
-        fontSize: 20,
-        fontFamily: "VT323",   // changing later
-    });
-
-    let menuButtonText = new PIXI.Text("Menu");
-    menuButtonText.style = textStyle;
-    menuButtonText.x = menuButton.x + 5;
-    menuButtonText.y = menuButton.y + 5;
-    menuButtonText.interactive = true;
-    menuButtonText.buttonMode = true;
-    // dogButtonText.on("pointerup", createDogPage);
-    // dogButtonText.on('pointerover', e => e.target.alpha = 0.7);
-    // dogButtonText.on('pointerout', e => e.target.alpha = 1.0);
-    dogPage.addChild(menuButtonText);
+    makeButton(10, 10, 8, 0x58C4C6, "Main menu", dogPage, createStartPage);
 }
 
 /*****************************
   CREATE BUN PAGE
 ******************************/
+
+function createBunPage() {
+    startPage.visible = false;
+    dogPage.visible = false;
+    bunPage.visible = true;
+    creditsPage.visible = false;
+    notesPage.visible = false;
+
+    changeBackground(0xFFFFFF, 0x000000);
+    bunPage.addChild(bg);
+
+    hopTexture = loadBunSprite();
+
+    // start with one bun on the page
+    hopAnim(randomInt(0, 380), randomInt(80, 430));
+
+    // let increase = grow(hoppingBun, 0.25, 0.8);
+
+    // create the menu, more buns!, and grow buttons
+    makeButton(10, 10, 8, 0x58C4C6, "Main Menu", bunPage, createStartPage);
+    makeButton(400, 10, 5, 0xFD4B65, "More buns!", bunPage, newBun);
+    makeButton(205, 10, 18, 0xFFC43C, "Resize", bunPage, resize);
+}
 
 /*****************************
   CREATE CAT PAGE
@@ -306,6 +333,9 @@ function createCreditsPage() {
     bunPage.visible = false;
     creditsPage.visible = true;
     notesPage.visible = false;
+
+    changeBackground(0xFFFFFF, 0x000000);
+    creditsPage.addChild(bg);
 }
 
 /*****************************
@@ -318,6 +348,9 @@ function createNotesPage() {
     bunPage.visible = false;
     creditsPage.visible = false;
     notesPage.visible = true;
+
+    changeBackground(0xFFFFFF, 0x000000);
+    notesPage.addChild(bg);
 }
 
 /*****************************
@@ -418,6 +451,53 @@ function barkAnim(x, y) {
 }
 
 /*****************************
+  LOAD BUN SPRITE
+****************************/
+
+function loadBunSprite() {
+    let bunSheet = BaseTexture.fromImage("bunny");
+    let bunWidth = 500;  // originally 35
+    let bunHeight = 270;
+    let hop = [];
+    hop.push(
+        new Texture(bunSheet, new Rectangle(0, 0, bunWidth, bunHeight)), // frame 0
+        new Texture(bunSheet, new Rectangle(bunWidth, 0, bunWidth, bunHeight)), // frame 1
+        new Texture(bunSheet, new Rectangle(0, 270, bunWidth, bunHeight)), // frame 2
+        new Texture(bunSheet, new Rectangle(bunWidth, 270, bunWidth, bunHeight)), // frame 3
+        new Texture(bunSheet, new Rectangle(0, 540, bunWidth, bunHeight)), // frame 4
+        new Texture(bunSheet, new Rectangle(bunWidth, 540, bunWidth, bunHeight)), // frame 5
+        new Texture(bunSheet, new Rectangle(0, 810, bunWidth, bunHeight)), // frame 6
+        new Texture(bunSheet, new Rectangle(bunWidth, 810, bunWidth, bunHeight)), // frame 7
+        new Texture(bunSheet, new Rectangle(0, 1080, bunWidth, bunHeight)), // frame 8
+        new Texture(bunSheet, new Rectangle(bunWidth, 1080, bunWidth, bunHeight)), // frame 9
+        new Texture(bunSheet, new Rectangle(0, 1350, bunWidth, bunHeight)), // frame 10
+        new Texture(bunSheet, new Rectangle(bunWidth, 1350, bunWidth, bunHeight)), // frame 11
+        new Texture(bunSheet, new Rectangle(0, 1620, bunWidth, bunHeight)) // frame 12
+        // new Texture(bunSheet, new Rectangle(270, 1620, bunWidth, bunHeight)) // frame 13
+    );
+
+    return hop;
+}
+
+/*****************************
+  LOAD BUN SPRITE
+****************************/
+
+function hopAnim(x, y) {
+    hoppingBun = new extras.AnimatedSprite(hopTexture);
+    hoppingBun.x = x;
+    hoppingBun.y = y;
+    hoppingBun.scale.x = 0.25;
+    hoppingBun.scale.y = 0.25;
+    hoppingBun.animationSpeed = 1/10;
+    hoppingBun.loop = true;
+
+    // add the texture onto the stage
+    bunPage.addChild(hoppingBun);
+    hoppingBun.play();
+}
+
+/*****************************
   OTHER FUNCTIONS
 ****************************/
 
@@ -444,52 +524,62 @@ function changeBackground(color, stroke){
     // dogPage.addChild(bg);
 }
 
-function makeButton(x, y, width, height, color, stroke, text) {
-    // let button = new Graphics();
-    // button.beginFill(color);
-    // button.lineStyle(1, stroke, 0.6); // stroke width, color, alpha
-    // button.drawRect(x, y, width, height);
-    // button.endFill();
-    // button.x = x;
-    // button.y = y;
-    // dogPage.addChild(button);
-
-    let backButton = new PIXI.Graphics();
-    backButton.lineStyle(1, stroke, 1); // stroke width, color, alpha
-    backButton.beginFill(0x000000);
-    backButton.moveTo(0, 20);
-    backButton.lineTo(20, 0);
-    backButton.lineTo(20, 10);
-    backButton.lineTo(45, 10);
-    backButton.lineTo(45, 30);
-    backButton.lineTo(20, 30);
-    backButton.lineTo(20, 40);
-    backButton.endFill();
-    backButton.x = x;
-    backButton.y = y;
-    backButton.scale.x = 0.7;
-    backButton.scale.y = 0.7;
-    backButton.interactive = true;
-    backButton.buttonMode = true;
-    backButton.on("pointerup", createStartPage);
-    // backButton.on('pointerover', e => e.target.alpha = 0.7);
-    // backButton.on('pointerout', e => e.target.alpha = 1.0);
-    dogPage.addChild(backButton);
+function makeButton(x, y, xOffset, color, text, pageName, targetFunction) {
+    // MENU BUTTON
+    let menuButton = new Graphics();
+    // menuButton.beginFill(0xa6cfd5);  // turquoise
+    // menuButton.beginFill(0x565254);  // dark grey
+    menuButton.beginFill(color); // jet black
+    menuButton.lineStyle(1, 0x000000, 0.9); // stroke width, color, alpha
+    menuButton.drawRect(0, 0, buttonWidth, buttonHeight);
+    menuButton.endFill();
+    menuButton.x = x;
+    menuButton.y = y;
+    menuButton.interactive = true;
+    menuButton.buttonMode = true;
+    menuButton.on("pointerup", targetFunction);
+    // dogButton.on('pointerover', e => e.target.alpha = 0.7);
+    // dogButton.on('pointerout', e => e.target.alpha = 1.0);
+    
+    pageName.addChild(menuButton);
 
     let textStyle = new PIXI.TextStyle({
-        fill: 0x000000,
-        fontSize: 18,
+        fill: 0xFFFFFF,
+        strokeThickness: 1,
+        // stroke: 0x000000,
+        dropShadow: true,
+        dropShadowBlur: 0,
+        dropShadowDistance: 2,
+        fontSize: 20,
         fontFamily: "VT323",   // changing later
     });
 
-//     let buttonText = new PIXI.Text(text);
-//     buttonText.style = textStyle;
-//     buttonText.x = x + 10;
-//     buttonText.y = y + 5;
-//     buttonText.interactive = true;
-//     buttonText.buttonMode = true;
-//     // functions to make this part interactive?
-//     dogPage.addChild(buttonText);
+    let menuButtonText = new PIXI.Text(text);
+    menuButtonText.style = textStyle;
+    menuButtonText.x = menuButton.x + xOffset;
+    menuButtonText.y = menuButton.y + 10;
+    menuButtonText.interactive = true;
+    menuButtonText.buttonMode = true;
+    menuButtonText.on("pointerup", targetFunction);
+    // dogButtonText.on('pointerover', e => e.target.alpha = 0.7);
+    // dogButtonText.on('pointerout', e => e.target.alpha = 1.0);
+    pageName.addChild(menuButtonText);
+}
+
+// spawn a new bun at a random location
+function newBun() {
+    let xVal = randomInt(0, 380);
+    let yVal = randomInt(80, 430);
+    hopAnim(xVal, yVal);
+    console.log("x: " + xVal + ", y: " + yVal);
+}
+
+// NEED HELP
+function resize() {
+    let limit = randomInt(1, 4);
+    hoppingBun.scale.x = limit*0.25;
+    hoppingBun.scale.y = limit*0.25;
+    console.log(limit);
 }
 
 /*****************************
