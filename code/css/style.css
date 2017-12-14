@@ -3,3 +3,10 @@
 body {
     font-family: 'VT323', monospace;
 }
+
+canvas {
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    display: block;
+}

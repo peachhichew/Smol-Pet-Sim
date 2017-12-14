@@ -41,6 +41,9 @@ let sit;
 
 let dogs;
 
+let buttonWidth = 60;
+let buttonHeight = 25;
+
 const app = new PIXI.Application(canvasWidth,canvasHeight);
 // renderer = autoDetectRenderer(500, 500);
 
@@ -52,7 +55,7 @@ let stage;
 // renderer.render(stage);
 
 loader
-    .add("dog", "../images/pupper/shiba.png")
+    .add("dog", "../images/pupper/shiba1.png")
     .add("dogWalking", "../images/pupper/shiba.png")
     // .add("dogSitting", "../images/pupper/shiba.png")
     .load(setup);
@@ -78,6 +81,16 @@ function setup() {
     catPage.visible = false;
     stage.addChild(catPage);
 
+    // CREDITS PAGE
+    creditsPage = new Container();
+    creditsPage.visible = false;
+    stage.addChild(creditsPage);
+
+    // NOTES PAGE
+    notesPage = new Container();
+    notesPage.visible = false;
+    stage.addChild(notesPage);
+
     changeBackground(0xFFFFFF, 0x000000);
     startPage.addChild(bg);
 
@@ -98,17 +111,62 @@ function setup() {
     app.ticker.add(gameLoop);
 }
 
+/*****************************
+  CREATE START PAGE 
+****************************/
+
 function createStartPage() {
     startPage.visible = true;
     dogPage.visible = false;
     bunPage.visible = false;
     catPage.visible = true;
 
-    let buttonWidth = 60;
-    let buttonHeight = 25;
-
     changeBackground(0xFFFFFF, 0x000000);
     startPage.addChild(bg);
+
+    // TITLE TEXT
+    let titleStyle = new PIXI.TextStyle({
+        fill: 0x000000,
+        fontSize: 35,
+        fontFamily: "VT323",   // changing later
+    });
+
+    let titleText1 = new PIXI.Text("Welcome to");
+    titleText1.style = titleStyle;
+    titleText1.x = 180;
+    titleText1.y = 100;
+    startPage.addChild(titleText1);
+
+    let titleText2 = new PIXI.Text("Smol Pet Simulator");
+    titleText2.style = titleStyle;
+    titleText2.x = 125;
+    titleText2.y = 250;
+    startPage.addChild(titleText2);
+
+    // CREDITS + NOTES TEXT
+    let infoStyle = new PIXI.TextStyle({
+        fill: 0x000000,
+        fontSize: 20,
+        fontFamily: "VT323",   // changing later
+    });
+
+    let credits = new PIXI.Text("Credits");
+    credits.style = infoStyle;
+    credits.x = 10;
+    credits.y = 478;
+    credits.interactive = true;
+    credits.buttonMode = true;
+    credits.on("pointerup", createCreditsPage);
+    startPage.addChild(credits);
+
+    let notes = new PIXI.Text("Notes");
+    notes.style = infoStyle;
+    notes.x = 450;
+    notes.y = 478;
+    notes.interactive = true;
+    notes.buttonMode = true;
+    notes.on("pointerup", createNotesPage);
+    startPage.addChild(notes);
 
     // DOG BUTTON
     let dogButton = new Graphics();
@@ -138,7 +196,7 @@ function createStartPage() {
     dogButtonText.y = dogButton.y + 5;
     dogButtonText.interactive = true;
     dogButtonText.buttonMode = true;
-    // dogButtonText.on("pointerup", createDogPage);
+    dogButtonText.on("pointerup", createDogPage);
     // dogButtonText.on('pointerover', e => e.target.alpha = 0.7);
     // dogButtonText.on('pointerout', e => e.target.alpha = 1.0);
     startPage.addChild(dogButtonText);
@@ -151,8 +209,8 @@ function createStartPage() {
     bunButton.endFill();
     bunButton.x = (canvasWidth/2)-(buttonWidth/2);
     bunButton.y = dogButton.y + 35;
-    // bunButton.interactive = true;
-    // bunButton.buttonMode = true;
+    bunButton.interactive = true;
+    bunButton.buttonMode = true;
     bunButton.on("pointerup", createDogPage);   // change function later
     startPage.addChild(bunButton);
 
@@ -162,12 +220,17 @@ function createStartPage() {
     bunButtonText.y = bunButton.y + 5;
     bunButtonText.interactive = true;
     bunButtonText.buttonMode = true;
-    // functions to make this part interactive?
-    // bunButtonText.on("pointerup", createDogPage);
+    bunButtonText.on("pointerup", createDogPage);
     // bunButtonText.on('pointerover', e => e.target.alpha = 0.7);
     // bunButtonText.on('pointerout', e => e.target.alpha = 1.0);
     startPage.addChild(bunButtonText);
+
+
 }
+
+/*****************************
+  CREATE DOG PAGE 
+****************************/
 
 function createDogPage() {
     startPage.visible = false;
@@ -190,17 +253,86 @@ function createDogPage() {
     sitAnim(100, 100);
     barkAnim(50, 50);
 
-    makeButton(5, 5, 60, 25, 0xcccccc, 0x000000, "test");
+    // makeButton(5, 5, 60, 25, 0xcccccc, 0x000000, "test");
+    // MENU BUTTON
+    let menuButton = new Graphics();
+    menuButton.beginFill(0xcccccc);
+    menuButton.lineStyle(1, 0x000000, 0.9); // stroke width, color, alpha
+    menuButton.drawRect(0, 0, buttonWidth, buttonHeight);
+    menuButton.endFill();
+    menuButton.x = 10;
+    menuButton.y = 10;
+    menuButton.interactive = true;
+    menuButton.buttonMode = true;
+    menuButton.on("pointerup", createStartPage);
+    // dogButton.on('pointerover', e => e.target.alpha = 0.7);
+    // dogButton.on('pointerout', e => e.target.alpha = 1.0);
+    
+    dogPage.addChild(menuButton);
+
+    let textStyle = new PIXI.TextStyle({
+        fill: 0x000000,
+        fontSize: 20,
+        fontFamily: "VT323",   // changing later
+    });
+
+    let menuButtonText = new PIXI.Text("Menu");
+    menuButtonText.style = textStyle;
+    menuButtonText.x = menuButton.x + 5;
+    menuButtonText.y = menuButton.y + 5;
+    menuButtonText.interactive = true;
+    menuButtonText.buttonMode = true;
+    // dogButtonText.on("pointerup", createDogPage);
+    // dogButtonText.on('pointerover', e => e.target.alpha = 0.7);
+    // dogButtonText.on('pointerout', e => e.target.alpha = 1.0);
+    dogPage.addChild(menuButtonText);
 }
+
+/*****************************
+  CREATE BUN PAGE
+******************************/
+
+/*****************************
+  CREATE CAT PAGE
+******************************/
+
+/*****************************
+  CREATE CREDITS PAGE
+******************************/
+
+function createCreditsPage() {
+    startPage.visible = false;
+    dogPage.visible = false;
+    bunPage.visible = false;
+    creditsPage.visible = true;
+    notesPage.visible = false;
+}
+
+/*****************************
+  CREATE NOTES PAGE
+******************************/
+
+function createNotesPage() {
+    startPage.visible = false;
+    dogPage.visible = false;
+    bunPage.visible = false;
+    creditsPage.visible = false;
+    notesPage.visible = true;
+}
+
+/*****************************
+  LOAD VARIOUS DOG SPRITES 
+****************************/
 
 //  load sprite sheet for walking 
 function loadWalkingSprite() {
     let dogWalkSheet = BaseTexture.fromImage("dog");
-    let dogWalkWidth = 35;
+    let dogWalkWidth = 42;  // originally 35
     let dogWalkHeight = 24;
     let numFrames = 12;
     let walk = [];
     for (let i = 0; i < numFrames; i++) {
+        // let frame = new Texture(dogWalkSheet, new Rectangle(i * dogWalkWidth, 240, dogWalkWidth, dogWalkHeight));
         let frame = new Texture(dogWalkSheet, new Rectangle(i * dogWalkWidth, 240, dogWalkWidth, dogWalkHeight));
         walk.push(frame);
     }
@@ -210,11 +342,12 @@ function loadWalkingSprite() {
 // load sprite sheet for sitting 
 function loadSittingSprite() {
     let dogSitSheet = BaseTexture.fromImage("dog");
-    let dogSitWidth = 39;   // alter between 38 and 39?
+    let dogSitWidth = 40.12;   // alter between 38 and 39? 39.6
     let dogSitHeight = 28;
     let numFrames = 15; // 15 frames
     sit = [];
     for (let i = 0; i < numFrames; i++) {
+        // let frame = new Texture(dogSitSheet, new Rectangle(i * dogSitWidth, 27, dogSitWidth, dogSitHeight));
         let frame = new Texture(dogSitSheet, new Rectangle(i * dogSitWidth, 27, dogSitWidth, dogSitHeight));
         sit.push(frame);
     }
@@ -224,7 +357,7 @@ function loadSittingSprite() {
 // load sprite sheet for barking
 function loadBarkingSprite() {
     let dogBarkSheet = BaseTexture.fromImage("dog");
-    let dogBarkWidth = 37;  // originally 35
+    let dogBarkWidth = 42.2;  // originally 35, 37
     let dogBarkHeight = 28; // originally 25
     let numFrames = 13;
     let bark = [];
@@ -234,6 +367,10 @@ function loadBarkingSprite() {
     }
     return bark;
 }
+
+/*****************************
+  DOG ANIMATIONS
+****************************/
 
 // walking animation
 function walkAnim(x, y) {
@@ -279,6 +416,10 @@ function barkAnim(x, y) {
     dogPage.addChild(barkingDog);
     barkingDog.play();
 }
+
+/*****************************
+  OTHER FUNCTIONS
+****************************/
 
 function randomInt(min, max) {
     // Math.ceil returns the smallest int greater than or equal to the given number
@@ -351,6 +492,10 @@ function makeButton(x, y, width, height, color, stroke, text) {
 //     dogPage.addChild(buttonText);
 }
 
+/*****************************
+  GAME LOOP 
+****************************/
+
 function gameLoop() {
     // calculate how much time has passed since the last update and adjust sprites
     // accordingly
@@ -359,7 +504,11 @@ function gameLoop() {
 
     if (dogPage.visible) {
         for (let dog of dogs) {
-            dog.x += 100 * dt;
+            dog.x += 50 * dt;
+
+            if (dog.x >= canvasWidth) {
+                dog.x += 0 * dt;
+            }
         }
     }
 }
