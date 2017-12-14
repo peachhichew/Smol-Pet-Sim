@@ -204,7 +204,7 @@ function createStartPage() {
     dogStartSprite.on("pointerup", createDogPage);
     startPage.addChild(dogStartSprite);
 
-    makeButton((canvasWidth/2)-(buttonWidth/2), 350, 23, 0x2C7FB, "Start", startPage, createDogPage);
+    makeButton((canvasWidth/2)-(buttonWidth/2), 350, 23, 0x7db4dd, "Start", startPage, createDogPage);
 
     // // DOG BUTTON
     // let dogButton = new Graphics();
@@ -336,6 +336,8 @@ function createCreditsPage() {
 
     changeBackground(0xFFFFFF, 0x000000);
     creditsPage.addChild(bg);
+
+    makeButton(10, 10, 8, 0x58C4C6, "Main menu", creditsPage, createStartPage);
 }
 
 /*****************************
@@ -351,6 +353,8 @@ function createNotesPage() {
 
     changeBackground(0xFFFFFF, 0x000000);
     notesPage.addChild(bg);
+
+    makeButton(10, 10, 8, 0x58C4C6, "Main menu", notesPage, createStartPage);
 }
 
 /*****************************
