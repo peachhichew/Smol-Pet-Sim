@@ -32,6 +32,10 @@ var sitTexture, sittingDog;
 var barkTexture, barkingDog;
 // texture and sprite for bunny
 var hopTexture, hoppingBun;
+// texture and sprite for walking cat
+var catWalkRightTexture, walkingRightCat, catWalkLeftTexture, walkingLeftCat;
+let catWalkLeft = [];
+let catWalkRight = [];
 
 // variable for the bg
 const bg = new Graphics();
@@ -58,9 +62,8 @@ let stage;
 
 loader
     .add("dog", "../images/pupper/shiba1.png")
-    .add("dogWalking", "../images/pupper/shiba.png")
     .add("bunny", "../images/bun/bun.png")
-    // .add("dogSitting", "../images/pupper/shiba.png")
+    .add("cat", "..images/catses/catses2.png")
     .load(setup);
 
 function setup() {
@@ -122,7 +125,7 @@ function createStartPage() {
     startPage.visible = true;
     dogPage.visible = false;
     bunPage.visible = false;
-    catPage.visible = true;
+    catPage.visible = false;
     creditsPage.visible = false;
     notesPage.visible = false;
 
@@ -195,8 +198,8 @@ function createStartPage() {
     let clipDog = new Rectangle(6 * dogWidth, 27, dogWidth, dogHeight);
     dogStart.frame = clipDog;
     let dogStartSprite = new Sprite(dogStart);
-    dogStartSprite.x = 190;
-    dogStartSprite.y = 160;
+    dogStartSprite.x = 220;
+    dogStartSprite.y = 162;
     dogStartSprite.scale.x = 1.8;
     dogStartSprite.scale.y = 1.8;
     dogStartSprite.interactive = true;
@@ -205,6 +208,7 @@ function createStartPage() {
     startPage.addChild(dogStartSprite);
 
     makeButton((canvasWidth/2)-(buttonWidth/2), 350, 23, 0x7db4dd, "Start", startPage, createDogPage);
+    makeButton((canvasWidth/2)-(buttonWidth/2), 390, 23, 0x7db4dd, "cat", startPage, createCatPage);
 
     // // DOG BUTTON
     // let dogButton = new Graphics();
@@ -273,6 +277,8 @@ function createDogPage() {
     dogPage.visible = true;
     bunPage.visible = false;
     catPage.visible = false;
+    creditsPage.visible = false;
+    notesPage.visible = false;
 
     changeBackground(0xFFFFFF, 0x000000);
     dogPage.addChild(bg);
@@ -300,6 +306,7 @@ function createBunPage() {
     startPage.visible = false;
     dogPage.visible = false;
     bunPage.visible = true;
+    catPage.visible = false;
     creditsPage.visible = false;
     notesPage.visible = false;
 
@@ -323,6 +330,26 @@ function createBunPage() {
   CREATE CAT PAGE
 ******************************/
 
+function createCatPage() {
+    startPage.visible = false;
+    dogPage.visible = false;
+    bunPage.visible = false;
+    catPage.visible = true;
+    creditsPage.visible = false;
+    notesPage.visible = false;
+
+    changeBackground(0xFFFFFF, 0x000000);
+    catPage.addChild(bg);
+
+    catWalkRightTexture = loadCatWalkRightSprite();
+    catWalkRightAnim(100, 200, 1, 1);
+
+    catWalkLeftTexture = loadCatWalkLeftSprite();
+    catWalkLeftAnim(100, 350, 3, 3);
+
+    makeButton(10, 10, 8, 0x58C4C6, "Main menu", catPage, createStartPage);
+}
+
 /*****************************
   CREATE CREDITS PAGE
 ******************************/
@@ -331,6 +358,7 @@ function createCreditsPage() {
     startPage.visible = false;
     dogPage.visible = false;
     bunPage.visible = false;
+    createCatPage.visible = false;
     creditsPage.visible = true;
     notesPage.visible = false;
 
@@ -484,7 +512,7 @@ function loadBunSprite() {
 }
 
 /*****************************
-  LOAD BUN SPRITE
+  BUN ANIMATION
 ****************************/
 
 function hopAnim(x, y) {
@@ -499,6 +527,90 @@ function hopAnim(x, y) {
     // add the texture onto the stage
     bunPage.addChild(hoppingBun);
     hoppingBun.play();
+}
+
+/*****************************
+  LOAD CAT SPRITE
+****************************/
+
+function loadCatWalkRightSprite() {
+    let catWalkRightSheet = BaseTexture.fromImage("../images/catses/catses2.png");
+    let catWalkRightWidth = 30; // originally 40
+    let catWalkRightHeight = 33; // originally 40
+    catWalkRight = [];
+    catWalkRight.push(
+        new Texture(catWalkRightSheet, new Rectangle(187, 69, catWalkRightWidth, catWalkRightHeight)), // frame 0
+        new Texture(catWalkRightSheet, new Rectangle(220, 69, catWalkRightWidth, catWalkRightHeight)),
+        new Texture(catWalkRightSheet, new Rectangle(253, 69, catWalkRightWidth, catWalkRightHeight))
+    );
+
+    return catWalkRight;
+}
+
+function loadCatWalkLeftSprite() {
+    let catWalkLeftSheet = BaseTexture.fromImage("../images/catses/catses2.png");
+    let catWalkLeftWidth = 30; // originally 40
+    let catWalkLeftHeight = 33; // originally 40
+    catWalkLeft = [];
+    catWalkLeft.push(
+        new Texture(catWalkLeftSheet, new Rectangle(187, 38, catWalkLeftWidth, catWalkLeftHeight)), // frame 0
+        new Texture(catWalkLeftSheet, new Rectangle(220, 38, catWalkLeftWidth, catWalkLeftHeight)),
+        new Texture(catWalkLeftSheet, new Rectangle(253, 38, catWalkLeftWidth, catWalkLeftHeight))
+    );
+
+    return catWalkLeft;
+}
+
+/*****************************
+  CATS WALK ANIMATION
+****************************/
+
+function catWalkRightAnim(x, y, scaleX, scaleY) {
+    walkingRightCat = new extras.AnimatedSprite(catWalkRightTexture);
+    walkingRightCat.x = x;
+    walkingRightCat.y = y;
+    // walkingRightCat.scale.x = 1.25;
+    // walkingRightCat.scale.y = 1.25;
+    walkingRightCat.scale.x = scaleX;
+    walkingRightCat.scale.y = scaleY;
+    walkingRightCat.animationSpeed = 1/10;
+    walkingRightCat.loop = true;
+
+    // add the texture onto the stage
+    catPage.addChild(walkingRightCat);
+    walkingRightCat.play();
+}
+
+function catWalkLeftAnim(x, y, scaleX, scaleY) {
+    walkingLeftCat = new extras.AnimatedSprite(catWalkLeftTexture);
+    walkingLeftCat.x = x;
+    walkingLeftCat.y = y;
+    walkingLeftCat.scale.x = scaleX;
+    walkingLeftCat.scale.y = scaleY;
+    walkingLeftCat.animationSpeed = 1/10;
+    walkingLeftCat.loop = true;
+    walkingLeftCat.interactive = true;
+    walkingLeftCat.buttonMode = true;
+    // TOGGLE BACK AND FORTH BETWEEN LEFT AND RIGHT ANIM
+    walkingLeftCat.on("pointerup", function(){
+        let clicked = true; 
+        if (clicked) {
+            clicked = !clicked;            
+            walkingLeftCat.textures = catWalkRight; 
+            walkingLeftCat.play();
+        }
+
+        // if (!clicked) {
+        //     walkingLeftCat.textures = catWalkLeft; 
+        //     walkingLeftCat.play();
+        //     clicked = !clicked; 
+        // }
+        console.log(clicked);
+    });
+
+    // add the texture onto the stage
+    catPage.addChild(walkingLeftCat);
+    walkingLeftCat.play();
 }
 
 /*****************************
@@ -603,6 +715,22 @@ function gameLoop() {
             if (dog.x >= canvasWidth) {
                 dog.x += 0 * dt;
             }
+        }
+    }
+
+    if (catPage.visible) {
+        // make the cat walking towards the right increase in size
+        if (walkingRightCat.scale.x < 2 && walkingRightCat.scale.x >= 1
+            && walkingRightCat.scale.y < 2 && walkingRightCat.scale.y >= 1) {
+            walkingRightCat.scale.x = walkingRightCat.scale.x + 0.01;
+            walkingRightCat.scale.y = walkingRightCat.scale.y + 0.01;
+            console.log("x: " + walkingRightCat.scale.x);
+            console.log(" y: " + walkingRightCat.scale.y);
+        }
+    
+        else {
+            walkingRightCat.scale.x = 2;
+            walkingRightCat.scale.y = 2;
         }
     }
 }
