@@ -240,8 +240,8 @@ function createDogPage() {
     wd2 = walkAnim(randomInt(0, 465), randomInt(0, 475));
 
     walkFlippedTexture = loadWalkingReversedSprite();
-    wdF1 = walkFlippedAnim(100, 450);
-    wdF2 = walkFlippedAnim(100, 350);
+    wdF1 = walkFlippedAnim(randomInt(0, 465), randomInt(0, 475));
+    wdF2 = walkFlippedAnim(randomInt(0, 465), randomInt(0, 475));
 
     dogs2 = [wdF1, wdF2];
     dogs = [wd1, wd2];
@@ -491,10 +491,13 @@ function loadBarkingFlippedSprite() {
 
 // walking animation
 function walkAnim(x, y) {
+    let speed = 2;
+    let direction = 1;
     let clicked = false;
     let walkingDog = new extras.AnimatedSprite(walkTexture);
     walkingDog.x = x;
     walkingDog.y = y;
+    walkingDog.vy = speed * direction;
     walkingDog.animationSpeed = 1/3;
     // walkingDog.anchor.set(0.5);
     walkingDog.loop = true;
@@ -523,10 +526,13 @@ function walkAnim(x, y) {
 }
 
 function walkFlippedAnim(x, y) {
+    let speed = 2;
+    let direction = 1;
     let clicked = false;
     let walkingDogFlipped = new extras.AnimatedSprite(walkFlippedTexture);
     walkingDogFlipped.x = x;
     walkingDogFlipped.y = y;
+    walkingDogFlipped.vy = speed * direction;
     walkingDogFlipped.animationSpeed = 1/3;
     walkingDogFlipped.loop = true;
     walkingDogFlipped.anchor.set(0.5);
@@ -853,38 +859,49 @@ function resize() {
     let limit = randomInt(1, 4);
     hoppingBun.scale.x = limit*0.25;
     hoppingBun.scale.y = limit*0.25;
-    console.log(limit);
+    // console.log(limit);
 }
 
-function contain(sprite, container) {
+function contain(sprite, container, velocity, flipVal1, flipVal2, fromEdge) {
     let collision = undefined;
 
     //Left
-    if (sprite.x < container.x + sprite.width) {
-    sprite.x = container.x;
-    collision = "left";
+    if (sprite.x < container.x + (sprite.width - fromEdge)) {
+        // sprite.x = container.x; //22
+        sprite.scale.x = flipVal1; // -1 for Flipped
+        sprite.x += 50 * velocity;
+        collision = "left";
     }
 
-    // //Top
-    // if (sprite.y < container.y) {
-    // sprite.y = container.y;
-    // collision = "top";
-    // }
-
     //Right
-    if (sprite.x + sprite.width > container.width) {
-        sprite.x = container.width - sprite.width;
+    if (sprite.x + (sprite.width - fromEdge) > container.width) {
+        // sprite.x = container.width - sprite.width;
+        sprite.scale.x = flipVal2;     // 1 for flipped
+        sprite.x -= 50 * velocity;
         collision = "right";
     }
 
-    // //Bottom
-    // if (sprite.y + sprite.height > container.height) {
-    // sprite.y = container.height - sprite.height;
-    // collision = "bottom";
-    // }
-
     //Return the `collision` value
     return collision;
+}
+
+function loopArray(array, velocity, flipVal1, flipVal2, dir, fromEdge) {
+    for (let sprite of array) {
+
+        if (dir == 1) {
+            sprite.x += sprite.vy;
+        }
+
+        else if (dir == 2) {
+            sprite.x -= sprite.vy;
+        }
+
+        let hitEdge = contain(sprite, bg, velocity, flipVal1, flipVal2, fromEdge);
+
+        if (hitEdge === "left" || hitEdge === "right") {
+            sprite.vy *= -1;
+        }
+    }
 }
 
 /*****************************
@@ -898,41 +915,29 @@ function gameLoop() {
     if (dt > 1/12) dt = 1/12;
 
     if (dogPage.visible) {
-        for (let dog of dogs) {
-            dog.x += 50 * dt;
 
-            // if (dog.x + 42 >= canvasWidth - 1) {
-            //     // dog.x = 500-42;
-            //     dog.x = (canvasWidth - 1) - 42;
-            // }
-            // let hitEdge = contain(dog, bg);
-            contain(dog, bg);
+        loopArray(dogs, dt, 1, -1, 1, 7);
+        loopArray(dogs2, dt, -1, 1, 2, 22);
+        // for (let dog of dogs) {
+        //     // dog.x += 50 * dt;
+        //     dog.x += dog.vy;
+            
+        //     let hitEdge = contain(dog, bg, dt);
 
-            // console.log(hitEdge);
-            // if (hitEdge === "right") {
-            //     dog.x += -(50 * dt);
-            //     console.log(dog.x);
-            // }
-        }
+        //     if (hitEdge === "left" || hitEdge === "right") {
+        //         dog.vy *= -1;
+        //     }
+        // }
 
-        for (let dog of dogs2) {
-            dog.x -= 50 * dt;
+        // for (let dog of dogs2) {
+        //     dog.x -= dog.vy;
 
-            let hitEdge = contain(dog, bg);
-            // contain(dog, bg);
+        //     let hitEdge = contain(dog, bg, dt);
 
-            if (hitEdge === "left") {
-                // wdF1.visible = false;
-                // wdF2.visible = false;
-                // dogs2 = [wd1, wd2];
-                // need some way to call the animation of the dog
-                // wd1 = walkAnim(dog.x, dog.y);
-                dog.scale.x = -1;   // flip the sprite?
-                // dog.x += 50 * dt;
-                dog.x = 10 + dog.x;
-                console.log(dog.x);
-            }
-        }
+        //     if (hitEdge === "left" || hitEdge === "right") {
+        //         dog.vy *= -1;
+        //     }
+        // }
     }
 
     if (catPage.visible) {
