@@ -21,21 +21,23 @@ extras = PIXI.extras,
 text = PIXI.Text;
 
 // width and height of the canvas
-var canvasWidth = 500;
-var canvasHeight = 500;
+let canvasWidth = 500;
+let canvasHeight = 500;
 
 // texture and sprite for walking dog 
-var walkTexture, wd1, wd2;
+let walkTexture, wd1, wd2;
 // flipped versions
-var walkFlippedTexture, walkingDogFlipped, wdF1, wdF2;
+let walkFlippedTexture, walkingDogFlipped, wdF1, wdF2;
 // texture and sprite for sitting dog
-var sitTexture, sittingDog;
+let sitTexture, sittingDog;
+// flipped versions
+let sitFlippedTexture, sittingDogFlipped;
 // texture and sprite for barking dog
-var barkTexture, barkingDog;
+let barkTexture, barkingDog;
 // texture and sprite for bunny
-var hopTexture, hoppingBun;
+let hopTexture, hoppingBun;
 // texture and sprite for walking cat
-var catWalkRightTexture, walkingRightCat, catWalkLeftTexture, walkingLeftCat;
+let catWalkRightTexture, walkingRightCat, catWalkLeftTexture, walkingLeftCat;
 
 // arrays to keep track of the cats + their direction
 let catWalkLeft = [];
@@ -45,9 +47,9 @@ let catWalkRight = [];
 const bg = new Graphics();
 
 // container to hold the sprites' pages
-var dogPage, startPage, bunPage, catPage;
+let dogPage, startPage, bunPage, catPage;
 
-let sit;
+let sit, sitFlipped;
 
 let dogs, dogs2;
 
@@ -60,8 +62,6 @@ const app = new PIXI.Application(canvasWidth,canvasHeight);
 document.body.appendChild(app.view);
 
 let stage;
-
-// renderer.render(stage);
 
 loader
     .add("dog", "../images/pupper/shiba1.png")
@@ -247,6 +247,9 @@ function createDogPage() {
     sitAnim(100, 100);
     barkAnim(50, 50);
 
+    sitFlippedTexture = loadSittingFlippedSprite();
+    sitAnimFlipped(20, 400);
+
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", dogPage, createStartPage);
 }
 
@@ -368,17 +371,6 @@ function loadWalkingReversedSprite() {
     //     walkFlipped.push(frame);
     // }
     walkFlipped.push(
-        // new Texture(dogWalk2, new Rectangle(416, 240, dogWalk2Width, dogWalk2Height)),  // frame 0
-        // new Texture(dogWalk2, new Rectangle(458, 240, dogWalk2Width, dogWalk2Height)),  // frame 1
-        // new Texture(dogWalk2, new Rectangle(500, 240, dogWalk2Width, dogWalk2Height)),  // frame 2
-        // new Texture(dogWalk2, new Rectangle(542, 240, dogWalk2Width, dogWalk2Height)),  // frame 3
-        // new Texture(dogWalk2, new Rectangle(584, 240, dogWalk2Width, dogWalk2Height)),  // frame 4
-        // new Texture(dogWalk2, new Rectangle(626, 240, dogWalk2Width, dogWalk2Height)),  // frame 5
-        // new Texture(dogWalk2, new Rectangle(668, 240, dogWalk2Width, dogWalk2Height)),  // frame 6
-        // new Texture(dogWalk2, new Rectangle(710, 240, dogWalk2Width, dogWalk2Height)),  // frame 7
-        // new Texture(dogWalk2, new Rectangle(752, 240, dogWalk2Width, dogWalk2Height)),  // frame 8
-        // new Texture(dogWalk2, new Rectangle(794, 240, dogWalk2Width, dogWalk2Height)),  // frame 9
-        // new Texture(dogWalk2, new Rectangle(836, 240, dogWalk2Width, dogWalk2Height)) // last frame
         new Texture(dogWalk2, new Rectangle(836, 240, dogWalk2Width, dogWalk2Height)), // last frame
         new Texture(dogWalk2, new Rectangle(794, 240, dogWalk2Width, dogWalk2Height)),  // frame 9
         new Texture(dogWalk2, new Rectangle(752, 240, dogWalk2Width, dogWalk2Height)),  // frame 8
@@ -390,8 +382,6 @@ function loadWalkingReversedSprite() {
         new Texture(dogWalk2, new Rectangle(500, 240, dogWalk2Width, dogWalk2Height)),  // frame 2
         new Texture(dogWalk2, new Rectangle(458, 240, dogWalk2Width, dogWalk2Height)),  // frame 1
         new Texture(dogWalk2, new Rectangle(416, 240, dogWalk2Width, dogWalk2Height))  // frame 0
-        
-        
     );
     return walkFlipped;
 }
@@ -425,6 +415,31 @@ function loadSittingSprite() {
         // new Texture(dogSitSheet, new Rectangle(563, 27, dogSitWidth, dogSitHeight))
     );
     return sit;
+}
+
+function loadSittingFlippedSprite() {
+    let dogSit2 = BaseTexture.fromImage("dogFlipped");
+    let dogSit2Width = 42;
+    let dogSit2Height = 28;
+    sitFlipped = [];
+    sitFlipped.push(
+        // new Texture(dogSit2, new Rectangle(315, 27, dogSit2Width, dogSit2Height)),   // frame 0
+        // new Texture(dogSit2, new Rectangle(357, 27, dogSit2Width, dogSit2Height)),
+        // new Texture(dogSit2, new Rectangle(399, 27, dogSit2Width, dogSit2Height)),
+        // new Texture(dogSit2, new Rectangle(439, 27, dogSit2Width, dogSit2Height)),
+        // new Texture(dogSit2, new Rectangle(477, 27, dogSit2Width, dogSit2Height)),
+        // new Texture(dogSit2, new Rectangle(517, 27, dogSit2Width, dogSit2Height)),
+        // new Texture(dogSit2, new Rectangle(517, 27, dogSit2Width, dogSit2Height)),
+        // new Texture(dogSit2, new Rectangle(557, 27, dogSit2Width, dogSit2Height)),
+        new Texture(dogSit2, new Rectangle(596, 27, dogSit2Width, dogSit2Height)),
+        new Texture(dogSit2, new Rectangle(635, 27, dogSit2Width, dogSit2Height)),
+        new Texture(dogSit2, new Rectangle(674, 27, dogSit2Width, dogSit2Height)),
+        new Texture(dogSit2, new Rectangle(713, 27, dogSit2Width, dogSit2Height)),
+        // new Texture(dogSit2, new Rectangle(752, 27, dogSit2Width, dogSit2Height)),
+        // new Texture(dogSit2, new Rectangle(794, 27, dogSit2Width, dogSit2Height)),
+        // new Texture(dogSit2, new Rectangle(836, 27, dogSit2Width, dogSit2Height)),
+    );
+    return sitFlipped;
 }
 
 // load sprite sheet for barking
@@ -476,10 +491,11 @@ function walkFlippedAnim(x, y) {
     walkingDogFlipped.loop = true;
     walkingDogFlipped.interactive = true;
     walkingDogFlipped.button = true;
-    // walkingDog.on("pointerup", function(){
-    //     walkingDog.textures = sit; 
-    //     walkingDog.play();
-    // });   // add event to sprite
+    walkingDogFlipped.on("pointerup", function(){
+        walkingDogFlipped.textures = sitFlipped; 
+        walkingDogFlipped.animationSpeed = 1/5;
+        walkingDogFlipped.play();
+    }); 
 
     // add the texture into the stage 
     dogPage.addChild(walkingDogFlipped);
@@ -500,6 +516,19 @@ function sitAnim(x, y) {
     // add the texture onto the stage
     dogPage.addChild(sittingDog);
     sittingDog.play();
+}
+
+// sitting animation flipped
+function sitAnimFlipped(x, y) {
+    sittingDogFlipped = new extras.AnimatedSprite(sitFlippedTexture);
+    sittingDogFlipped.x = x;
+    sittingDogFlipped.y = y;
+    sittingDogFlipped.animationSpeed = 1/5;
+    sittingDogFlipped.loop = true;
+
+    // add the texture onto the stage
+    dogPage.addChild(sittingDogFlipped);
+    sittingDogFlipped.play();
 }
 
 function barkAnim(x, y) {
