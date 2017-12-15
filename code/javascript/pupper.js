@@ -34,6 +34,8 @@ let sitTexture, sittingDog;
 let sitFlippedTexture, sittingDogFlipped;
 // texture and sprite for barking dog
 let barkTexture, barkingDog;
+// flipped versions
+let barkFlippedTexture, barkingDogFlipped;
 // texture and sprite for bunny
 let hopTexture, hoppingBun;
 // texture and sprite for walking cat
@@ -49,7 +51,7 @@ const bg = new Graphics();
 // container to hold the sprites' pages
 let dogPage, startPage, bunPage, catPage;
 
-let sit, sitFlipped;
+let walk, walkFlipped, sit, sitFlipped, bark, barkFlipped;
 
 let dogs, dogs2;
 
@@ -245,10 +247,13 @@ function createDogPage() {
     dogs = [wd1, wd2];
 
     sitAnim(100, 100);
-    barkAnim(50, 50);
+    // barkAnim(50, 50);
 
     sitFlippedTexture = loadSittingFlippedSprite();
     sitAnimFlipped(20, 400);
+
+    barkFlippedTexture = loadBarkingFlippedSprite();
+    // barkAnimFlipped(20, 310);
 
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", dogPage, createStartPage);
 }
@@ -350,7 +355,7 @@ function loadWalkingSprite() {
     let dogWalkWidth = 42;  // originally 35
     let dogWalkHeight = 24;
     let numFrames = 12;
-    let walk = [];
+    walk = [];
     for (let i = 0; i < numFrames; i++) {
         // let frame = new Texture(dogWalkSheet, new Rectangle(i * dogWalkWidth, 240, dogWalkWidth, dogWalkHeight));
         let frame = new Texture(dogWalkSheet, new Rectangle(i * dogWalkWidth, 240, dogWalkWidth, dogWalkHeight));
@@ -364,7 +369,7 @@ function loadWalkingReversedSprite() {
     let dogWalk2Width = 42;
     let dogWalk2Height = 24;
     let numFrames = 12; // somehow 10 
-    let walkFlipped = [];
+    walkFlipped = [];
     // for (let i = 0; i < numFrames; i++) {
     //     // let frame = new Texture(dogWalkSheet, new Rectangle(i * dogWalkWidth, 240, dogWalkWidth, dogWalkHeight));
     //     let frame = new Texture(dogWalk2, new Rectangle(416 + (dogWalk2Width * i), 240, dogWalk2Width, dogWalk2Height));
@@ -448,12 +453,36 @@ function loadBarkingSprite() {
     let dogBarkWidth = 42.2;  // originally 35, 37
     let dogBarkHeight = 28; // originally 25
     let numFrames = 13;
-    let bark = [];
+    bark = [];
     for (let i = 0; i < numFrames; i++) {
         let frame = new Texture(dogBarkSheet, new Rectangle(i * dogBarkWidth, 58, dogBarkWidth, dogBarkHeight));
         bark.push(frame);
     }
     return bark;
+}
+
+// load flipped sprite sheet for barking
+function loadBarkingFlippedSprite() {
+    let dogBark2 = BaseTexture.fromImage("dogFlipped");
+    let dogBark2Width = 42;
+    let dogBark2Height = 28;
+    barkFlipped = [];
+    barkFlipped.push(
+        new Texture(dogBark2, new Rectangle(872, 58, dogBark2Width, dogBark2Height)), // last frame
+        new Texture(dogBark2, new Rectangle(830, 58, dogBark2Width, dogBark2Height)),
+        new Texture(dogBark2, new Rectangle(788, 58, dogBark2Width, dogBark2Height)),
+        new Texture(dogBark2, new Rectangle(745, 58, dogBark2Width, dogBark2Height)),
+        new Texture(dogBark2, new Rectangle(703, 58, dogBark2Width, dogBark2Height)),
+        new Texture(dogBark2, new Rectangle(661, 58, dogBark2Width, dogBark2Height)),
+        new Texture(dogBark2, new Rectangle(619, 58, dogBark2Width, dogBark2Height)),
+        new Texture(dogBark2, new Rectangle(577, 58, dogBark2Width, dogBark2Height)),
+        new Texture(dogBark2, new Rectangle(535, 58, dogBark2Width, dogBark2Height)),
+        new Texture(dogBark2, new Rectangle(491, 58, dogBark2Width, dogBark2Height)),
+        new Texture(dogBark2, new Rectangle(449, 58, dogBark2Width, dogBark2Height)),
+        new Texture(dogBark2, new Rectangle(407, 58, dogBark2Width, dogBark2Height)),
+        new Texture(dogBark2, new Rectangle(365, 58, dogBark2Width, dogBark2Height)), // first
+    );
+    return barkFlipped;
 }
 
 /*****************************
@@ -462,57 +491,94 @@ function loadBarkingSprite() {
 
 // walking animation
 function walkAnim(x, y) {
+    let clicked = false;
     let walkingDog = new extras.AnimatedSprite(walkTexture);
     walkingDog.x = x;
     walkingDog.y = y;
     walkingDog.animationSpeed = 1/3;
+    // walkingDog.anchor.set(0.5);
     walkingDog.loop = true;
     walkingDog.interactive = true;
     walkingDog.button = true;
     walkingDog.on("pointerup", function(){
-        walkingDog.textures = sit; 
-        walkingDog.animationSpeed = 1/5;
-        walkingDog.play();
-    });   // add event to sprite
+        if (!clicked) {
+            walkingDog.textures = sit; 
+            walkingDog.animationSpeed = 1/5;
+            walkingDog.play();
+            clicked = true;
+        }
+
+        else {
+            walkingDog.textures = walk;
+            walkingDog.animationSpeed = 1/3;
+            walkingDog.play();
+            clicked = false;
+        }
+    });
 
     // add the texture into the stage 
     dogPage.addChild(walkingDog);
     walkingDog.play();
-    // dogPage.removeChild(walkingDog);
-    // walkingDog.on("pointerup", sitAnim(x, y));
     return walkingDog;
 }
 
 function walkFlippedAnim(x, y) {
+    let clicked = false;
     let walkingDogFlipped = new extras.AnimatedSprite(walkFlippedTexture);
     walkingDogFlipped.x = x;
     walkingDogFlipped.y = y;
     walkingDogFlipped.animationSpeed = 1/3;
     walkingDogFlipped.loop = true;
+    walkingDogFlipped.anchor.set(0.5);
     walkingDogFlipped.interactive = true;
     walkingDogFlipped.button = true;
     walkingDogFlipped.on("pointerup", function(){
-        walkingDogFlipped.textures = sitFlipped; 
-        walkingDogFlipped.animationSpeed = 1/5;
-        walkingDogFlipped.play();
+        if (!clicked) {
+            walkingDogFlipped.textures = sitFlipped; 
+            walkingDogFlipped.animationSpeed = 1/5;
+            walkingDogFlipped.play();
+            clicked = true;
+        }
+
+        else {
+            walkingDogFlipped.textures = walkFlipped;
+            walkingDogFlipped.animationSpeed = 1/3;
+            walkingDogFlipped.play();
+            clicked = false;
+        }
     }); 
 
     // add the texture into the stage 
     dogPage.addChild(walkingDogFlipped);
     walkingDogFlipped.play();
-    // dogPage.removeChild(walkingDog);
-    // walkingDog.on("pointerup", sitAnim(x, y));
     return walkingDogFlipped;
 }
 
 // sitting animation
 function sitAnim(x, y) {
+    let clicked = false;
     sittingDog = new extras.AnimatedSprite(sitTexture);
     sittingDog.x = x;
     sittingDog.y = y;
     sittingDog.animationSpeed = 1/5;
     sittingDog.loop = true;
+    sittingDog.interactive = true;
+    sittingDog.buttonMode = true;
+    sittingDog.on("pointerup", function(){
+        if (!clicked) {
+            sittingDog.textures = bark;
+            sittingDog.animationSpeed = 1/5;
+            sittingDog.play();
+            clicked = true;
+        }
 
+        else {
+            sittingDog.textures = sit;
+            sittingDog.animationSpeed = 1/5;
+            sittingDog.play();
+            clicked = false;
+        }
+    });
     // add the texture onto the stage
     dogPage.addChild(sittingDog);
     sittingDog.play();
@@ -520,11 +586,29 @@ function sitAnim(x, y) {
 
 // sitting animation flipped
 function sitAnimFlipped(x, y) {
+    let clicked = false;
     sittingDogFlipped = new extras.AnimatedSprite(sitFlippedTexture);
     sittingDogFlipped.x = x;
     sittingDogFlipped.y = y;
     sittingDogFlipped.animationSpeed = 1/5;
     sittingDogFlipped.loop = true;
+    sittingDogFlipped.interactive = true;
+    sittingDogFlipped.buttonMode = true;
+    sittingDogFlipped.on("pointerup", function(){
+        if (!clicked) {
+            sittingDogFlipped.textures = barkFlipped;
+            sittingDogFlipped.animationSpeed = 1/5;
+            sittingDogFlipped.play();
+            clicked = true;
+        }
+
+        else {
+            sittingDogFlipped.textures = sitFlipped;
+            sittingDogFlipped.animationSpeed = 1/5;
+            sittingDogFlipped.play();
+            clicked = false;
+        }
+    });
 
     // add the texture onto the stage
     dogPage.addChild(sittingDogFlipped);
@@ -541,6 +625,18 @@ function barkAnim(x, y) {
     // add texture onto stage
     dogPage.addChild(barkingDog);
     barkingDog.play();
+}
+
+function barkAnimFlipped(x, y) {
+    barkingDogFlipped = new PIXI.extras.AnimatedSprite(barkFlippedTexture);
+    barkingDogFlipped.x = x;
+    barkingDogFlipped.y = y;
+    barkingDogFlipped.animationSpeed = 1/5;
+    barkingDogFlipped.loop = true;
+
+    // add texture onto stage
+    dogPage.addChild(barkingDogFlipped);
+    barkingDogFlipped.play();
 }
 
 /*****************************
@@ -760,44 +856,32 @@ function resize() {
     console.log(limit);
 }
 
-function dogInteraction() {
-    let roll = randomInt(1, 3);
-    if (roll == 1) {
-        // run sitting animation
-    }
-
-    else {
-        // run barking animation
-    }
-}
-
 function contain(sprite, container) {
-    
     let collision = undefined;
 
     //Left
-    if (sprite.x < container.x) {
+    if (sprite.x < container.x + sprite.width) {
     sprite.x = container.x;
     collision = "left";
     }
 
-    //Top
-    if (sprite.y < container.y) {
-    sprite.y = container.y;
-    collision = "top";
-    }
+    // //Top
+    // if (sprite.y < container.y) {
+    // sprite.y = container.y;
+    // collision = "top";
+    // }
 
     //Right
     if (sprite.x + sprite.width > container.width) {
-    sprite.x = container.width - sprite.width;
-    collision = "right";
+        sprite.x = container.width - sprite.width;
+        collision = "right";
     }
 
-    //Bottom
-    if (sprite.y + sprite.height > container.height) {
-    sprite.y = container.height - sprite.height;
-    collision = "bottom";
-    }
+    // //Bottom
+    // if (sprite.y + sprite.height > container.height) {
+    // sprite.y = container.height - sprite.height;
+    // collision = "bottom";
+    // }
 
     //Return the `collision` value
     return collision;
@@ -817,11 +901,37 @@ function gameLoop() {
         for (let dog of dogs) {
             dog.x += 50 * dt;
 
-            if (dog.x + 42 >= canvasWidth - 1) {
-                // dog.x = 500-42;
-                dog.x = (canvasWidth - 1) - 42;
-            }
+            // if (dog.x + 42 >= canvasWidth - 1) {
+            //     // dog.x = 500-42;
+            //     dog.x = (canvasWidth - 1) - 42;
+            // }
+            // let hitEdge = contain(dog, bg);
+            contain(dog, bg);
+
+            // console.log(hitEdge);
+            // if (hitEdge === "right") {
+            //     dog.x += -(50 * dt);
+            //     console.log(dog.x);
+            // }
+        }
+
+        for (let dog of dogs2) {
+            dog.x -= 50 * dt;
+
+            let hitEdge = contain(dog, bg);
             // contain(dog, bg);
+
+            if (hitEdge === "left") {
+                // wdF1.visible = false;
+                // wdF2.visible = false;
+                // dogs2 = [wd1, wd2];
+                // need some way to call the animation of the dog
+                // wd1 = walkAnim(dog.x, dog.y);
+                dog.scale.x = -1;   // flip the sprite?
+                // dog.x += 50 * dt;
+                dog.x = 10 + dog.x;
+                console.log(dog.x);
+            }
         }
     }
 
