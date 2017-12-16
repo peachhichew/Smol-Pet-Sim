@@ -39,7 +39,7 @@ let barkFlippedTexture, barkingDogFlipped;
 // texture and sprite for bunny
 let hopTexture, hoppingBun;
 // texture and sprite for walking cat
-let catWalkRightTexture, walkingRightCat, catWalkLeftTexture, walkingLeftCat;
+let catWalkRightTexture, walkingRightCat, catWalkLeftTexture, walkingLeftCat, catL1, catL2, catL3, catL4, catR1, catR2, catR3, catR4;
 
 // arrays to keep track of the cats + their direction
 let catWalkLeft = [];
@@ -53,7 +53,7 @@ let dogPage, startPage, bunPage, catPage;
 
 let walk, walkFlipped, sit, sitFlipped, bark, barkFlipped;
 
-let dogs, dogs2;
+let dogs, dogs2, cats, cats2;
 
 let buttonWidth = 90; // originally 60, 25
 let buttonHeight = 30;
@@ -108,18 +108,6 @@ function setup() {
 
     createStartPage();
     
-    // // load the sprite sheets into the window 
-    // walkTexture = loadWalkingSprite();
-    // sitTexture = loadSittingSprite();
-    // barkTexture = loadBarkingSprite();
-    // // call the animation functions
-    // walkAnim(randomInt(0, 465), randomInt(0, 475));
-    // walkAnim(randomInt(0, 465), randomInt(0, 475));
-    // sitAnim(100, 100);
-    // barkAnim(50, 50);
-
-    // makeButton(5, 5, 60, 25, 0xcccccc, 0x000000, "test");
-    // call the gameLoop function to make the animation work 
     app.ticker.add(gameLoop);
 }
 
@@ -236,21 +224,21 @@ function createDogPage() {
     sitTexture = loadSittingSprite();
     barkTexture = loadBarkingSprite();
     // call the animation functions
-    wd1 = walkAnim(randomInt(0, 465), randomInt(0, 475));
-    wd2 = walkAnim(randomInt(0, 465), randomInt(0, 475));
+    wd1 = walkAnim(randomInt(0, 465), randomInt(80, 475));
+    wd2 = walkAnim(randomInt(0, 465), randomInt(80, 475));
 
     walkFlippedTexture = loadWalkingReversedSprite();
-    wdF1 = walkFlippedAnim(randomInt(0, 465), randomInt(0, 475));
-    wdF2 = walkFlippedAnim(randomInt(0, 465), randomInt(0, 475));
+    wdF1 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
+    wdF2 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
 
     dogs2 = [wdF1, wdF2];
     dogs = [wd1, wd2];
 
-    sitAnim(100, 100);
+    sitAnim(randomInt(0, 465), randomInt(80, 475));
     // barkAnim(50, 50);
 
     sitFlippedTexture = loadSittingFlippedSprite();
-    sitAnimFlipped(20, 400);
+    sitAnimFlipped(randomInt(0, 465), randomInt(80, 475));
 
     barkFlippedTexture = loadBarkingFlippedSprite();
     // barkAnimFlipped(20, 310);
@@ -302,10 +290,20 @@ function createCatPage() {
     catPage.addChild(bg);
 
     catWalkRightTexture = loadCatWalkRightSprite();
-    catWalkRightAnim(100, 200, 1, 1);
+    
+    catR1 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
+    catR2 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
+    // catR3 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
+    // catR4 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
 
     catWalkLeftTexture = loadCatWalkLeftSprite();
-    catWalkLeftAnim(100, 350, 3, 3);
+    catL1 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
+    catL2 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
+    // catL3 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
+    // catL4 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
+
+    cats = [catR1, catR2];
+    cats2 = [catL1, catL2];
 
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", catPage, createStartPage);
 }
@@ -411,10 +409,10 @@ function loadSittingSprite() {
         // new Texture(dogSitSheet, new Rectangle(205, 27, dogSitWidth, dogSitHeight)),
         // new Texture(dogSitSheet, new Rectangle(245, 27, dogSitWidth, dogSitHeight)),
         // new Texture(dogSitSheet, new Rectangle(285, 27, dogSitWidth, dogSitHeight)),
-        new Texture(dogSitSheet, new Rectangle(323, 27, dogSitWidth, dogSitHeight)),    // start here
-        new Texture(dogSitSheet, new Rectangle(363, 27, dogSitWidth, dogSitHeight)),
-        new Texture(dogSitSheet, new Rectangle(402, 27, dogSitWidth, dogSitHeight)),
-        new Texture(dogSitSheet, new Rectangle(442, 27, dogSitWidth, dogSitHeight)),
+        new Texture(dogSitSheet, new Rectangle(322, 27, dogSitWidth, dogSitHeight)),    // start here
+        new Texture(dogSitSheet, new Rectangle(362, 27, dogSitWidth, dogSitHeight)),
+        new Texture(dogSitSheet, new Rectangle(401, 27, dogSitWidth, dogSitHeight)),
+        new Texture(dogSitSheet, new Rectangle(441, 27, dogSitWidth, dogSitHeight)),
         // new Texture(dogSitSheet, new Rectangle(481, 27, dogSitWidth, dogSitHeight)),
         // new Texture(dogSitSheet, new Rectangle(521, 27, dogSitWidth, dogSitHeight)),
         // new Texture(dogSitSheet, new Rectangle(563, 27, dogSitWidth, dogSitHeight))
@@ -491,6 +489,7 @@ function loadBarkingFlippedSprite() {
 
 // walking animation
 function walkAnim(x, y) {
+    let clickedSit = false;
     let speed = 2;
     let direction = 1;
     let clicked = false;
@@ -499,7 +498,6 @@ function walkAnim(x, y) {
     walkingDog.y = y;
     walkingDog.vy = speed * direction;
     walkingDog.animationSpeed = 1/3;
-    // walkingDog.anchor.set(0.5);
     walkingDog.loop = true;
     walkingDog.interactive = true;
     walkingDog.button = true;
@@ -507,15 +505,27 @@ function walkAnim(x, y) {
         if (!clicked) {
             walkingDog.textures = sit; 
             walkingDog.animationSpeed = 1/5;
+            walkingDog.vy = 0;
             walkingDog.play();
             clicked = true;
+            clickedSit = true;
         }
 
         else {
             walkingDog.textures = walk;
             walkingDog.animationSpeed = 1/3;
+            walkingDog.vy = speed * -direction;
             walkingDog.play();
             clicked = false;
+            if (clickedSit && walkingDog.scale.x == 1) {
+                walkingDog.vy = speed * direction;  
+                clickedSit = false;
+            }
+
+            else {
+                walkingDog.vy = speed * -direction;
+                clickedSit = true;
+            }
         }
     });
 
@@ -529,6 +539,7 @@ function walkFlippedAnim(x, y) {
     let speed = 2;
     let direction = 1;
     let clicked = false;
+    let clickedSit = false;
     let walkingDogFlipped = new extras.AnimatedSprite(walkFlippedTexture);
     walkingDogFlipped.x = x;
     walkingDogFlipped.y = y;
@@ -542,15 +553,31 @@ function walkFlippedAnim(x, y) {
         if (!clicked) {
             walkingDogFlipped.textures = sitFlipped; 
             walkingDogFlipped.animationSpeed = 1/5;
+            walkingDogFlipped.vy = 0;
             walkingDogFlipped.play();
             clicked = true;
+            clickedSit = true;
+            // console.log("8");
         }
 
         else {
             walkingDogFlipped.textures = walkFlipped;
             walkingDogFlipped.animationSpeed = 1/3;
+            walkingDogFlipped.vy = speed * -direction;
             walkingDogFlipped.play();
             clicked = false;
+            if (clickedSit && walkingDogFlipped.scale.x == 1) {
+                walkingDogFlipped.vy = speed * direction;  
+                clickedSit = false;
+                // console.log("clickedsit " + clickedSit+ " " + walkingDogFlipped.scale.x);
+                // console.log(walkingDogFlipped.x);          
+            }
+
+            else {
+                walkingDogFlipped.vy = speed * -direction;
+                clickedSit = true;
+                // console.log("p");
+            }
         }
     }); 
 
@@ -727,40 +754,57 @@ function loadCatWalkLeftSprite() {
   CATS WALK ANIMATION
 ****************************/
 
-function catWalkRightAnim(x, y, scaleX, scaleY) {
+function catWalkRightAnim(x, y) {
     walkingRightCat = new extras.AnimatedSprite(catWalkRightTexture);
     walkingRightCat.x = x;
     walkingRightCat.y = y;
-    // walkingRightCat.scale.x = 1.25;
-    // walkingRightCat.scale.y = 1.25;
-    walkingRightCat.scale.x = scaleX;
-    walkingRightCat.scale.y = scaleY;
+    // createCatDepth(walkingRightCat);
     walkingRightCat.animationSpeed = 1/10;
     walkingRightCat.loop = true;
+    // walkingRightCat.anchor.set(0.5);
+    let clicked = false;
+    walkingRightCat.interactive = true;
+    walkingRightCat.buttonMode = true;
+    walkingRightCat.on("pointerup", function() {
+        if (!clicked) {
+            walkingRightCat.textures = catWalkLeft; 
+            walkingRightCat.play();
+            clicked = true;
+            console.log("if: " + clicked);
+        }
+    
+        else {
+            walkingRightCat.textures = catWalkRight; 
+            walkingRightCat.play();
+            // clicked = !clicked; 
+            clicked = false;
+            console.log("else: " + clicked);            
+        }
+    });
 
     // add the texture onto the stage
     catPage.addChild(walkingRightCat);
     walkingRightCat.play();
 }
 
-function catWalkLeftAnim(x, y, scaleX, scaleY) {
+function catWalkLeftAnim(x, y) {
     walkingLeftCat = new extras.AnimatedSprite(catWalkLeftTexture);
     walkingLeftCat.x = x;
     walkingLeftCat.y = y;
-    walkingLeftCat.scale.x = scaleX;
-    walkingLeftCat.scale.y = scaleY;
+    // createCatDepth(walkingLeftCat);
     walkingLeftCat.animationSpeed = 1/10;
+    // walkingLeftCat.anchor.set(0.5);
     walkingLeftCat.loop = true;
     walkingLeftCat.interactive = true;
     walkingLeftCat.buttonMode = true;
-    let clicked = true; 
+    let clicked = false; 
     // TOGGLE BACK AND FORTH BETWEEN LEFT AND RIGHT ANIM
     walkingLeftCat.on("pointerup", function(){
         console.log("initialized: " + clicked);  
-        if (clicked) {
-            clicked = false;
+        if (!clicked) {
             walkingLeftCat.textures = catWalkRight; 
             walkingLeftCat.play();
+            clicked = true;
             console.log("if: " + clicked);
         }
 
@@ -768,7 +812,7 @@ function catWalkLeftAnim(x, y, scaleX, scaleY) {
             walkingLeftCat.textures = catWalkLeft; 
             walkingLeftCat.play();
             // clicked = !clicked; 
-            clicked = true;
+            clicked = false;
             console.log("else: " + clicked);            
         }
     });
@@ -842,8 +886,6 @@ function makeButton(x, y, xOffset, color, text, pageName, targetFunction) {
     menuButtonText.interactive = true;
     menuButtonText.buttonMode = true;
     menuButtonText.on("pointerup", targetFunction);
-    // dogButtonText.on('pointerover', e => e.target.alpha = 0.7);
-    // dogButtonText.on('pointerout', e => e.target.alpha = 1.0);
     pageName.addChild(menuButtonText);
 }
 
@@ -904,6 +946,34 @@ function loopArray(array, velocity, flipVal1, flipVal2, dir, fromEdge) {
     }
 }
 
+// creates a sense of depth for the cat sprites by changing the scale
+function createCatDepth(sprite) {
+    if (sprite.y >= 80 && sprite.y < 160) {
+        sprite.scale.x = 1;
+        sprite.scale.y = 1;
+    }
+
+    else if (sprite.y >= 160 && sprite.y < 240) {
+        sprite.scale.x = 2;
+        sprite.scale.y = 2;
+    }
+
+    else if (sprite.y >= 240 && sprite.y < 2320) {
+        sprite.scale.x = 3;
+        sprite.scale.y = 3;
+    }
+
+    else if (sprite.y >= 320 && sprite.y < 400) {
+        sprite.scale.x = 4;
+        sprite.scale.y = 4;
+    }
+
+    else if (sprite.y >= 400 && sprite.y < 500) {
+        sprite.scale.x = 5;
+        sprite.scale.y = 5;
+    }
+}
+
 /*****************************
   GAME LOOP 
 ****************************/
@@ -918,42 +988,22 @@ function gameLoop() {
 
         loopArray(dogs, dt, 1, -1, 1, 7);
         loopArray(dogs2, dt, -1, 1, 2, 22);
-        // for (let dog of dogs) {
-        //     // dog.x += 50 * dt;
-        //     dog.x += dog.vy;
-            
-        //     let hitEdge = contain(dog, bg, dt);
-
-        //     if (hitEdge === "left" || hitEdge === "right") {
-        //         dog.vy *= -1;
-        //     }
-        // }
-
-        // for (let dog of dogs2) {
-        //     dog.x -= dog.vy;
-
-        //     let hitEdge = contain(dog, bg, dt);
-
-        //     if (hitEdge === "left" || hitEdge === "right") {
-        //         dog.vy *= -1;
-        //     }
-        // }
     }
 
     if (catPage.visible) {
         // make the cat walking towards the right increase in size
-        if (walkingRightCat.scale.x < 2 && walkingRightCat.scale.x >= 1
-            && walkingRightCat.scale.y < 2 && walkingRightCat.scale.y >= 1) {
-            walkingRightCat.scale.x = walkingRightCat.scale.x + 0.01;
-            walkingRightCat.scale.y = walkingRightCat.scale.y + 0.01;
-            // console.log("x: " + walkingRightCat.scale.x);
-            // console.log(" y: " + walkingRightCat.scale.y);
-        }
+        // if (walkingRightCat.scale.x < 2 && walkingRightCat.scale.x >= 1
+        //     && walkingRightCat.scale.y < 2 && walkingRightCat.scale.y >= 1) {
+        //     walkingRightCat.scale.x = walkingRightCat.scale.x + 0.01;
+        //     walkingRightCat.scale.y = walkingRightCat.scale.y + 0.01;
+        //     // console.log("x: " + walkingRightCat.scale.x);
+        //     // console.log(" y: " + walkingRightCat.scale.y);
+        // }
     
-        else {
-            walkingRightCat.scale.x = 2;
-            walkingRightCat.scale.y = 2;
-        }
+        // else {
+        //     walkingRightCat.scale.x = 2;
+        //     walkingRightCat.scale.y = 2;
+        // }
     }
 
     /* LOGIC FOR MAKING THE DOG GO BACK AND FORTH 
