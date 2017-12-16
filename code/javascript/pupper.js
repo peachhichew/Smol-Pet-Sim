@@ -39,7 +39,7 @@ let barkFlippedTexture, barkingDogFlipped;
 // texture and sprite for bunny
 let hopTexture, hoppingBun;
 // texture and sprite for walking cat
-let catWalkRightTexture, catWalkLeftTexture, walkingLeftCat, catL1, catL2, catL3, catL4, catR1, catR2, catR3, catR4;
+let catWalkRightTexture, catWalkLeftTexture, catL1, catL2, catL3, catL4, catR1, catR2, catR3, catR4;
 
 // arrays to keep track of the cats + their direction
 let catWalkLeft, catWalkRight;
@@ -300,8 +300,10 @@ function createCatPage() {
     catL3 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
     catL4 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
 
-    cats = [catR1, catR2, catR3, catR4];
+    // cats = [catR1, catR2, catR3, catR4];
+    cats = [catR1];
     cats2 = [catL1, catL2, catL3, catL4];
+    // cats2 = [catL1];
 
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", catPage, createStartPage);
 }
@@ -320,6 +322,24 @@ function createCreditsPage() {
 
     changeBackground(0xFFFFFF, 0x000000);
     creditsPage.addChild(bg);
+
+    let titleStyle = new PIXI.TextStyle({
+        fill: 0x000000,
+        fontSize: 20,
+        fontFamily: "VT323",   // changing later
+        wordWrap: true,
+        wordWrapWidth: 490,
+        // lineHeight: 20,
+        leading: 8
+    });
+
+    let titleText1 = new PIXI.Text("     Lorem ipsum dolor sit amet, ludus commodo lucilius ius et, et quot definitionem sit. Mazim insolens maiestatis an vix, te mea nullam commodo appetere. Eu dolor corrumpit eos. Tollit conclusionemque ei mei. Deleniti cotidieque concludaturque te sea, eu vel aliquam reprehendunt.");
+    titleText1.style = titleStyle;
+    titleText1.x = 10;
+    titleText1.y = 100;
+    // titleText1.wordWrap = true;
+    // titleText1.wordWrapWidth = 100;
+    creditsPage.addChild(titleText1);
 
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", creditsPage, createStartPage);
 }
@@ -488,7 +508,7 @@ function loadBarkingFlippedSprite() {
 // walking animation
 function walkAnim(x, y) {
     let clickedSit = false;
-    let speed = 2;
+    let speed = 1.5;
     let direction = 1;
     let clicked = false;
     let walkingDog = new extras.AnimatedSprite(walkTexture);
@@ -534,7 +554,7 @@ function walkAnim(x, y) {
 }
 
 function walkFlippedAnim(x, y) {
-    let speed = 2;
+    let speed = 1.5;
     let direction = 1;
     let clicked = false;
     let clickedSit = false;
@@ -749,7 +769,7 @@ function loadCatWalkLeftSprite() {
 ****************************/
 
 function catWalkRightAnim(x, y) {
-    let speed = 2;
+    let speed = 1.5;
     let direction = 1;
     let clicked = false;
     let clickedOnce;
@@ -767,19 +787,21 @@ function catWalkRightAnim(x, y) {
     walkingRightCat.buttonMode = true;
     walkingRightCat.on("pointerup", function() {
         if (!clicked && walkingRightCat.scale.x == 2) {
-            walkingRightCat.textures = catWalkLeft; 
-            // walkingRightCat.scale.x = -1;
+            // walkingRightCat.textures = catWalkLeft; 
+            walkingRightCat.scale.x = -2;
             walkingRightCat.vy = speed * -direction;
             walkingRightCat.play();
-            clicked = true;
+            // clicked = true;
+            console.log(clicked + " " + walkingRightCat.scale.x);
         }
     
         else {
-            walkingRightCat.textures = catWalkRight; 
-            // walkingRightCat.scale.x = 1;
+            // walkingRightCat.textures = catWalkRight; 
+            walkingRightCat.scale.x = 2;
             walkingRightCat.vy = speed * direction;
             walkingRightCat.play();
-            clicked = false;
+            // clicked = false;
+            console.log(clicked + " " + walkingRightCat.scale.x);
         }
     });
 
@@ -790,11 +812,14 @@ function catWalkRightAnim(x, y) {
 }
 
 function catWalkLeftAnim(x, y) {
-    let speed = 2;
+    let speed = 1.5;
     let direction = 1;
-    walkingLeftCat = new extras.AnimatedSprite(catWalkLeftTexture);
+    let clicked = false; 
+    let walkingLeftCat = new extras.AnimatedSprite(catWalkLeftTexture);
     walkingLeftCat.x = x;
     walkingLeftCat.y = y;
+    walkingLeftCat.scale.x = 2;
+    walkingLeftCat.scale.y = 2;
     // createCatDepth(walkingLeftCat);
     walkingLeftCat.animationSpeed = 1/10;
     walkingLeftCat.vy = speed * direction;
@@ -802,20 +827,27 @@ function catWalkLeftAnim(x, y) {
     walkingLeftCat.loop = true;
     walkingLeftCat.interactive = true;
     walkingLeftCat.buttonMode = true;
-    let clicked = false; 
+    console.log(walkingLeftCat.scale.x);
     // TOGGLE BACK AND FORTH BETWEEN LEFT AND RIGHT ANIM
     walkingLeftCat.on("pointerup", function(){
-        if (!clicked) {
-            walkingLeftCat.textures = catWalkRight; 
+        if (!clicked && walkingLeftCat.scale.x == 2) { //2
+            // walkingLeftCat.textures = catWalkRight; 
+            walkingLeftCat.scale.x = -2; //-2
+            walkingLeftCat.vy = speed * -direction;
             walkingLeftCat.play();
-            clicked = true;
+            // clicked = true;
+            // console.log(clicked + " x " + walkingLeftCat.scale.x);
+            console.log("a " + walkingLeftCat.scale.x);
         }
 
-        else {
-            walkingLeftCat.textures = catWalkLeft; 
+        else  {
+            // walkingLeftCat.textures = catWalkLeft; 
+            walkingLeftCat.scale.x = 2; //2
+            walkingLeftCat.vy = speed * direction;
             walkingLeftCat.play();
-            // clicked = !clicked; 
-            clicked = false;
+            // clicked = false;
+            // console.log(clicked + " " + walkingLeftCat.scale.x);
+            console.log("b " + walkingLeftCat.scale.x);
         }
     });
 
@@ -916,6 +948,7 @@ function contain(sprite, container, velocity, flipVal1, flipVal2, fromEdge) {
         sprite.scale.x = flipVal1; // -1 for Flipped
         sprite.x += 50 * velocity;
         collision = "left";
+        console.log("hit wall L " + sprite.scale.x);
     }
 
     //Right
@@ -924,6 +957,7 @@ function contain(sprite, container, velocity, flipVal1, flipVal2, fromEdge) {
         sprite.scale.x = flipVal2;     // 1 for flipped
         sprite.x -= 50 * velocity;
         collision = "right";
+        console.log("hit wall R " + sprite.scale.x);
     }
 
     //Return the `collision` value
@@ -975,6 +1009,8 @@ function createCatDepth(sprite) {
         sprite.scale.x = 5;
         sprite.scale.y = 5;
     }
+
+    return sprite.scale.x;
 }
 
 /*****************************
@@ -1007,7 +1043,7 @@ function gameLoop() {
         //     walkingRightCat.scale.y = 2;
         // }
         loopArray(cats, dt, 2, -2, 1, 25);
-        // loopArray(cats2, dt, -1, 1, 2, 0);
+        loopArray(cats2, dt, -2, 2, 2, 25);
     }
 
     /* LOGIC FOR MAKING THE DOG GO BACK AND FORTH 
