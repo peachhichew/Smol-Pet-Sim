@@ -17,59 +17,45 @@ Sprite = PIXI.Sprite,
 Graphics = PIXI.Graphics
 Rectangle = PIXI.Rectangle,
 BaseTexture = PIXI.BaseTexture,
-extras = PIXI.extras,
-text = PIXI.Text;
+extras = PIXI.extras;
 
 // width and height of the canvas
 let canvasWidth = 500;
 let canvasHeight = 500;
 
-// texture and sprite for walking dog 
-let walkTexture, wd1, wd2;
-// flipped versions
-let walkFlippedTexture, walkingDogFlipped, wdF1, wdF2;
-// texture and sprite for sitting dog
-let sitTexture, sittingDog;
-// flipped versions
-let sitFlippedTexture, sittingDogFlipped;
-// texture and sprite for barking dog
-let barkTexture, barkingDog;
-// flipped versions
-let barkFlippedTexture, barkingDogFlipped;
+// texture and sprite for walking dog + flipped versions
+let walkTexture, wd1, wd2, walkFlippedTexture, walkingDogFlipped, wdF1, wdF2;
+// texture and sprite for sitting dog + flipped versions
+let sitTexture, sittingDog, sitFlippedTexture, sittingDogFlipped;
+// texture and sprite for barking dog + flipped versions
+let barkTexture, barkingDog, barkFlippedTexture, barkingDogFlipped;
 // texture and sprite for bunny
 let hopTexture, hoppingBun;
 // texture for walking cat and the cat sprites
 let catWalkRightTexture, catWalkLeftTexture, catL1, catL2, catL3, catL4, catR1, catR2, catR3, catR4;
 
-// arrays to keep track of the cats + their direction
-let catWalkLeft, catWalkRight;
+// arrays to keep track of the sprite textures
+let walk, walkFlipped, sit, sitFlipped, bark, barkFlipped, catWalkLeft, catWalkRight;
 
 // variable for the background
 const bg = new Graphics();
 
-// container to hold the sprites' pages
+// container to hold the different pages
 let dogPage, startPage, bunPage, catPage, creditsPage, notesPage, notesPage2;
 
-let walk, walkFlipped, sit, sitFlipped, bark, barkFlipped;
-
+// arrays that hold the cat + dog sprites
 let dogs, dogs2, cats, cats2;
 
-let buttonWidth = 90; // originally 60, 25
+// width of each button on the project
+let buttonWidth = 90;
 let buttonHeight = 30;
 
-const app = new PIXI.Application(canvasWidth,canvasHeight);
+const app = new PIXI.Application(canvasWidth, canvasHeight);
 
 // add the canvas to the HTML document
 document.body.appendChild(app.view);
 
 let stage;
-
-loader
-    .add("dog", "../images/pupper/shiba1.png")
-    .add("dogFlipped", "../images/pupper/shiba1-flipped.png")
-    .add("bunny", "../images/bun/bun.png")
-    .add("cat", "../images/catses/catses2.png")
-    .load(setup);
 
 function setup() {
     stage = app.stage;
@@ -119,6 +105,7 @@ function setup() {
 ****************************/
 
 function createStartPage() {
+    // make every other page invisible except the start page
     startPage.visible = true;
     dogPage.visible = false;
     bunPage.visible = false;
@@ -174,7 +161,7 @@ function createStartPage() {
     notes.on("pointerup", createNotesPage);
     startPage.addChild(notes);
 
-    let directions = new PIXI.Text("(Click each animal to visit its page.)");
+    let directions = new PIXI.Text("(Click each animal to visit its page!)");
     directions.style = infoStyle;
     directions.x = 100;
     directions.y = 300;
@@ -256,17 +243,16 @@ function createDogPage() {
     wdF1 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
     wdF2 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
 
+    // insert the sprites into the arrays
     dogs2 = [wdF1, wdF2];
     dogs = [wd1, wd2];
 
     sitAnim(randomInt(0, 465), randomInt(80, 475));
-    // barkAnim(50, 50);
 
     sitFlippedTexture = loadSittingFlippedSprite();
     sitAnimFlipped(randomInt(0, 465), randomInt(80, 475));
 
     barkFlippedTexture = loadBarkingFlippedSprite();
-    // barkAnimFlipped(20, 310);
 
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", dogPage, createStartPage);
 }
@@ -287,12 +273,13 @@ function createBunPage() {
     changeBackground(0xFFFFFF, 0x000000);
     bunPage.addChild(bg);
 
+    // load the bun sprite
     hopTexture = loadBunSprite();
 
     // start with one bun on the page
     hopAnim(randomInt(0, 380), randomInt(80, 430));
 
-    // create the menu, more buns!, and grow buttons
+    // create the menu, more buns!, and resize buttons
     makeButton(10, 10, 8, 0x58C4C6, "Main Menu", bunPage, createStartPage);
     makeButton(400, 10, 5, 0xFD4B65, "More buns!", bunPage, newBun);
     makeButton(205, 10, 18, 0xFFC43C, "Resize", bunPage, resize);
@@ -348,10 +335,11 @@ function createCreditsPage() {
     changeBackground(0xFFFFFF, 0x000000);
     creditsPage.addChild(bg);
 
+    // text style for paragraphs
     let paraStyle = new PIXI.TextStyle({
         fill: 0x000000,
         fontSize: 20,
-        fontFamily: "VT323",   // changing later
+        fontFamily: "VT323",
         wordWrap: true,
         wordWrapWidth: 470,
         leading: 8
@@ -420,7 +408,7 @@ function createNotesPage() {
     let titleStyle = new PIXI.TextStyle({
         fill: 0x000000,
         fontSize: 35,
-        fontFamily: "VT323",   // changing later
+        fontFamily: "VT323",
     });
 
     let title = new PIXI.Text("Notes");
@@ -459,6 +447,7 @@ function createNotesPage() {
     inspiration.y = 130;
     notesPage.addChild(inspiration);
 
+    // drawing the arrow at the bottom of the page using PIXI.Graphics
     let arrow = new Graphics();
     arrow.lineStyle(1, 0x7db4dd, 1);
     arrow.beginFill(0x7db4dd);
@@ -528,6 +517,7 @@ function createNotesPage2() {
     learnedText2.y = 405;
     notesPage2.addChild(learnedText2);
 
+    // drawing a back arrow on the page
     let arrow = new Graphics();
     arrow.lineStyle(1, 0x7db4dd, 1);
     arrow.beginFill(0x7db4dd);
@@ -563,7 +553,6 @@ function loadWalkingSprite() {
     let numFrames = 12;
     walk = [];
     for (let i = 0; i < numFrames; i++) {
-        // let frame = new Texture(dogWalkSheet, new Rectangle(i * dogWalkWidth, 240, dogWalkWidth, dogWalkHeight));
         let frame = new Texture(dogWalkSheet, new Rectangle(i * dogWalkWidth, 240, dogWalkWidth, dogWalkHeight));
         walk.push(frame);
     }
@@ -574,13 +563,9 @@ function loadWalkingReversedSprite() {
     let dogWalk2 = BaseTexture.fromImage("dogFlipped");
     let dogWalk2Width = 42;
     let dogWalk2Height = 24;
-    let numFrames = 12; // somehow 10 
+    let numFrames = 12;
     walkFlipped = [];
-    // for (let i = 0; i < numFrames; i++) {
-    //     // let frame = new Texture(dogWalkSheet, new Rectangle(i * dogWalkWidth, 240, dogWalkWidth, dogWalkHeight));
-    //     let frame = new Texture(dogWalk2, new Rectangle(416 + (dogWalk2Width * i), 240, dogWalk2Width, dogWalk2Height));
-    //     walkFlipped.push(frame);
-    // }
+    // manually "crop" out each sprite due to the different spacings in between each of them
     walkFlipped.push(
         new Texture(dogWalk2, new Rectangle(836, 240, dogWalk2Width, dogWalk2Height)), // last frame
         new Texture(dogWalk2, new Rectangle(794, 240, dogWalk2Width, dogWalk2Height)),  // frame 9
@@ -605,21 +590,10 @@ function loadSittingSprite() {
     // let numFrames = 15; // 15 frames
     sit = [];
     sit.push(
-        // new Texture(dogSitSheet, new Rectangle(4, 27, dogSitWidth, dogSitHeight)), // frame 0
-        // new Texture(dogSitSheet, new Rectangle(42, 27, dogSitWidth, dogSitHeight)),
-        // new Texture(dogSitSheet, new Rectangle(84, 27, dogSitWidth, dogSitHeight)),
-        // new Texture(dogSitSheet, new Rectangle(126, 27, dogSitWidth, dogSitHeight)),
-        // new Texture(dogSitSheet, new Rectangle(167, 27, dogSitWidth, dogSitHeight)),
-        // new Texture(dogSitSheet, new Rectangle(205, 27, dogSitWidth, dogSitHeight)),
-        // new Texture(dogSitSheet, new Rectangle(245, 27, dogSitWidth, dogSitHeight)),
-        // new Texture(dogSitSheet, new Rectangle(285, 27, dogSitWidth, dogSitHeight)),
         new Texture(dogSitSheet, new Rectangle(322, 27, dogSitWidth, dogSitHeight)),    // start here
         new Texture(dogSitSheet, new Rectangle(362, 27, dogSitWidth, dogSitHeight)),
         new Texture(dogSitSheet, new Rectangle(401, 27, dogSitWidth, dogSitHeight)),
         new Texture(dogSitSheet, new Rectangle(441, 27, dogSitWidth, dogSitHeight)),
-        // new Texture(dogSitSheet, new Rectangle(481, 27, dogSitWidth, dogSitHeight)),
-        // new Texture(dogSitSheet, new Rectangle(521, 27, dogSitWidth, dogSitHeight)),
-        // new Texture(dogSitSheet, new Rectangle(563, 27, dogSitWidth, dogSitHeight))
     );
     return sit;
 }
@@ -630,21 +604,10 @@ function loadSittingFlippedSprite() {
     let dogSit2Height = 28;
     sitFlipped = [];
     sitFlipped.push(
-        // new Texture(dogSit2, new Rectangle(315, 27, dogSit2Width, dogSit2Height)),   // frame 0
-        // new Texture(dogSit2, new Rectangle(357, 27, dogSit2Width, dogSit2Height)),
-        // new Texture(dogSit2, new Rectangle(399, 27, dogSit2Width, dogSit2Height)),
-        // new Texture(dogSit2, new Rectangle(439, 27, dogSit2Width, dogSit2Height)),
-        // new Texture(dogSit2, new Rectangle(477, 27, dogSit2Width, dogSit2Height)),
-        // new Texture(dogSit2, new Rectangle(517, 27, dogSit2Width, dogSit2Height)),
-        // new Texture(dogSit2, new Rectangle(517, 27, dogSit2Width, dogSit2Height)),
-        // new Texture(dogSit2, new Rectangle(557, 27, dogSit2Width, dogSit2Height)),
         new Texture(dogSit2, new Rectangle(596, 27, dogSit2Width, dogSit2Height)),
         new Texture(dogSit2, new Rectangle(635, 27, dogSit2Width, dogSit2Height)),
         new Texture(dogSit2, new Rectangle(674, 27, dogSit2Width, dogSit2Height)),
         new Texture(dogSit2, new Rectangle(713, 27, dogSit2Width, dogSit2Height)),
-        // new Texture(dogSit2, new Rectangle(752, 27, dogSit2Width, dogSit2Height)),
-        // new Texture(dogSit2, new Rectangle(794, 27, dogSit2Width, dogSit2Height)),
-        // new Texture(dogSit2, new Rectangle(836, 27, dogSit2Width, dogSit2Height)),
     );
     return sitFlipped;
 }
@@ -693,10 +656,12 @@ function loadBarkingFlippedSprite() {
 
 // walking animation
 function walkAnim(x, y) {
-    let clickedSit = false;
     let speed = 1.5;
     let direction = 1;
-    let clicked = false;
+    let clicked = false;    // keeps track of the first click, which makes the dog sit
+    // clickedSit keeps track of the second click, which makes the dog walk again but in the 
+    // same direction it was walking before
+    let clickedSit = false; 
     let walkingDog = new extras.AnimatedSprite(walkTexture);
     walkingDog.x = x;
     walkingDog.y = y;
@@ -709,7 +674,7 @@ function walkAnim(x, y) {
         if (!clicked) {
             walkingDog.textures = sit; 
             walkingDog.animationSpeed = 1/5;
-            walkingDog.vy = 0;
+            walkingDog.vy = 0;  // make the velocity = 0 so the sprite stops moving
             walkingDog.play();
             clicked = true;
             clickedSit = true;
@@ -718,14 +683,18 @@ function walkAnim(x, y) {
         else {
             walkingDog.textures = walk;
             walkingDog.animationSpeed = 1/3;
-            walkingDog.vy = speed * -direction;
+            walkingDog.vy = speed * -direction; // make the velocity negative so the dog walks in the opposite direction
             walkingDog.play();
             clicked = false;
+            // if clickedSit is false, change the velocity back to positive
+            // this allows the sprite to keep walking in the same direction it originally
+            // was before it started sitting
             if (clickedSit && walkingDog.scale.x == 1) {
                 walkingDog.vy = speed * direction;  
                 clickedSit = false;
             }
 
+            // if clickedSit is true, change the velocity back to negative 
             else {
                 walkingDog.vy = speed * -direction;
                 clickedSit = true;
@@ -733,7 +702,7 @@ function walkAnim(x, y) {
         }
     });
 
-    // add the texture into the stage 
+    // add the sprite into the stage 
     dogPage.addChild(walkingDog);
     walkingDog.play();
     return walkingDog;
@@ -798,6 +767,7 @@ function sitAnim(x, y) {
     sittingDog.interactive = true;
     sittingDog.buttonMode = true;
     sittingDog.on("pointerup", function(){
+        // if clicked is true, run the barking animation
         if (!clicked) {
             sittingDog.textures = bark;
             sittingDog.animationSpeed = 1/5;
@@ -812,7 +782,7 @@ function sitAnim(x, y) {
             clicked = false;
         }
     });
-    // add the texture onto the stage
+    // add the sprite onto the stage
     dogPage.addChild(sittingDog);
     sittingDog.play();
 }
@@ -855,7 +825,6 @@ function barkAnim(x, y) {
     barkingDog.animationSpeed = 1/5;
     barkingDog.loop = true;
 
-    // add texture onto stage
     dogPage.addChild(barkingDog);
     barkingDog.play();
 }
@@ -867,7 +836,6 @@ function barkAnimFlipped(x, y) {
     barkingDogFlipped.animationSpeed = 1/5;
     barkingDogFlipped.loop = true;
 
-    // add texture onto stage
     dogPage.addChild(barkingDogFlipped);
     barkingDogFlipped.play();
 }
@@ -878,7 +846,7 @@ function barkAnimFlipped(x, y) {
 
 function loadBunSprite() {
     let bunSheet = BaseTexture.fromImage("bunny");
-    let bunWidth = 500;  // originally 35
+    let bunWidth = 500;
     let bunHeight = 270;
     let hop = [];
     hop.push(
@@ -896,7 +864,6 @@ function loadBunSprite() {
         new Texture(bunSheet, new Rectangle(bunWidth, 1350, bunWidth, bunHeight)), // frame 11
         new Texture(bunSheet, new Rectangle(0, 1620, bunWidth, bunHeight)) // frame 12
     );
-
     return hop;
 }
 
@@ -913,7 +880,6 @@ function hopAnim(x, y) {
     hoppingBun.animationSpeed = 1/10;
     hoppingBun.loop = true;
 
-    // add the texture onto the stage
     bunPage.addChild(hoppingBun);
     hoppingBun.play();
 }
@@ -932,7 +898,6 @@ function loadCatWalkRightSprite() {
         new Texture(catWalkRightSheet, new Rectangle(220, 69, catWalkRightWidth, catWalkRightHeight)),
         new Texture(catWalkRightSheet, new Rectangle(253, 69, catWalkRightWidth, catWalkRightHeight))
     );
-
     return catWalkRight;
 }
 
@@ -946,7 +911,6 @@ function loadCatWalkLeftSprite() {
         new Texture(catWalkLeftSheet, new Rectangle(220, 38, catWalkLeftWidth, catWalkLeftHeight)),
         new Texture(catWalkLeftSheet, new Rectangle(253, 38, catWalkLeftWidth, catWalkLeftHeight))
     );
-
     return catWalkLeft;
 }
 
@@ -958,40 +922,32 @@ function catWalkRightAnim(x, y) {
     let speed = 1.5;
     let direction = 1;
     let clicked = false;
-    let clickedOnce;
     let walkingRightCat = new extras.AnimatedSprite(catWalkRightTexture);
     walkingRightCat.x = x;
     walkingRightCat.y = y;
     walkingRightCat.scale.x = 2;
     walkingRightCat.scale.y = 2;
     walkingRightCat.vy = speed * direction;
-    // createCatDepth(walkingRightCat);
     walkingRightCat.animationSpeed = 1/10;
     walkingRightCat.loop = true;
     walkingRightCat.anchor.set(0.5);
     walkingRightCat.interactive = true;
     walkingRightCat.buttonMode = true;
     walkingRightCat.on("pointerup", function() {
+        // if clicked is true + the cat is facing towards the right, flip the 
+        // sprite horizontally and make it walk in the opposite direction (neg velocity)
         if (!clicked && walkingRightCat.scale.x == 2) {
-            // walkingRightCat.textures = catWalkLeft; 
             walkingRightCat.scale.x = -2;
             walkingRightCat.vy = speed * -direction;
             walkingRightCat.play();
-            // clicked = true;
-            console.log(clicked + " " + walkingRightCat.scale.x);
         }
     
         else {
-            // walkingRightCat.textures = catWalkRight; 
             walkingRightCat.scale.x = 2;
             walkingRightCat.vy = speed * direction;
             walkingRightCat.play();
-            // clicked = false;
-            console.log(clicked + " " + walkingRightCat.scale.x);
         }
     });
-
-    // add the texture onto the stage
     catPage.addChild(walkingRightCat);
     walkingRightCat.play();
     return walkingRightCat;
@@ -1013,31 +969,20 @@ function catWalkLeftAnim(x, y) {
     walkingLeftCat.loop = true;
     walkingLeftCat.interactive = true;
     walkingLeftCat.buttonMode = true;
-    console.log(walkingLeftCat.scale.x);
-    // TOGGLE BACK AND FORTH BETWEEN LEFT AND RIGHT ANIM
     walkingLeftCat.on("pointerup", function(){
-        if (!clicked && walkingLeftCat.scale.x == 2) { //2
-            // walkingLeftCat.textures = catWalkRight; 
-            walkingLeftCat.scale.x = -2; //-2
+        // use the same boolean check in catWalkRightAnim to flip the cat sprite
+        if (!clicked && walkingLeftCat.scale.x == 2) {
+            walkingLeftCat.scale.x = -2;
             walkingLeftCat.vy = speed * -direction;
             walkingLeftCat.play();
-            // clicked = true;
-            // console.log(clicked + " x " + walkingLeftCat.scale.x);
-            console.log("a " + walkingLeftCat.scale.x);
         }
 
         else  {
-            // walkingLeftCat.textures = catWalkLeft; 
-            walkingLeftCat.scale.x = 2; //2
+            walkingLeftCat.scale.x = 2;
             walkingLeftCat.vy = speed * direction;
             walkingLeftCat.play();
-            // clicked = false;
-            // console.log(clicked + " " + walkingLeftCat.scale.x);
-            console.log("b " + walkingLeftCat.scale.x);
         }
     });
-
-    // add the texture onto the stage
     catPage.addChild(walkingLeftCat);
     walkingLeftCat.play();
     return walkingLeftCat;
@@ -1047,6 +992,7 @@ function catWalkLeftAnim(x, y) {
   OTHER FUNCTIONS
 ****************************/
 
+// creating a Random function so we can use it to spawn sprites at random locations
 function randomInt(min, max) {
     // Math.ceil returns the smallest int greater than or equal to the given number
     min = Math.ceil(min);
@@ -1058,7 +1004,7 @@ function randomInt(min, max) {
     return num;
 }
 
-// changes the background color by drawing a rectangle
+// changes the background color by drawing a white rectangle
 function changeBackground(color, stroke){
     // bg = new Graphics();
     bg.beginFill(color);
@@ -1067,15 +1013,13 @@ function changeBackground(color, stroke){
     bg.endFill();
     bg.x = 0;
     bg.y = 0;
-    // dogPage.addChild(bg);
 }
 
+// adding a makeButton function so we can easily create a button by giving it
+// certain parameter info
 function makeButton(x, y, xOffset, color, text, pageName, targetFunction) {
-    // MENU BUTTON
     let menuButton = new Graphics();
-    // menuButton.beginFill(0xa6cfd5);  // turquoise
-    // menuButton.beginFill(0x565254);  // dark grey
-    menuButton.beginFill(color); // jet black
+    menuButton.beginFill(color);
     menuButton.lineStyle(1, 0x000000, 0.9); // stroke width, color, alpha
     menuButton.drawRect(0, 0, buttonWidth, buttonHeight);
     menuButton.endFill();
@@ -1083,21 +1027,18 @@ function makeButton(x, y, xOffset, color, text, pageName, targetFunction) {
     menuButton.y = y;
     menuButton.interactive = true;
     menuButton.buttonMode = true;
-    menuButton.on("pointerup", targetFunction);
-    // dogButton.on('pointerover', e => e.target.alpha = 0.7);
-    // dogButton.on('pointerout', e => e.target.alpha = 1.0);
-    
-    pageName.addChild(menuButton);
+    menuButton.on("pointerup", targetFunction); // targetFunction = function of the page you want to go to
+    pageName.addChild(menuButton); // add the button on to the specific page
 
+    // text style for the button text
     let textStyle = new PIXI.TextStyle({
         fill: 0xFFFFFF,
         strokeThickness: 1,
-        // stroke: 0x000000,
         dropShadow: true,
         dropShadowBlur: 0,
         dropShadowDistance: 2,
         fontSize: 20,
-        fontFamily: "VT323",   // changing later
+        fontFamily: "VT323",
     });
 
     let menuButtonText = new PIXI.Text(text);
@@ -1118,38 +1059,37 @@ function newBun() {
     console.log("x: " + xVal + ", y: " + yVal);
 }
 
+// uses the randomInt() function to randomly resize the buns on the page
 function resize() {
     let limit = randomInt(1, 4);
     hoppingBun.scale.x = limit*0.25;
     hoppingBun.scale.y = limit*0.25;
-    // console.log(limit);
 }
 
+// used kittykatattack's contain() function as reference, but is heavily modified
 function contain(sprite, container, velocity, flipVal1, flipVal2, fromEdge) {
     let collision = undefined;
 
-    //Left
-    if (sprite.x < container.x + (sprite.width - fromEdge)) {
-        // sprite.x = container.x; //22
-        sprite.scale.x = flipVal1; // -1 for Flipped
-        sprite.x += 50 * velocity;
+    // checks whether or not the sprite has hit the left edge
+    if (sprite.x < container.x + (sprite.width - fromEdge)) { // fromEdge is used since sometimes the white space between the actual sprite + wall varies
+        sprite.scale.x = flipVal1;  // if there is collision, horizontally flip the sprite
+        sprite.x += 50 * velocity;  // increment the sprite's x position so it moves towards the right edge
         collision = "left";
-        console.log("hit wall L " + sprite.scale.x);
     }
 
-    //Right
+    // checks whether or not the sprite has hit the right edge
     if (sprite.x + (sprite.width - fromEdge) > container.width) {
-        // sprite.x = container.width - sprite.width;
-        sprite.scale.x = flipVal2;     // 1 for flipped
-        sprite.x -= 50 * velocity;
+        sprite.scale.x = flipVal2;  // if there is collision, horizontally flip the sprite 
+        sprite.x -= 50 * velocity;  // decrement the sprite's x position so it moves towards the left
         collision = "right";
-        console.log("hit wall R " + sprite.scale.x);
     }
 
     //Return the `collision` value
     return collision;
 }
 
+// loops through an array and checks the ORIGINAL direction of the sprite upon being spawned
+// also calls the contain function so we can make the sprite move AND check for collision
 function loopArray(array, velocity, flipVal1, flipVal2, dir, fromEdge) {
     for (let sprite of array) {
         if (dir == 1) {
@@ -1163,40 +1103,9 @@ function loopArray(array, velocity, flipVal1, flipVal2, dir, fromEdge) {
         let hitEdge = contain(sprite, bg, velocity, flipVal1, flipVal2, fromEdge);
 
         if (hitEdge === "left" || hitEdge === "right") {
-            // createCatDepth(sprite, -1);
-            sprite.vy *= -1;
+            sprite.vy *= -1;    // negate the velocities to make the sprites go in the opposite direction
         }
     }
-}
-
-// creates a sense of depth for the cat sprites by changing the scale
-function createCatDepth(sprite) {
-    if (sprite.y >= 80 && sprite.y < 160) {
-        sprite.scale.x = 1;
-        sprite.scale.y = 1;
-    }
-
-    else if (sprite.y >= 160 && sprite.y < 240) {
-        sprite.scale.x = 2;
-        sprite.scale.y = 2;
-    }
-
-    else if (sprite.y >= 240 && sprite.y < 2320) {
-        sprite.scale.x = 3;
-        sprite.scale.y = 3;
-    }
-
-    else if (sprite.y >= 320 && sprite.y < 400) {
-        sprite.scale.x = 4;
-        sprite.scale.y = 4;
-    }
-
-    else if (sprite.y >= 400 && sprite.y < 500) {
-        sprite.scale.x = 5;
-        sprite.scale.y = 5;
-    }
-
-    return sprite.scale.x;
 }
 
 /*****************************
@@ -1209,6 +1118,8 @@ function gameLoop() {
     let dt = 1/app.ticker.FPS;
     if (dt > 1/12) dt = 1/12;
 
+    // if these pages are visible, loop through the arrays to check for collision + to change
+    // the velocities of the sprites + x positions
     if (dogPage.visible) {
         loopArray(dogs, dt, 1, -1, 1, 7);
         loopArray(dogs2, dt, -1, 1, 2, 22);
