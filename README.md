@@ -1,5 +1,5 @@
 # Final Project Information
-Description of the final project, significant changes from the [proposal](https://github.com/peachhichew/Smol-Pet-Sim/blob/master/Proposal.md), and how the user can interact with the page.
+This is a smol (small) pet simulator where the user can interact with a dog, a cat, and a bunny. All of the animals are animated using Pixi.js, with the exception of the main menu. User interactions will be listed below. Any significant changes from the [proposal](https://github.com/peachhichew/Smol-Pet-Sim/blob/master/Proposal.md) will also be included in this document.
 
 Link to the project: [here](https://people.rit.edu/sxw8136/igme230/Smol-Pet-Sim/code/index.html).
 
@@ -23,7 +23,7 @@ Link to the project: [here](https://people.rit.edu/sxw8136/igme230/Smol-Pet-Sim/
 
 ### Dog page
 - Click on a sitting dog to make him/her bark.
-- Click on a walking dog to make him/her sit.
+- Click on a walking dog to make him/her sit and click on him/her again to make him walk.
 
 ### Cat page
 - Click on a cat to make him/her move in the opposite direction.
