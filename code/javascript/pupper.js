@@ -38,7 +38,7 @@ let barkTexture, barkingDog;
 let barkFlippedTexture, barkingDogFlipped;
 // texture and sprite for bunny
 let hopTexture, hoppingBun;
-// texture and sprite for walking cat
+// texture for walking cat and the cat sprites
 let catWalkRightTexture, catWalkLeftTexture, catL1, catL2, catL3, catL4, catR1, catR2, catR3, catR4;
 
 // arrays to keep track of the cats + their direction
@@ -48,7 +48,7 @@ let catWalkLeft, catWalkRight;
 const bg = new Graphics();
 
 // container to hold the sprites' pages
-let dogPage, startPage, bunPage, catPage;
+let dogPage, startPage, bunPage, catPage, creditsPage, notesPage, notesPage2;
 
 let walk, walkFlipped, sit, sitFlipped, bark, barkFlipped;
 
@@ -97,10 +97,14 @@ function setup() {
     creditsPage.visible = false;
     stage.addChild(creditsPage);
 
-    // NOTES PAGE
+    // NOTES PAGES
     notesPage = new Container();
     notesPage.visible = false;
     stage.addChild(notesPage);
+
+    notesPage2 = new Container();
+    notesPage2.visible = false;
+    stage.addChild(notesPage2);
 
     changeBackground(0xFFFFFF, 0x000000);
     startPage.addChild(bg);
@@ -121,6 +125,7 @@ function createStartPage() {
     catPage.visible = false;
     creditsPage.visible = false;
     notesPage.visible = false;
+    notesPage2.visible = false;
 
     changeBackground(0xFFFFFF, 0x000000);
     startPage.addChild(bg);
@@ -169,6 +174,12 @@ function createStartPage() {
     notes.on("pointerup", createNotesPage);
     startPage.addChild(notes);
 
+    let directions = new PIXI.Text("(Click each animal to visit its page.)");
+    directions.style = infoStyle;
+    directions.x = 100;
+    directions.y = 300;
+    startPage.addChild(directions);
+
     // ANIMAL IMAGES
     let bunWidth = 500;  // originally 35
     let bunHeight = 270;
@@ -176,7 +187,7 @@ function createStartPage() {
     let clipBun = new Rectangle(0, 0, bunWidth, bunHeight);
     bunStart.frame = clipBun;
     let bunStartSprite = new Sprite(bunStart);
-    bunStartSprite.x = 100;
+    bunStartSprite.x = 230; //100
     bunStartSprite.y = 143;
     bunStartSprite.scale.x = 0.25;
     bunStartSprite.scale.y = 0.25;
@@ -191,7 +202,7 @@ function createStartPage() {
     let clipDog = new Rectangle(6 * dogWidth, 27, dogWidth, dogHeight);
     dogStart.frame = clipDog;
     let dogStartSprite = new Sprite(dogStart);
-    dogStartSprite.x = 220;
+    dogStartSprite.x = 135; //220
     dogStartSprite.y = 162;
     dogStartSprite.scale.x = 1.8;
     dogStartSprite.scale.y = 1.8;
@@ -200,8 +211,22 @@ function createStartPage() {
     dogStartSprite.on("pointerup", createDogPage);
     startPage.addChild(dogStartSprite);
 
-    makeButton((canvasWidth/2)-(buttonWidth/2), 350, 23, 0x7db4dd, "Start", startPage, createDogPage);
-    makeButton((canvasWidth/2)-(buttonWidth/2), 390, 23, 0x7db4dd, "cat", startPage, createCatPage);
+    let catStart = TextureCache["cat"];
+    let catWidth = 30;
+    let catHeight = 33;
+    let clipCat = new Rectangle(217, 0, catWidth, catHeight);
+    catStart.frame = clipCat;
+    let catStartSprite = new Sprite(catStart);
+    catStartSprite.x = 214; //300
+    catStartSprite.y = 153;
+    catStartSprite.scale.x = 2;
+    catStartSprite.scale.y = 2;
+    catStartSprite.interactive = true;
+    catStartSprite.buttonMode = true;
+    catStartSprite.on("pointerup", createCatPage);
+    startPage.addChild(catStartSprite);
+
+    makeButton((canvasWidth/2)-(buttonWidth/2), 360, 23, 0x7db4dd, "Start", startPage, createDogPage);
 }
 
 /*****************************
@@ -215,6 +240,7 @@ function createDogPage() {
     catPage.visible = false;
     creditsPage.visible = false;
     notesPage.visible = false;
+    notesPage2.visible = false;
 
     changeBackground(0xFFFFFF, 0x000000);
     dogPage.addChild(bg);
@@ -256,6 +282,7 @@ function createBunPage() {
     catPage.visible = false;
     creditsPage.visible = false;
     notesPage.visible = false;
+    notesPage2.visible = false;
 
     changeBackground(0xFFFFFF, 0x000000);
     bunPage.addChild(bg);
@@ -264,8 +291,6 @@ function createBunPage() {
 
     // start with one bun on the page
     hopAnim(randomInt(0, 380), randomInt(80, 430));
-
-    // let increase = grow(hoppingBun, 0.25, 0.8);
 
     // create the menu, more buns!, and grow buttons
     makeButton(10, 10, 8, 0x58C4C6, "Main Menu", bunPage, createStartPage);
@@ -284,6 +309,7 @@ function createCatPage() {
     catPage.visible = true;
     creditsPage.visible = false;
     notesPage.visible = false;
+    notesPage2.visible = false;
 
     changeBackground(0xFFFFFF, 0x000000);
     catPage.addChild(bg);
@@ -300,10 +326,8 @@ function createCatPage() {
     catL3 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
     catL4 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
 
-    // cats = [catR1, catR2, catR3, catR4];
-    cats = [catR1];
+    cats = [catR1, catR2, catR3, catR4];
     cats2 = [catL1, catL2, catL3, catL4];
-    // cats2 = [catL1];
 
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", catPage, createStartPage);
 }
@@ -319,27 +343,61 @@ function createCreditsPage() {
     createCatPage.visible = false;
     creditsPage.visible = true;
     notesPage.visible = false;
+    notesPage2.visible = false;
 
     changeBackground(0xFFFFFF, 0x000000);
     creditsPage.addChild(bg);
 
-    let titleStyle = new PIXI.TextStyle({
+    let paraStyle = new PIXI.TextStyle({
         fill: 0x000000,
         fontSize: 20,
         fontFamily: "VT323",   // changing later
         wordWrap: true,
-        wordWrapWidth: 490,
-        // lineHeight: 20,
+        wordWrapWidth: 470,
         leading: 8
     });
 
-    let titleText1 = new PIXI.Text("     Lorem ipsum dolor sit amet, ludus commodo lucilius ius et, et quot definitionem sit. Mazim insolens maiestatis an vix, te mea nullam commodo appetere. Eu dolor corrumpit eos. Tollit conclusionemque ei mei. Deleniti cotidieque concludaturque te sea, eu vel aliquam reprehendunt.");
-    titleText1.style = titleStyle;
-    titleText1.x = 10;
-    titleText1.y = 100;
-    // titleText1.wordWrap = true;
-    // titleText1.wordWrapWidth = 100;
-    creditsPage.addChild(titleText1);
+    let spriteTitle = new PIXI.Text("Sprites", {
+        fill: 0xFFC43C,
+        fontSize: 25,
+        fontFamily: "VT323"
+    });
+    spriteTitle.x = 20;
+    spriteTitle.y = 100;
+    creditsPage.addChild(spriteTitle);
+
+    let spriteText = new PIXI.Text(" • Cat: Biofunk95 @ DeviantArt (https://goo.gl/CUgsek) \n • Dog: Davidalix @ Spriters-Resource \n       (https://goo.gl/aKfHHF) \n • Bunny: Pastella @ Rebloggy (https://goo.gl/FRa4r6)");
+    spriteText.style = paraStyle;
+    spriteText.x = 30;
+    spriteText.y = 130;
+    creditsPage.addChild(spriteText);
+
+    let resourcesTitle = new PIXI.Text("Resources", {
+        fill: 0xFD4B65,
+        fontSize: 25,
+        fontFamily: "VT323"
+    });
+    resourcesTitle.x = 20;
+    resourcesTitle.y = 240;
+    creditsPage.addChild(resourcesTitle);
+
+    let resourcesText = new PIXI.Text("   The following resources were used to learn more about Pixi.js: \n • Pixi.js (http://www.pixijs.com/)\n • Kittykatattack's Pixi Tutorial on GitHub \n  (https://goo.gl/fHJfFL) \n • Tonethar's Circle Blast Tutorial \n  (https://goo.gl/x896Vg)");
+    resourcesText.style = paraStyle;
+    resourcesText.x = 30;
+    resourcesText.y = 270;
+    creditsPage.addChild(resourcesText);
+
+    let titleStyle = new PIXI.TextStyle({
+        fill: 0x000000,
+        fontSize: 35,
+        fontFamily: "VT323",   // changing later
+    });
+
+    let title = new PIXI.Text("Credits");
+    title.style = titleStyle;
+    title.x = 200;
+    title.y = 65;
+    creditsPage.addChild(title);
 
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", creditsPage, createStartPage);
 }
@@ -354,11 +412,143 @@ function createNotesPage() {
     bunPage.visible = false;
     creditsPage.visible = false;
     notesPage.visible = true;
+    notesPage2.visible = false;
 
     changeBackground(0xFFFFFF, 0x000000);
     notesPage.addChild(bg);
 
+    let titleStyle = new PIXI.TextStyle({
+        fill: 0x000000,
+        fontSize: 35,
+        fontFamily: "VT323",   // changing later
+    });
+
+    let title = new PIXI.Text("Notes");
+    title.style = titleStyle;
+    title.x = 220;
+    title.y = 65;
+    notesPage.addChild(title);
+
+    let inspirationTitle = new PIXI.Text("Inspiration", {
+        fill: 0xFFC43C,
+        fontSize: 25,
+        fontFamily: "VT323"
+    });
+    inspirationTitle.x = 20;
+    inspirationTitle.y = 100;
+    notesPage.addChild(inspirationTitle);
+
+    let paraStyle = new PIXI.TextStyle({
+        fill: 0x000000,
+        fontSize: 20,
+        fontFamily: "VT323",   // changing later
+        wordWrap: true,
+        wordWrapWidth: 450,
+        leading: 8
+    });
+
+    let inspiration = new PIXI.Text("   After looking at many pixelated animal gifs and sprites during my free time, I was suddenly " +  
+    "inspired to create a pet simulator (hence the name 'Smol Pet Sim'). I remembered how I always wanted a " + 
+    "pet when I was younger and was heavily drawn to online games such as Webkinz or Neopets. After bugging my mum " + 
+    "for years, we finally got a cat (her name is Cookie!) in 2010 and that was one of the happiest days of my life.\n" + 
+    "   In this project, I wanted to recreate some of the online pet interaction experience and to see how far " + 
+    "I could get with the programming knowledge I accumulated in three semesters of college. Although the idea " +
+    "behind Smol Pet Sim wasn't terribly complicated, the execution process was more than challenging. ");
+    inspiration.style = paraStyle;
+    inspiration.x = 30;
+    inspiration.y = 130;
+    notesPage.addChild(inspiration);
+
+    let arrow = new Graphics();
+    arrow.lineStyle(1, 0x7db4dd, 1);
+    arrow.beginFill(0x7db4dd);
+    arrow.moveTo(0, 20);
+    arrow.lineTo(15, 0);
+    arrow.lineTo(15, 10);
+    arrow.lineTo(40, 10);
+    arrow.lineTo(40, 30);
+    arrow.lineTo(15, 30);
+    arrow.lineTo(15, 40);
+    arrow.endFill();
+    arrow.x = 490;
+    arrow.y = 465;
+    arrow.scale.x = -0.65;
+    arrow.scale.y = 0.65;
+    arrow.buttonMode = true;
+    arrow.interactive = true;
+    arrow.on("pointerup", createNotesPage2);
+    notesPage.addChild(arrow);
+    
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", notesPage, createStartPage);
+}
+
+function createNotesPage2() {
+    startPage.visible = false;
+    dogPage.visible = false;
+    bunPage.visible = false;
+    creditsPage.visible = false;
+    notesPage.visible = false;
+    notesPage2.visible = true;
+
+    changeBackground(0xFFFFFF, 0x000000);
+    notesPage2.addChild(bg);
+
+    let learnedTitle = new PIXI.Text("Process + Above & Beyond", {
+        fill: 0xFD4B65,
+        fontSize: 25,
+        fontFamily: "VT323"
+    });
+    learnedTitle.x = 20;
+    learnedTitle.y = 70;
+    notesPage2.addChild(learnedTitle);
+
+    let paraStyle = new PIXI.TextStyle({
+        fill: 0x000000,
+        fontSize: 20,
+        fontFamily: "VT323",   // changing later
+        wordWrap: true,
+        wordWrapWidth: 450,
+        leading: 8
+    });
+
+    let learnedText = new PIXI.Text("   I wanted the outcome to look exactly like how I pictured it in my head, or as close to it as possible. To do this, I had to: \n" + 
+    " • Get more comfortable with JavaScript and learn\n   Pixi.js syntax \n" + 
+    " • Learn different methods for animating sprites from\n   sprite sheets using Pixi.js \n" +
+    " • Learn to display Pixi objects without an actual\n   renderer object, which was confusing at first\n" +  
+    " • Make all sprites, Graphics, and Text objects\n   interactive using the mouse \n" + 
+    " • Create multiple states/scenes whose visibility could\n   be turned on/off");
+    learnedText.style = paraStyle;
+    learnedText.x = 30;
+    learnedText.y = 100;
+    notesPage2.addChild(learnedText);
+
+    let learnedText2 = new PIXI.Text("   To learn more about the resources I used to create this project, please visit the Credits page.");
+    learnedText2.style = paraStyle;
+    learnedText2.x = 30;
+    learnedText2.y = 405;
+    notesPage2.addChild(learnedText2);
+
+    let arrow = new Graphics();
+    arrow.lineStyle(1, 0x7db4dd, 1);
+    arrow.beginFill(0x7db4dd);
+    arrow.moveTo(0, 20);
+    arrow.lineTo(15, 0);
+    arrow.lineTo(15, 10);
+    arrow.lineTo(40, 10);
+    arrow.lineTo(40, 30);
+    arrow.lineTo(15, 30);
+    arrow.lineTo(15, 40);
+    arrow.endFill();
+    arrow.x = 10;
+    arrow.y = 465;
+    arrow.scale.x = 0.65;
+    arrow.scale.y = 0.65;
+    arrow.buttonMode = true;
+    arrow.interactive = true;
+    arrow.on("pointerup", createNotesPage);
+    notesPage2.addChild(arrow);
+
+    makeButton(10, 10, 8, 0x58C4C6, "Main menu", notesPage2, createStartPage);
 }
 
 /*****************************
@@ -414,10 +604,6 @@ function loadSittingSprite() {
     let dogSitHeight = 28;
     // let numFrames = 15; // 15 frames
     sit = [];
-    // for (let i = 0; i < numFrames; i++) {
-    //     let frame = new Texture(dogSitSheet, new Rectangle(i * dogSitWidth, 27, dogSitWidth, dogSitHeight));
-    //     sit.push(frame);
-    // }
     sit.push(
         // new Texture(dogSitSheet, new Rectangle(4, 27, dogSitWidth, dogSitHeight)), // frame 0
         // new Texture(dogSitSheet, new Rectangle(42, 27, dogSitWidth, dogSitHeight)),
@@ -1029,44 +1215,7 @@ function gameLoop() {
     }
 
     if (catPage.visible) {
-        // make the cat walking towards the right increase in size
-        // if (walkingRightCat.scale.x < 2 && walkingRightCat.scale.x >= 1
-        //     && walkingRightCat.scale.y < 2 && walkingRightCat.scale.y >= 1) {
-        //     walkingRightCat.scale.x = walkingRightCat.scale.x + 0.01;
-        //     walkingRightCat.scale.y = walkingRightCat.scale.y + 0.01;
-        //     // console.log("x: " + walkingRightCat.scale.x);
-        //     // console.log(" y: " + walkingRightCat.scale.y);
-        // }
-    
-        // else {
-        //     walkingRightCat.scale.x = 2;
-        //     walkingRightCat.scale.y = 2;
-        // }
         loopArray(cats, dt, 2, -2, 1, 25);
         loopArray(cats2, dt, -2, 2, 2, 25);
     }
-
-    /* LOGIC FOR MAKING THE DOG GO BACK AND FORTH 
-    let dir = right; OR dog1 = visible, dog2 = invisible
-    if (dir = right) {
-        if (dog1.x <= edge) {
-            dog1.x = dog1.x + 50;
-        }
-
-        else {
-            dir = left;
-            hide dog1, show dog2
-        }
-    }
-    if (dir = left) {
-        if (dog2.x >= edge) {
-            dog2.x = dog2.x + 50;
-        }
-
-        else {
-            dir = right; 
-            hide dog2, show dog1
-        }
-    }
-    */
 }
