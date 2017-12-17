@@ -1,5 +1,7 @@
 # Final Project Information
-Description of the final project, significant changes from the proposal, and how the user can interact with the page.
+Description of the final project, significant changes from the [proposal](https://github.com/peachhichew/Smol-Pet-Sim/blob/master/Proposal.md), and how the user can interact with the page.
+
+Link to the project: [here](https://people.rit.edu/sxw8136/igme230/Smol-Pet-Sim/code/index.html).
 
 ## Significant changes from proposal
 
