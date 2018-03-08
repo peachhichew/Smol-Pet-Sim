@@ -184,30 +184,30 @@ function createStartPage() {
     startPage.addChild(bunStartSprite);
 
     let dogStart = TextureCache["dog"];
-    let dogWidth = 40.12;   // alter between 38 and 39? 39.6
-    let dogHeight = 28;
-    let clipDog = new Rectangle(6 * dogWidth, 27, dogWidth, dogHeight);
+    let dogWidth = 80.24;   // 40.12 x 28
+    let dogHeight = 56;
+    let clipDog = new Rectangle(12 * dogWidth, 54, dogWidth, dogHeight); // 6, 27
     dogStart.frame = clipDog;
     let dogStartSprite = new Sprite(dogStart);
     dogStartSprite.x = 135; //220
     dogStartSprite.y = 162;
-    dogStartSprite.scale.x = 1.8;
-    dogStartSprite.scale.y = 1.8;
+    // dogStartSprite.scale.x = 1.8;
+    // dogStartSprite.scale.y = 1.8;
     dogStartSprite.interactive = true;
     dogStartSprite.buttonMode = true;
     dogStartSprite.on("pointerup", createDogPage);
     startPage.addChild(dogStartSprite);
 
     let catStart = TextureCache["cat"];
-    let catWidth = 30;
-    let catHeight = 33;
-    let clipCat = new Rectangle(217, 0, catWidth, catHeight);
+    let catWidth = 60;  // 30
+    let catHeight = 66; // 33
+    let clipCat = new Rectangle(434, 0, catWidth, catHeight); // 217, 0
     catStart.frame = clipCat;
     let catStartSprite = new Sprite(catStart);
     catStartSprite.x = 214; //300
     catStartSprite.y = 153;
-    catStartSprite.scale.x = 2;
-    catStartSprite.scale.y = 2;
+    // catStartSprite.scale.x = 2;
+    // catStartSprite.scale.y = 2;
     catStartSprite.interactive = true;
     catStartSprite.buttonMode = true;
     catStartSprite.on("pointerup", createCatPage);
@@ -548,12 +548,12 @@ function createNotesPage2() {
 //  load sprite sheet for walking 
 function loadWalkingSprite() {
     let dogWalkSheet = BaseTexture.fromImage("dog");
-    let dogWalkWidth = 42;  // originally 35
-    let dogWalkHeight = 24;
+    let dogWalkWidth = 84;  // originally 42
+    let dogWalkHeight = 48; // 24
     let numFrames = 12;
     walk = [];
     for (let i = 0; i < numFrames; i++) {
-        let frame = new Texture(dogWalkSheet, new Rectangle(i * dogWalkWidth, 240, dogWalkWidth, dogWalkHeight));
+        let frame = new Texture(dogWalkSheet, new Rectangle(i * dogWalkWidth, 480, dogWalkWidth, dogWalkHeight)); // 240
         walk.push(frame);
     }
     return walk;
@@ -561,23 +561,23 @@ function loadWalkingSprite() {
 
 function loadWalkingReversedSprite() {
     let dogWalk2 = BaseTexture.fromImage("dogFlipped");
-    let dogWalk2Width = 42;
-    let dogWalk2Height = 24;
+    let dogWalk2Width = 84; // originally 42
+    let dogWalk2Height = 48;    // 24
     let numFrames = 12;
     walkFlipped = [];
     // manually "crop" out each sprite due to the different spacings in between each of them
     walkFlipped.push(
-        new Texture(dogWalk2, new Rectangle(836, 240, dogWalk2Width, dogWalk2Height)), // last frame
-        new Texture(dogWalk2, new Rectangle(794, 240, dogWalk2Width, dogWalk2Height)),  // frame 9
-        new Texture(dogWalk2, new Rectangle(752, 240, dogWalk2Width, dogWalk2Height)),  // frame 8
-        new Texture(dogWalk2, new Rectangle(710, 240, dogWalk2Width, dogWalk2Height)),  // frame 7
-        new Texture(dogWalk2, new Rectangle(668, 240, dogWalk2Width, dogWalk2Height)),  // frame 6
-        new Texture(dogWalk2, new Rectangle(626, 240, dogWalk2Width, dogWalk2Height)),  // frame 5
-        new Texture(dogWalk2, new Rectangle(584, 240, dogWalk2Width, dogWalk2Height)),  // frame 4
-        new Texture(dogWalk2, new Rectangle(542, 240, dogWalk2Width, dogWalk2Height)),  // frame 3
-        new Texture(dogWalk2, new Rectangle(500, 240, dogWalk2Width, dogWalk2Height)),  // frame 2
-        new Texture(dogWalk2, new Rectangle(458, 240, dogWalk2Width, dogWalk2Height)),  // frame 1
-        new Texture(dogWalk2, new Rectangle(416, 240, dogWalk2Width, dogWalk2Height))  // frame 0
+        new Texture(dogWalk2, new Rectangle(1672, 480, dogWalk2Width, dogWalk2Height)), // last frame, 836, 240
+        new Texture(dogWalk2, new Rectangle(1588, 480, dogWalk2Width, dogWalk2Height)),  // frame 9, 794
+        new Texture(dogWalk2, new Rectangle(1504, 480, dogWalk2Width, dogWalk2Height)),  // frame 8, 752
+        new Texture(dogWalk2, new Rectangle(1420, 480, dogWalk2Width, dogWalk2Height)),  // frame 7, 710
+        new Texture(dogWalk2, new Rectangle(1336, 480, dogWalk2Width, dogWalk2Height)),  // frame 6, 668
+        new Texture(dogWalk2, new Rectangle(1252, 480, dogWalk2Width, dogWalk2Height)),  // frame 5, 626
+        new Texture(dogWalk2, new Rectangle(1168, 480, dogWalk2Width, dogWalk2Height)),  // frame 4, 584
+        new Texture(dogWalk2, new Rectangle(1084, 480, dogWalk2Width, dogWalk2Height)),  // frame 3, 542
+        new Texture(dogWalk2, new Rectangle(1000, 480, dogWalk2Width, dogWalk2Height)),  // frame 2, 500
+        new Texture(dogWalk2, new Rectangle(916, 480, dogWalk2Width, dogWalk2Height)),  // frame 1, 458
+        new Texture(dogWalk2, new Rectangle(832, 480, dogWalk2Width, dogWalk2Height))  // frame 0, 416
     );
     return walkFlipped;
 }
@@ -585,29 +585,29 @@ function loadWalkingReversedSprite() {
 // load sprite sheet for sitting 
 function loadSittingSprite() {
     let dogSitSheet = BaseTexture.fromImage("dog");
-    let dogSitWidth = 42;   // alter between 38 and 39? 39.6, 40.12
-    let dogSitHeight = 28;
+    let dogSitWidth = 84;   // 48
+    let dogSitHeight = 56;  // 28
     // let numFrames = 15; // 15 frames
     sit = [];
     sit.push(
-        new Texture(dogSitSheet, new Rectangle(322, 27, dogSitWidth, dogSitHeight)),    // start here
-        new Texture(dogSitSheet, new Rectangle(362, 27, dogSitWidth, dogSitHeight)),
-        new Texture(dogSitSheet, new Rectangle(401, 27, dogSitWidth, dogSitHeight)),
-        new Texture(dogSitSheet, new Rectangle(441, 27, dogSitWidth, dogSitHeight)),
+        new Texture(dogSitSheet, new Rectangle(644, 54, dogSitWidth, dogSitHeight)),    // start here, originally 322, 27
+        new Texture(dogSitSheet, new Rectangle(724, 54, dogSitWidth, dogSitHeight)),    // 362, 27
+        new Texture(dogSitSheet, new Rectangle(802, 54, dogSitWidth, dogSitHeight)),    // 401, 27
+        new Texture(dogSitSheet, new Rectangle(882, 54, dogSitWidth, dogSitHeight)),    // 441, 27
     );
     return sit;
 }
 
 function loadSittingFlippedSprite() {
     let dogSit2 = BaseTexture.fromImage("dogFlipped");
-    let dogSit2Width = 42;
-    let dogSit2Height = 28;
+    let dogSit2Width = 84;  // 42
+    let dogSit2Height = 56; // 28
     sitFlipped = [];
     sitFlipped.push(
-        new Texture(dogSit2, new Rectangle(596, 27, dogSit2Width, dogSit2Height)),
-        new Texture(dogSit2, new Rectangle(635, 27, dogSit2Width, dogSit2Height)),
-        new Texture(dogSit2, new Rectangle(674, 27, dogSit2Width, dogSit2Height)),
-        new Texture(dogSit2, new Rectangle(713, 27, dogSit2Width, dogSit2Height)),
+        new Texture(dogSit2, new Rectangle(1192, 54, dogSit2Width, dogSit2Height)),  // 596, 27
+        new Texture(dogSit2, new Rectangle(1270, 54, dogSit2Width, dogSit2Height)),  // 635
+        new Texture(dogSit2, new Rectangle(1348, 54, dogSit2Width, dogSit2Height)),  // 674
+        new Texture(dogSit2, new Rectangle(1426, 54, dogSit2Width, dogSit2Height)),  // 713
     );
     return sitFlipped;
 }
@@ -615,12 +615,12 @@ function loadSittingFlippedSprite() {
 // load sprite sheet for barking
 function loadBarkingSprite() {
     let dogBarkSheet = BaseTexture.fromImage("dog");
-    let dogBarkWidth = 42.2;  // originally 35, 37
-    let dogBarkHeight = 28; // originally 25
+    let dogBarkWidth = 84.4;  // originally 42.2
+    let dogBarkHeight = 56; // originally 28
     let numFrames = 13;
     bark = [];
     for (let i = 0; i < numFrames; i++) {
-        let frame = new Texture(dogBarkSheet, new Rectangle(i * dogBarkWidth, 58, dogBarkWidth, dogBarkHeight));
+        let frame = new Texture(dogBarkSheet, new Rectangle(i * dogBarkWidth, 116, dogBarkWidth, dogBarkHeight)); // originally 58
         bark.push(frame);
     }
     return bark;
@@ -629,23 +629,23 @@ function loadBarkingSprite() {
 // load flipped sprite sheet for barking
 function loadBarkingFlippedSprite() {
     let dogBark2 = BaseTexture.fromImage("dogFlipped");
-    let dogBark2Width = 42;
-    let dogBark2Height = 28;
+    let dogBark2Width = 84; // 42
+    let dogBark2Height = 56;    // 28
     barkFlipped = [];
     barkFlipped.push(
-        new Texture(dogBark2, new Rectangle(872, 58, dogBark2Width, dogBark2Height)), // last frame
-        new Texture(dogBark2, new Rectangle(830, 58, dogBark2Width, dogBark2Height)),
-        new Texture(dogBark2, new Rectangle(788, 58, dogBark2Width, dogBark2Height)),
-        new Texture(dogBark2, new Rectangle(745, 58, dogBark2Width, dogBark2Height)),
-        new Texture(dogBark2, new Rectangle(703, 58, dogBark2Width, dogBark2Height)),
-        new Texture(dogBark2, new Rectangle(661, 58, dogBark2Width, dogBark2Height)),
-        new Texture(dogBark2, new Rectangle(619, 58, dogBark2Width, dogBark2Height)),
-        new Texture(dogBark2, new Rectangle(577, 58, dogBark2Width, dogBark2Height)),
-        new Texture(dogBark2, new Rectangle(535, 58, dogBark2Width, dogBark2Height)),
-        new Texture(dogBark2, new Rectangle(491, 58, dogBark2Width, dogBark2Height)),
-        new Texture(dogBark2, new Rectangle(449, 58, dogBark2Width, dogBark2Height)),
-        new Texture(dogBark2, new Rectangle(407, 58, dogBark2Width, dogBark2Height)),
-        new Texture(dogBark2, new Rectangle(365, 58, dogBark2Width, dogBark2Height)), // first
+        new Texture(dogBark2, new Rectangle(1744, 116, dogBark2Width, dogBark2Height)), // last frame, 872, 58
+        new Texture(dogBark2, new Rectangle(1660, 116, dogBark2Width, dogBark2Height)),   // 830
+        new Texture(dogBark2, new Rectangle(1576, 116, dogBark2Width, dogBark2Height)),   // 788
+        new Texture(dogBark2, new Rectangle(1490, 116, dogBark2Width, dogBark2Height)),   // 745
+        new Texture(dogBark2, new Rectangle(1406, 116, dogBark2Width, dogBark2Height)),   // 703
+        new Texture(dogBark2, new Rectangle(1322, 116, dogBark2Width, dogBark2Height)),   // 661
+        new Texture(dogBark2, new Rectangle(1238, 116, dogBark2Width, dogBark2Height)),   // 619
+        new Texture(dogBark2, new Rectangle(1154, 116, dogBark2Width, dogBark2Height)),   // 577
+        new Texture(dogBark2, new Rectangle(1070, 116, dogBark2Width, dogBark2Height)),   // 535
+        new Texture(dogBark2, new Rectangle(982, 116, dogBark2Width, dogBark2Height)),   // 491
+        new Texture(dogBark2, new Rectangle(898, 116, dogBark2Width, dogBark2Height)),   // 449
+        new Texture(dogBark2, new Rectangle(814, 116, dogBark2Width, dogBark2Height)),   // 407
+        new Texture(dogBark2, new Rectangle(730, 116, dogBark2Width, dogBark2Height)), // first, 365
     );
     return barkFlipped;
 }
@@ -890,26 +890,26 @@ function hopAnim(x, y) {
 
 function loadCatWalkRightSprite() {
     let catWalkRightSheet = BaseTexture.fromImage("cat");
-    let catWalkRightWidth = 30; // originally 40
-    let catWalkRightHeight = 33; // originally 40
+    let catWalkRightWidth = 60; // originally 30
+    let catWalkRightHeight = 66; // originally 33
     catWalkRight = [];
     catWalkRight.push(
-        new Texture(catWalkRightSheet, new Rectangle(187, 69, catWalkRightWidth, catWalkRightHeight)), // frame 0
-        new Texture(catWalkRightSheet, new Rectangle(220, 69, catWalkRightWidth, catWalkRightHeight)),
-        new Texture(catWalkRightSheet, new Rectangle(253, 69, catWalkRightWidth, catWalkRightHeight))
+        new Texture(catWalkRightSheet, new Rectangle(374, 138, catWalkRightWidth, catWalkRightHeight)), // frame 0, 187, 69
+        new Texture(catWalkRightSheet, new Rectangle(440, 138, catWalkRightWidth, catWalkRightHeight)),  // 220
+        new Texture(catWalkRightSheet, new Rectangle(506, 138, catWalkRightWidth, catWalkRightHeight))   // 253
     );
     return catWalkRight;
 }
 
 function loadCatWalkLeftSprite() {
     let catWalkLeftSheet = BaseTexture.fromImage("cat");
-    let catWalkLeftWidth = 30; // originally 40
-    let catWalkLeftHeight = 33; // originally 40
+    let catWalkLeftWidth = 60; // originally 30
+    let catWalkLeftHeight = 66; // originally 33
     catWalkLeft = [];
     catWalkLeft.push(
-        new Texture(catWalkLeftSheet, new Rectangle(187, 38, catWalkLeftWidth, catWalkLeftHeight)), // frame 0
-        new Texture(catWalkLeftSheet, new Rectangle(220, 38, catWalkLeftWidth, catWalkLeftHeight)),
-        new Texture(catWalkLeftSheet, new Rectangle(253, 38, catWalkLeftWidth, catWalkLeftHeight))
+        new Texture(catWalkLeftSheet, new Rectangle(374, 76, catWalkLeftWidth, catWalkLeftHeight)), // frame 0, 187, 38
+        new Texture(catWalkLeftSheet, new Rectangle(440, 76, catWalkLeftWidth, catWalkLeftHeight)), // 220
+        new Texture(catWalkLeftSheet, new Rectangle(506, 76, catWalkLeftWidth, catWalkLeftHeight))  // 253
     );
     return catWalkLeft;
 }
@@ -925,8 +925,8 @@ function catWalkRightAnim(x, y) {
     let walkingRightCat = new extras.AnimatedSprite(catWalkRightTexture);
     walkingRightCat.x = x;
     walkingRightCat.y = y;
-    walkingRightCat.scale.x = 2;
-    walkingRightCat.scale.y = 2;
+    // walkingRightCat.scale.x = 2;
+    // walkingRightCat.scale.y = 2;
     walkingRightCat.vy = speed * direction;
     walkingRightCat.animationSpeed = 1/10;
     walkingRightCat.loop = true;
@@ -936,14 +936,14 @@ function catWalkRightAnim(x, y) {
     walkingRightCat.on("pointerup", function() {
         // if clicked is true + the cat is facing towards the right, flip the 
         // sprite horizontally and make it walk in the opposite direction (neg velocity)
-        if (!clicked && walkingRightCat.scale.x == 2) {
-            walkingRightCat.scale.x = -2;
+        if (!clicked && walkingRightCat.scale.x == 1) {
+            // walkingRightCat.scale.x = -2;
             walkingRightCat.vy = speed * -direction;
             walkingRightCat.play();
         }
     
         else {
-            walkingRightCat.scale.x = 2;
+            // walkingRightCat.scale.x = 2;
             walkingRightCat.vy = speed * direction;
             walkingRightCat.play();
         }
@@ -960,8 +960,8 @@ function catWalkLeftAnim(x, y) {
     let walkingLeftCat = new extras.AnimatedSprite(catWalkLeftTexture);
     walkingLeftCat.x = x;
     walkingLeftCat.y = y;
-    walkingLeftCat.scale.x = 2;
-    walkingLeftCat.scale.y = 2;
+    // walkingLeftCat.scale.x = 2;
+    // walkingLeftCat.scale.y = 2;
     // createCatDepth(walkingLeftCat);
     walkingLeftCat.animationSpeed = 1/10;
     walkingLeftCat.vy = speed * direction;
@@ -971,14 +971,14 @@ function catWalkLeftAnim(x, y) {
     walkingLeftCat.buttonMode = true;
     walkingLeftCat.on("pointerup", function(){
         // use the same boolean check in catWalkRightAnim to flip the cat sprite
-        if (!clicked && walkingLeftCat.scale.x == 2) {
-            walkingLeftCat.scale.x = -2;
+        if (!clicked && walkingLeftCat.scale.x == 1) {
+            // walkingLeftCat.scale.x = -2;
             walkingLeftCat.vy = speed * -direction;
             walkingLeftCat.play();
         }
 
         else  {
-            walkingLeftCat.scale.x = 2;
+            // walkingLeftCat.scale.x = 2;
             walkingLeftCat.vy = speed * direction;
             walkingLeftCat.play();
         }
@@ -1126,7 +1126,7 @@ function gameLoop() {
     }
 
     if (catPage.visible) {
-        loopArray(cats, dt, 2, -2, 1, 25);
-        loopArray(cats2, dt, -2, 2, 2, 25);
+        loopArray(cats, dt, 1, -1, 1, 25);
+        loopArray(cats2, dt, -1, 1, 2, 25);
     }
 }
