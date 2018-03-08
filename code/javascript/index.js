@@ -937,13 +937,13 @@ function catWalkRightAnim(x, y) {
         // if clicked is true + the cat is facing towards the right, flip the 
         // sprite horizontally and make it walk in the opposite direction (neg velocity)
         if (!clicked && walkingRightCat.scale.x == 1) {
-            // walkingRightCat.scale.x = -2;
+            walkingRightCat.scale.x = -1;   // originally -2
             walkingRightCat.vy = speed * -direction;
             walkingRightCat.play();
         }
     
         else {
-            // walkingRightCat.scale.x = 2;
+            walkingRightCat.scale.x = 1;
             walkingRightCat.vy = speed * direction;
             walkingRightCat.play();
         }
@@ -972,13 +972,13 @@ function catWalkLeftAnim(x, y) {
     walkingLeftCat.on("pointerup", function(){
         // use the same boolean check in catWalkRightAnim to flip the cat sprite
         if (!clicked && walkingLeftCat.scale.x == 1) {
-            // walkingLeftCat.scale.x = -2;
+            walkingLeftCat.scale.x = -1;
             walkingLeftCat.vy = speed * -direction;
             walkingLeftCat.play();
         }
 
         else  {
-            // walkingLeftCat.scale.x = 2;
+            walkingLeftCat.scale.x = 1;
             walkingLeftCat.vy = speed * direction;
             walkingLeftCat.play();
         }
