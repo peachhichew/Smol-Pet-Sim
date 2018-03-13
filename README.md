@@ -1,9 +1,9 @@
-# Final Project Information
+# Project Information
 This is a smol (small) pet simulator where the user can interact with a dog, a cat, and a bunny. All of the animals are animated using Pixi.js, with the exception of the main menu. User interactions will be listed below. Any significant changes from the [proposal](https://github.com/peachhichew/Smol-Pet-Sim/blob/master/Proposal.md) will also be included in this document.
 
-Link to the project: [here](https://people.rit.edu/sxw8136/igme230/Smol-Pet-Sim/code/index.html).
+Link to the project: [here](https://people.rit.edu/sxw8136/330/Smol-Pet-Sim/code/index.html).
 
-## Significant changes from proposal
+## [IN-PROGRESS] Significant changes from proposal
 
 ### Dog page
 - Only has mouseClicked/pointerup event, no mouseDragged was implemented.
