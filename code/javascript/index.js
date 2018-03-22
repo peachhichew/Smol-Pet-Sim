@@ -155,14 +155,15 @@ function createStartPage() {
     credits.on("pointerup", createCreditsPage);
     startPage.addChild(credits);
 
-    let notes = new PIXI.Text("Notes");
-    notes.style = infoStyle;
-    notes.x = 450;
-    notes.y = 478;
-    notes.interactive = true;
-    notes.buttonMode = true;
-    notes.on("pointerup", createNotesPage);
-    startPage.addChild(notes);
+    // HIDE FOR NOW -- ADD INSTRUCTIONS LATER?
+    // let notes = new PIXI.Text("Notes");
+    // notes.style = infoStyle;
+    // notes.x = 450;
+    // notes.y = 478;
+    // notes.interactive = true;
+    // notes.buttonMode = true;
+    // notes.on("pointerup", createNotesPage);
+    // startPage.addChild(notes);
 
     let directions = new PIXI.Text("(Click each animal to visit its page!)");
     directions.style = infoStyle;
@@ -193,7 +194,7 @@ function createStartPage() {
     dogStart.frame = clipDog;
     let dogStartSprite = new Sprite(dogStart);
     dogStartSprite.x = 135; //220
-    dogStartSprite.y = 162;
+    dogStartSprite.y = 157;
     // dogStartSprite.scale.x = 1.8;
     // dogStartSprite.scale.y = 1.8;
     dogStartSprite.interactive = true;
