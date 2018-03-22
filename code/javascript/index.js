@@ -1,3 +1,6 @@
+import {randomInt, changeBackground, makeButton} from './utilities.js';
+export {setup, gameLoop};
+
 // Testing if pixi is loaded properly
 var type = "WebGL"
 if(!PIXI.utils.isWebGLSupported()){
@@ -14,7 +17,7 @@ resources = PIXI.loader.resources,
 TextureCache = PIXI.utils.TextureCache,
 Texture = PIXI.Texture,
 Sprite = PIXI.Sprite,
-Graphics = PIXI.Graphics
+Graphics = PIXI.Graphics,
 Rectangle = PIXI.Rectangle,
 BaseTexture = PIXI.BaseTexture,
 extras = PIXI.extras;
@@ -92,7 +95,7 @@ function setup() {
     notesPage2.visible = false;
     stage.addChild(notesPage2);
 
-    changeBackground(0xFFFFFF, 0x000000);
+    changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     startPage.addChild(bg);
 
     createStartPage();
@@ -114,7 +117,7 @@ function createStartPage() {
     notesPage.visible = false;
     notesPage2.visible = false;
 
-    changeBackground(0xFFFFFF, 0x000000);
+    changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     startPage.addChild(bg);
 
     // TITLE TEXT
@@ -172,7 +175,7 @@ function createStartPage() {
     let bunHeight = 270;
     let bunStart = TextureCache["bunny"];
     let clipBun = new Rectangle(0, 0, bunWidth, bunHeight);
-    bunStart.frame = clipBun;
+    bunStart.frame = clipBun;   // doesn't work??
     let bunStartSprite = new Sprite(bunStart);
     bunStartSprite.x = 230; //100
     bunStartSprite.y = 143;
@@ -213,7 +216,7 @@ function createStartPage() {
     catStartSprite.on("pointerup", createCatPage);
     startPage.addChild(catStartSprite);
 
-    makeButton((canvasWidth/2)-(buttonWidth/2), 360, 23, 0x7db4dd, "Start", startPage, createDogPage);
+    makeButton((canvasWidth/2)-(buttonWidth/2), 360, 23, 0x7db4dd, "Start", startPage, createDogPage, buttonWidth, buttonHeight);
 }
 
 /*****************************
@@ -229,7 +232,7 @@ function createDogPage() {
     notesPage.visible = false;
     notesPage2.visible = false;
 
-    changeBackground(0xFFFFFF, 0x000000);
+    changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     dogPage.addChild(bg);
     // load the sprite sheets into the window 
     walkTexture = loadWalkingSprite();
@@ -254,7 +257,7 @@ function createDogPage() {
 
     barkFlippedTexture = loadBarkingFlippedSprite();
 
-    makeButton(10, 10, 8, 0x58C4C6, "Main menu", dogPage, createStartPage);
+    makeButton(10, 10, 8, 0x58C4C6, "Main menu", dogPage, createStartPage, buttonWidth, buttonHeight);
 }
 
 /*****************************
@@ -270,7 +273,7 @@ function createBunPage() {
     notesPage.visible = false;
     notesPage2.visible = false;
 
-    changeBackground(0xFFFFFF, 0x000000);
+    changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     bunPage.addChild(bg);
 
     // load the bun sprite
@@ -280,9 +283,9 @@ function createBunPage() {
     hopAnim(randomInt(0, 380), randomInt(80, 430));
 
     // create the menu, more buns!, and resize buttons
-    makeButton(10, 10, 8, 0x58C4C6, "Main Menu", bunPage, createStartPage);
-    makeButton(400, 10, 5, 0xFD4B65, "More buns!", bunPage, newBun);
-    makeButton(205, 10, 18, 0xFFC43C, "Resize", bunPage, resize);
+    makeButton(10, 10, 8, 0x58C4C6, "Main Menu", bunPage, createStartPage, buttonWidth, buttonHeight);
+    makeButton(400, 10, 5, 0xFD4B65, "More buns!", bunPage, newBun, buttonWidth, buttonHeight);
+    makeButton(205, 10, 18, 0xFFC43C, "Resize", bunPage, resize, buttonWidth, buttonHeight);
 }
 
 /*****************************
@@ -298,7 +301,7 @@ function createCatPage() {
     notesPage.visible = false;
     notesPage2.visible = false;
 
-    changeBackground(0xFFFFFF, 0x000000);
+    changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     catPage.addChild(bg);
 
     catWalkRightTexture = loadCatWalkRightSprite();
@@ -316,7 +319,7 @@ function createCatPage() {
     cats = [catR1, catR2, catR3, catR4];
     cats2 = [catL1, catL2, catL3, catL4];
 
-    makeButton(10, 10, 8, 0x58C4C6, "Main menu", catPage, createStartPage);
+    makeButton(10, 10, 8, 0x58C4C6, "Main menu", catPage, createStartPage, buttonWidth, buttonHeight);
 }
 
 /*****************************
@@ -332,7 +335,7 @@ function createCreditsPage() {
     notesPage.visible = false;
     notesPage2.visible = false;
 
-    changeBackground(0xFFFFFF, 0x000000);
+    changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     creditsPage.addChild(bg);
 
     // text style for paragraphs
@@ -387,7 +390,7 @@ function createCreditsPage() {
     title.y = 65;
     creditsPage.addChild(title);
 
-    makeButton(10, 10, 8, 0x58C4C6, "Main menu", creditsPage, createStartPage);
+    makeButton(10, 10, 8, 0x58C4C6, "Main menu", creditsPage, createStartPage, buttonWidth, buttonHeight);
 }
 
 /*****************************
@@ -402,7 +405,7 @@ function createNotesPage() {
     notesPage.visible = true;
     notesPage2.visible = false;
 
-    changeBackground(0xFFFFFF, 0x000000);
+    changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     notesPage.addChild(bg);
 
     let titleStyle = new PIXI.TextStyle({
@@ -468,7 +471,7 @@ function createNotesPage() {
     arrow.on("pointerup", createNotesPage2);
     notesPage.addChild(arrow);
     
-    makeButton(10, 10, 8, 0x58C4C6, "Main menu", notesPage, createStartPage);
+    makeButton(10, 10, 8, 0x58C4C6, "Main menu", notesPage, createStartPage, buttonWidth, buttonHeight);
 }
 
 function createNotesPage2() {
@@ -479,7 +482,7 @@ function createNotesPage2() {
     notesPage.visible = false;
     notesPage2.visible = true;
 
-    changeBackground(0xFFFFFF, 0x000000);
+    changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     notesPage2.addChild(bg);
 
     let learnedTitle = new PIXI.Text("Process + Above & Beyond", {
@@ -538,7 +541,7 @@ function createNotesPage2() {
     arrow.on("pointerup", createNotesPage);
     notesPage2.addChild(arrow);
 
-    makeButton(10, 10, 8, 0x58C4C6, "Main menu", notesPage2, createStartPage);
+    makeButton(10, 10, 8, 0x58C4C6, "Main menu", notesPage2, createStartPage, buttonWidth, buttonHeight);
 }
 
 /*****************************
@@ -992,64 +995,64 @@ function catWalkLeftAnim(x, y) {
   OTHER FUNCTIONS
 ****************************/
 
-// creating a Random function so we can use it to spawn sprites at random locations
-function randomInt(min, max) {
-    // Math.ceil returns the smallest int greater than or equal to the given number
-    min = Math.ceil(min);
-    max = Math.floor(max);
+// // creating a Random function so we can use it to spawn sprites at random locations
+// function randomInt(min, max) {
+//     // Math.ceil returns the smallest int greater than or equal to the given number
+//     min = Math.ceil(min);
+//     max = Math.floor(max);
 
-    // [min, max)
-    let num = Math.floor(Math.random() * (max - min)) + min;
+//     // [min, max)
+//     let num = Math.floor(Math.random() * (max - min)) + min;
     
-    return num;
-}
+//     return num;
+// }
 
-// changes the background color by drawing a white rectangle
-function changeBackground(color, stroke){
-    // bg = new Graphics();
-    bg.beginFill(color);
-    bg.lineStyle(1, stroke, 1);  // stroke width, color, alpha
-    bg.drawRect(1, 0, canvasWidth - 1, canvasHeight - 1);
-    bg.endFill();
-    bg.x = 0;
-    bg.y = 0;
-}
+// // changes the background color by drawing a white rectangle
+// function changeBackground(color, stroke){
+//     // bg = new Graphics();
+//     bg.beginFill(color);
+//     bg.lineStyle(1, stroke, 1);  // stroke width, color, alpha
+//     bg.drawRect(1, 0, canvasWidth - 1, canvasHeight - 1);
+//     bg.endFill();
+//     bg.x = 0;
+//     bg.y = 0;
+// }
 
-// adding a makeButton function so we can easily create a button by giving it
-// certain parameter info
-function makeButton(x, y, xOffset, color, text, pageName, targetFunction) {
-    let menuButton = new Graphics();
-    menuButton.beginFill(color);
-    menuButton.lineStyle(1, 0x000000, 0.9); // stroke width, color, alpha
-    menuButton.drawRect(0, 0, buttonWidth, buttonHeight);
-    menuButton.endFill();
-    menuButton.x = x;
-    menuButton.y = y;
-    menuButton.interactive = true;
-    menuButton.buttonMode = true;
-    menuButton.on("pointerup", targetFunction); // targetFunction = function of the page you want to go to
-    pageName.addChild(menuButton); // add the button on to the specific page
+// // adding a makeButton function so we can easily create a button by giving it
+// // certain parameter info
+// function makeButton(x, y, xOffset, color, text, pageName, targetFunction) {
+//     let menuButton = new Graphics();
+//     menuButton.beginFill(color);
+//     menuButton.lineStyle(1, 0x000000, 0.9); // stroke width, color, alpha
+//     menuButton.drawRect(0, 0, buttonWidth, buttonHeight);
+//     menuButton.endFill();
+//     menuButton.x = x;
+//     menuButton.y = y;
+//     menuButton.interactive = true;
+//     menuButton.buttonMode = true;
+//     menuButton.on("pointerup", targetFunction); // targetFunction = function of the page you want to go to
+//     pageName.addChild(menuButton); // add the button on to the specific page
 
-    // text style for the button text
-    let textStyle = new PIXI.TextStyle({
-        fill: 0xFFFFFF,
-        strokeThickness: 1,
-        dropShadow: true,
-        dropShadowBlur: 0,
-        dropShadowDistance: 2,
-        fontSize: 20,
-        fontFamily: "VT323",
-    });
+//     // text style for the button text
+//     let textStyle = new PIXI.TextStyle({
+//         fill: 0xFFFFFF,
+//         strokeThickness: 1,
+//         dropShadow: true,
+//         dropShadowBlur: 0,
+//         dropShadowDistance: 2,
+//         fontSize: 20,
+//         fontFamily: "VT323",
+//     });
 
-    let menuButtonText = new PIXI.Text(text);
-    menuButtonText.style = textStyle;
-    menuButtonText.x = menuButton.x + xOffset;
-    menuButtonText.y = menuButton.y + 10;
-    menuButtonText.interactive = true;
-    menuButtonText.buttonMode = true;
-    menuButtonText.on("pointerup", targetFunction);
-    pageName.addChild(menuButtonText);
-}
+//     let menuButtonText = new PIXI.Text(text);
+//     menuButtonText.style = textStyle;
+//     menuButtonText.x = menuButton.x + xOffset;
+//     menuButtonText.y = menuButton.y + 10;
+//     menuButtonText.interactive = true;
+//     menuButtonText.buttonMode = true;
+//     menuButtonText.on("pointerup", targetFunction);
+//     pageName.addChild(menuButtonText);
+// }
 
 // spawn a new bun at a random location
 function newBun() {

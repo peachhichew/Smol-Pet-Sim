@@ -1,3 +1,5 @@
+import {setup} from './index.js';
+
 WebFont.load({
     google: {
       families: ['VT323']
