@@ -855,7 +855,7 @@ function loadBunSprite() {
     let hop = [];
     hop.push(
         new Texture(bunSheet, new Rectangle(0, 0, bunWidth, bunHeight)), // frame 0
-        new Texture(bunSheet, new Rectangle(bunWidth, 0, bunWidth, bunHeight)), // frame 1
+        new Texture(bunSheet, new Rectangle(bunWidth, 0, bunWidth-2, bunHeight)), // frame 1
         new Texture(bunSheet, new Rectangle(0, 270, bunWidth, bunHeight)), // frame 2
         new Texture(bunSheet, new Rectangle(bunWidth, 270, bunWidth, bunHeight)), // frame 3
         new Texture(bunSheet, new Rectangle(0, 540, bunWidth, bunHeight)), // frame 4
@@ -877,15 +877,54 @@ function loadBunSprite() {
 
 function hopAnim(x, y) {
     hoppingBun = new extras.AnimatedSprite(hopTexture);
-    hoppingBun.x = x;
-    hoppingBun.y = y;
+    // hoppingBun.x = x;
+    // hoppingBun.y = y;
     hoppingBun.scale.x = 0.25;
     hoppingBun.scale.y = 0.25;
+    hoppingBun.anchor.set(0.5);
     hoppingBun.animationSpeed = 1/10;
     hoppingBun.loop = true;
+    hoppingBun.interactive = true;
+    hoppingBun.buttonMode = true;
+    hoppingBun.on('pointerdown', onDragStart)
+    hoppingBun.on('pointerup', onDragEnd)
+    hoppingBun.on('pointerupoutside', onDragEnd)
+    hoppingBun.on('pointermove', onDragMove);
+    // hoppingBun.on("pointerup", function() {
+    //     console.log("clicked");
+    //     // use boolean to check whether it's been clicked on and if the button has been clicked?
+    //     // OR click and drag rabbits around?
+    // });
+    hoppingBun.x = x;
+    hoppingBun.y = y;
 
     bunPage.addChild(hoppingBun);
     hoppingBun.play();
+}
+
+// DRAGGING: http://pixijs.io/examples/#/demos/dragging.js
+function onDragStart(event) {
+    // store a reference to the data
+    // the reason for this is because of multitouch
+    // we want to track the movement of this particular touch
+    this.data = event.data;
+    this.alpha = 0.5;
+    this.dragging = true;
+}
+
+function onDragEnd() {
+    this.alpha = 1;
+    this.dragging = false;
+    // set the interaction data to null
+    this.data = null;
+}
+
+function onDragMove() {
+    if (this.dragging) {
+        var newPosition = this.data.getLocalPosition(this.parent);
+        this.x = newPosition.x;
+        this.y = newPosition.y;
+    }
 }
 
 /*****************************
@@ -1065,6 +1104,7 @@ function newBun() {
 
 // uses the randomInt() function to randomly resize the buns on the page
 function resize() {
+    // reset back to original size once it hits 4, get original size first
     let limit = randomInt(1, 4);
     hoppingBun.scale.x = limit*0.25;
     hoppingBun.scale.y = limit*0.25;
