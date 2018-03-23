@@ -1,4 +1,5 @@
 import {randomInt, changeBackground, makeButton} from './utilities.js';
+import {Animal, addAnimalSpriteToStage} from './classes.js';
 export {setup, gameLoop};
 
 // Testing if pixi is loaded properly
@@ -174,10 +175,11 @@ function createStartPage() {
     // ANIMAL IMAGES
     let bunWidth = 500;  // originally 35
     let bunHeight = 270;
-    let bunStart = TextureCache["bunny"];
+    // let bunStart = TextureCache["bunny"];
     let clipBun = new Rectangle(0, 0, bunWidth, bunHeight);
-    bunStart.frame = clipBun;   // doesn't work??
-    let bunStartSprite = new Sprite(bunStart);
+    // bunStart.frame = clipBun;   // doesn't work??
+    hopTexture = loadBunSprite();
+    let bunStartSprite = new Sprite(hopTexture[0]);
     bunStartSprite.x = 230; //100
     bunStartSprite.y = 143;
     bunStartSprite.scale.x = 0.25;
@@ -187,12 +189,16 @@ function createStartPage() {
     bunStartSprite.on("pointerup", createBunPage);
     startPage.addChild(bunStartSprite);
 
-    let dogStart = TextureCache["dog"];
+    // get rid of texture cache
+    // let dogStart = TextureCache["dog"];
     let dogWidth = 80.24;   // 40.12 x 28
     let dogHeight = 56;
     let clipDog = new Rectangle(12 * dogWidth, 54, dogWidth, dogHeight); // 6, 27
-    dogStart.frame = clipDog;
-    let dogStartSprite = new Sprite(dogStart);
+    // dogStart.frame = clipDog;
+    walkTexture = loadWalkingSprite();
+    sitTexture = loadSittingSprite();
+    barkTexture = loadBarkingSprite();
+    let dogStartSprite = new Sprite(sitTexture[0]);
     dogStartSprite.x = 135; //220
     dogStartSprite.y = 157;
     // dogStartSprite.scale.x = 1.8;
@@ -202,12 +208,12 @@ function createStartPage() {
     dogStartSprite.on("pointerup", createDogPage);
     startPage.addChild(dogStartSprite);
 
-    let catStart = TextureCache["cat"];
+    // let catStart = TextureCache["cat"];
     let catWidth = 60;  // 30
     let catHeight = 66; // 33
     let clipCat = new Rectangle(434, 0, catWidth, catHeight); // 217, 0
-    catStart.frame = clipCat;
-    let catStartSprite = new Sprite(catStart);
+    // catStart.frame = clipCat;
+    let catStartSprite = new Sprite(new Texture(BaseTexture.fromImage("cat"), clipCat));
     catStartSprite.x = 214; //300
     catStartSprite.y = 153;
     // catStartSprite.scale.x = 2;
@@ -240,23 +246,43 @@ function createDogPage() {
     sitTexture = loadSittingSprite();
     barkTexture = loadBarkingSprite();
     // call the animation functions
-    wd1 = walkAnim(randomInt(0, 465), randomInt(80, 475));
-    wd2 = walkAnim(randomInt(0, 465), randomInt(80, 475));
+    // wd1 = walkAnim(randomInt(0, 465), randomInt(80, 475));
+    // wd2 = walkAnim(randomInt(0, 465), randomInt(80, 475));
 
-    walkFlippedTexture = loadWalkingReversedSprite();
-    wdF1 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
-    wdF2 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
+    // wd1 = new Animal(walkTexture, 1, 100, 100, dogPage);
+    let test = addAnimalSpriteToStage(dogPage, sitTexture, 1/3, 100, 100);
+    // let test = new Animal(walkTexture, 1/3, 100, 100);
+    // test.testing();
+
+    let dogStartSprite = new Sprite(sitTexture[0]);
+    dogStartSprite.x = 135; //220
+    dogStartSprite.y = 157;
+    // dogStartSprite.scale.x = 1.8;
+    // dogStartSprite.scale.y = 1.8;
+    dogStartSprite.interactive = true;
+    dogStartSprite.buttonMode = true;
+    dogStartSprite.on("pointerup", createDogPage);
+    dogPage.addChild(dogStartSprite);
+
+    console.log("ewfwefwfew");
+    debugger;
+
+    // walkFlippedTexture = loadWalkingReversedSprite();
+    // wdF1 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
+    // wdF2 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
 
     // insert the sprites into the arrays
-    dogs2 = [wdF1, wdF2];
-    dogs = [wd1, wd2];
+    // dogs2 = [wdF1, wdF2];
+    // dogs = [wd1, wd2];
+    dogs = [];
+    dogs2 = [];
 
-    sitAnim(randomInt(0, 465), randomInt(80, 475));
+    // sitAnim(randomInt(0, 465), randomInt(80, 475));
 
-    sitFlippedTexture = loadSittingFlippedSprite();
-    sitAnimFlipped(randomInt(0, 465), randomInt(80, 475));
+    // sitFlippedTexture = loadSittingFlippedSprite();
+    // sitAnimFlipped(randomInt(0, 465), randomInt(80, 475));
 
-    barkFlippedTexture = loadBarkingFlippedSprite();
+    // barkFlippedTexture = loadBarkingFlippedSprite();
 
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", dogPage, createStartPage, buttonWidth, buttonHeight);
 }
@@ -278,7 +304,7 @@ function createBunPage() {
     bunPage.addChild(bg);
 
     // load the bun sprite
-    hopTexture = loadBunSprite();
+    // hopTexture = loadBunSprite();
 
     // start with one bun on the page
     hopAnim(randomInt(0, 380), randomInt(80, 430));

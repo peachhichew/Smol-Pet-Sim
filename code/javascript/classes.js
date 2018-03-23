@@ -1,52 +1,34 @@
-class Animal {
-    constructor(img, w, h, frames, array, movingSprite, spriteTexture) {
-        this.spritesheet = PIXI.BaseTexture.fromImage(img);
-        this.spriteWidth = w;
-        this.spriteHeight = h;
-        this.frames = frames;
-        this.array = array;
-        this.movingSprite = movingSprite;
-        this.spriteTexture = spriteTexture;
+export {Animal, addAnimalSpriteToStage}
+
+class Animal extends PIXI.extras.AnimatedSprite {
+    constructor(textures, speed, x, y) {
+        super(textures);
+        this.animationSpeed = speed;
+        this.interactive = true;
+        this.buttonMode = true;
+        this.loop = true;
+        this.x = x;
+        this.y = y;
+        this.tint = 0xFF0000;
+        this.visible = true;
+        // this.page = page;
     }
 
-    loadSprites() {
-        for (let i = 0; i < this.frames; i++) {
-            let frame = new PIXI.Texture(this.spritesheet, new Rectangle(i * this.spriteWidth, 480, this.spriteWidth, this.spriteHeight));
-            this.array.push(frame);
-        }
-
-        return this.array;
-    }
-
-    animateSprites(s, dir, animSpeed, interact, buttonMode) {
-        let speed = s;
-        let direction = dir;
-        // let clicked = false;    // keeps track of the first click, which makes the dog sit
-        // // clickedSit keeps track of the second click, which makes the dog walk again but in the 
-        // // same direction it was walking before
-        // let clickedSit = false; 
-        this.movingSprite = new extras.AnimatedSprite(this.spriteTexture);
-        this.movingSprite.x = x;
-        this.movingSprite.y = y;
-        this.movingSprite.vy = speed * direction;
-        this.movingSprite.animationSpeed = animSpeed;
-        this.movingSprite.loop = true;
-        this.movingSprite.interactive = true;
-        this.movingSprite.buttonMode = true;
+    testing() {
+        console.log("11111");
     }
 }
 
-// function pushSpritesToArrayLoop(array) {
-//     array = [];
+function addAnimalSpriteToStage(page, textures, speed, x, y) {
+    let obj = new Animal(textures, 0, x, y);
+    obj.testing();
+    obj.textures = textures;
+    page.addChild(obj);
+    obj.play();
+    console.log(obj.x);
+    console.log(obj.y);
+    debugger;
 
-//     for (let i = 0; i < this.frames; i++) {
-//         let frame = new PIXI.Texture(this.spritesheet, new Rectangle(i * this.spriteWidth, 480, this.spriteWidth, this.spriteHeight));
-//         array.push(frame);
-//     }
+    return obj;
 
-//     return array;
-// }
-
-class Dog extends Animal {
-    constructor();
 }
