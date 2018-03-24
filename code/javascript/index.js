@@ -1,6 +1,6 @@
 import {randomInt, changeBackground, makeButton} from './utilities.js';
-// import {Animal} from './classes.js';
 import {Dog} from './Dog.js';
+import {Bun} from './Bun.js';
 export {setup, gameLoop};
 
 // Testing if pixi is loaded properly
@@ -246,49 +246,52 @@ function createDogPage() {
     walkTexture = loadWalkingSprite();
     sitTexture = loadSittingSprite();
     barkTexture = loadBarkingSprite();
+
+    walkFlippedTexture = loadWalkingReversedSprite();
+    sitFlippedTexture = loadSittingFlippedSprite();
+    barkFlippedTexture = loadBarkingFlippedSprite();
+
     // call the animation functions
     // wd1 = walkAnim(randomInt(0, 465), randomInt(80, 475));
     // wd2 = walkAnim(randomInt(0, 465), randomInt(80, 475));
 
     // let test = addAnimalSpriteToStage(dogPage, sitTexture, 1/3, 100, 100);
     // let test = new Animal(walkTexture, 1/4, 1, 100, 100);
-    let wd1 = new Dog(walkTexture, 2/5, 1, randomInt(0, 465), randomInt(80, 475));
-    let wd2 = new Dog(walkTexture, 2/5, 1, randomInt(0, 465), randomInt(80, 475));
+    let wd1 = new Dog(walkTexture, 2/5, 1, randomInt(0, 465), randomInt(80, 475), 1);
+    let wd2 = new Dog(barkTexture, 1/4, 0, randomInt(0, 465), randomInt(80, 475), 1);
     wd1.play();
     wd2.play();
-    // console.log(test.x);
-    // console.log(test.y);
+
+    let helperFunction = function() {
+        wd1.dogSit(sitTexture, walkTexture);
+    };
+
+    // dog disappears??
+    wd1.on("pointerup", helperFunction);
+
     dogPage.addChild(wd1);
     dogPage.addChild(wd2);
-    debugger;
 
-    // // DELETE LATER
-    // let dogStartSprite = new Sprite(sitTexture[0]);
-    // dogStartSprite.x = 135; //220
-    // dogStartSprite.y = 157;
-    // // dogStartSprite.scale.x = 1.8;
-    // // dogStartSprite.scale.y = 1.8;
-    // dogStartSprite.interactive = true;
-    // dogStartSprite.buttonMode = true;
-    // dogStartSprite.on("pointerup", createDogPage);
-    // dogPage.addChild(dogStartSprite);
-
-    // walkFlippedTexture = loadWalkingReversedSprite();
+    let wdF1 = new Dog(walkFlippedTexture, 2/5, -1, randomInt(0, 465), randomInt(80, 475), 1);
+    let wdF2 = new Dog(walkFlippedTexture, 2/5, -1, randomInt(0, 465), randomInt(80, 475), 1);    
     // wdF1 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
     // wdF2 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
 
+    wdF1.play();
+    wdF2.play();
+    dogPage.addChild(wdF1);
+    dogPage.addChild(wdF2);
+
     // insert the sprites into the arrays
-    // dogs2 = [wdF1, wdF2];
-    // dogs = [wd1, wd2];
+    dogs2 = [wdF1, wdF2];
     dogs = [wd1, wd2];
-    dogs2 = [wd1];
 
     // sitAnim(randomInt(0, 465), randomInt(80, 475));
-
-    // sitFlippedTexture = loadSittingFlippedSprite();
     // sitAnimFlipped(randomInt(0, 465), randomInt(80, 475));
+    let sittingDog = new Dog(sitTexture, 1/9, 0, randomInt(0, 465), randomInt(80, 475));
+    sittingDog.play();
+    dogPage.addChild(sittingDog);
 
-    // barkFlippedTexture = loadBarkingFlippedSprite();
 
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", dogPage, createStartPage, buttonWidth, buttonHeight);
 }
@@ -310,14 +313,25 @@ function createBunPage() {
     bunPage.addChild(bg);
 
     // load the bun sprite
-    // hopTexture = loadBunSprite();
+    hopTexture = loadBunSprite();
 
     // start with one bun on the page
-    hopAnim(randomInt(0, 380), randomInt(80, 430));
+    // hopAnim(randomInt(0, 380), randomInt(80, 430));
+    hoppingBun = new Bun(hopTexture, 1/10, randomInt(0, 380), randomInt(80, 430), 0.25);
+    hoppingBun.updatePos(hoppingBun.x, hoppingBun.y);
+    hoppingBun.anchor.set(0.5);
+    hoppingBun.on('pointerdown', onDragStart);
+    hoppingBun.on('pointerup', onDragEnd);
+    hoppingBun.on('pointerupoutside', onDragEnd);
+    hoppingBun.on('pointermove', onDragMove);
+    hoppingBun.play();
+    bunPage.addChild(hoppingBun);
+    
+    // debugger;    
 
     // create the menu, more buns!, and resize buttons
     makeButton(10, 10, 8, 0x58C4C6, "Main Menu", bunPage, createStartPage, buttonWidth, buttonHeight);
-    makeButton(400, 10, 5, 0xFD4B65, "More buns!", bunPage, newBun, buttonWidth, buttonHeight);
+    makeButton(400, 10, 5, 0xFD4B65, "More buns!", bunPage, generateBun, buttonWidth, buttonHeight);
     makeButton(205, 10, 18, 0xFFC43C, "Resize", bunPage, resize, buttonWidth, buttonHeight);
 }
 
@@ -883,7 +897,7 @@ function barkAnimFlipped(x, y) {
 function loadBunSprite() {
     let bunSheet = BaseTexture.fromImage("bunny");
     let bunWidth = 500;
-    let bunHeight = 270;
+    let bunHeight = 268;    // originally 270
     let hop = [];
     hop.push(
         new Texture(bunSheet, new Rectangle(0, 0, bunWidth, bunHeight)), // frame 0
@@ -907,32 +921,28 @@ function loadBunSprite() {
   BUN ANIMATION
 ****************************/
 
-function hopAnim(x, y) {
-    hoppingBun = new extras.AnimatedSprite(hopTexture);
-    // hoppingBun.x = x;
-    // hoppingBun.y = y;
-    hoppingBun.scale.x = 0.25;
-    hoppingBun.scale.y = 0.25;
-    hoppingBun.anchor.set(0.5);
-    hoppingBun.animationSpeed = 1/10;
-    hoppingBun.loop = true;
-    hoppingBun.interactive = true;
-    hoppingBun.buttonMode = true;
-    hoppingBun.on('pointerdown', onDragStart)
-    hoppingBun.on('pointerup', onDragEnd)
-    hoppingBun.on('pointerupoutside', onDragEnd)
-    hoppingBun.on('pointermove', onDragMove);
-    // hoppingBun.on("pointerup", function() {
-    //     console.log("clicked");
-    //     // use boolean to check whether it's been clicked on and if the button has been clicked?
-    //     // OR click and drag rabbits around?
-    // });
-    hoppingBun.x = x;
-    hoppingBun.y = y;
+// function hopAnim(x, y) {
+//     hoppingBun = new extras.AnimatedSprite(hopTexture);
+//     // hoppingBun.x = x;
+//     // hoppingBun.y = y;
+//     hoppingBun.scale.x = 0.25;
+//     hoppingBun.scale.y = 0.25;
+//     hoppingBun.anchor.set(0.5);
+//     hoppingBun.animationSpeed = 1/10;
+//     hoppingBun.loop = true;
+//     hoppingBun.interactive = true;
+//     hoppingBun.buttonMode = true;
+//     hoppingBun.on('pointerdown', onDragStart)
+//     hoppingBun.on('pointerup', onDragEnd)
+//     hoppingBun.on('pointerupoutside', onDragEnd)
+//     hoppingBun.on('pointermove', onDragMove);
+   
+//     hoppingBun.x = x;
+//     hoppingBun.y = y;
 
-    bunPage.addChild(hoppingBun);
-    hoppingBun.play();
-}
+//     bunPage.addChild(hoppingBun);
+//     hoppingBun.play();
+// }
 
 // DRAGGING: http://pixijs.io/examples/#/demos/dragging.js
 function onDragStart(event) {
@@ -1127,19 +1137,42 @@ function catWalkLeftAnim(x, y) {
 // }
 
 // spawn a new bun at a random location
-function newBun() {
+function generateBun() {
     let xVal = randomInt(0, 380);
     let yVal = randomInt(80, 430);
-    hopAnim(xVal, yVal);
-    console.log("x: " + xVal + ", y: " + yVal);
+    hoppingBun = new Bun(hopTexture, 1/10, xVal, yVal, 0.25);
+    hoppingBun.play();
+    hoppingBun.updatePos(hoppingBun.x, hoppingBun.y);
+    hoppingBun.anchor.set(0.5);
+    hoppingBun.on('pointerdown', onDragStart);
+    hoppingBun.on('pointerup', onDragEnd);
+    hoppingBun.on('pointerupoutside', onDragEnd);
+    hoppingBun.on('pointermove', onDragMove);
+    hoppingBun.play();
+    bunPage.addChild(hoppingBun);
 }
 
 // uses the randomInt() function to randomly resize the buns on the page
 function resize() {
     // reset back to original size once it hits 4, get original size first
-    let limit = randomInt(1, 4);
-    hoppingBun.scale.x = limit*0.25;
-    hoppingBun.scale.y = limit*0.25;
+    // let limit = randomInt(1, 4);
+    // hoppingBun.scale.x = limit*0.25;
+    // hoppingBun.scale.y = limit*0.25;
+    let limit = 1;
+    let currentSize = 0.25;
+    if (hoppingBun.scale.x < 0.6) {
+        // currentSize = currentSize + 0.1;
+        hoppingBun.scale.x *= 1.25;
+        hoppingBun.scale.y *= 1.25;
+    }
+
+    else {
+        currentSize = 0.25;
+        hoppingBun.scale.x = currentSize;
+        hoppingBun.scale.y = currentSize;
+    }
+
+    console.log(hoppingBun.scale.x);
 }
 
 // used kittykatattack's contain() function as reference, but is heavily modified

@@ -1,4 +1,4 @@
-export {randomInt, changeBackground, makeButton};
+export {randomInt, changeBackground, makeButton, onDragStart, onDragEnd, onDragMove};
 
 // creating a Random function so we can use it to spawn sprites at random locations
 function randomInt(min, max) {
@@ -35,7 +35,7 @@ function makeButton(x, y, xOffset, color, text, pageName, targetFunction, w, h) 
     menuButton.y = y;
     menuButton.interactive = true;
     menuButton.buttonMode = true;
-    menuButton.on("pointerup", targetFunction); // targetFunction = function of the page you want to go to
+    menuButton.on("pointerdown", targetFunction); // targetFunction = function of the page you want to go to
     pageName.addChild(menuButton); // add the button on to the specific page
 
     // text style for the button text
