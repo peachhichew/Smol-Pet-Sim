@@ -1,7 +1,7 @@
 import {Animal} from './classes.js';
-export {Bun};
+export {Cat};
 
-class Bun extends Animal {
+class Cat extends Animal {
     constructor(textures, speed = 1/10, x, y, scale = 0.25) {
         super(textures, speed, x, y);
         this.interactive = true;
@@ -10,11 +10,6 @@ class Bun extends Animal {
         // booleans to check for clicking
         this.scale.x = scale;
         this.scale.y = scale;
-        this.x = x;
-        this.y = y;
-    }
-
-    updatePos(x, y) {
         this.x = x;
         this.y = y;
     }

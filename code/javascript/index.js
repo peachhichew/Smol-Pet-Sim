@@ -1,6 +1,7 @@
 import {randomInt, changeBackground, makeButton} from './utilities.js';
 import {Dog} from './Dog.js';
 import {Bun} from './Bun.js';
+import {Cat} from './Cat.js';
 export {setup, gameLoop};
 
 // Testing if pixi is loaded properly
@@ -38,6 +39,7 @@ let barkTexture, barkingDog, barkFlippedTexture, barkingDogFlipped;
 let hopTexture, hoppingBun;
 // texture for walking cat and the cat sprites
 let catWalkRightTexture, catWalkLeftTexture, catL1, catL2, catL3, catL4, catR1, catR2, catR3, catR4;
+let catDownTexture, catDown;
 
 // arrays to keep track of the sprite textures
 let walk, walkFlipped, sit, sitFlipped, bark, barkFlipped, catWalkLeft, catWalkRight;
@@ -351,20 +353,25 @@ function createCatPage() {
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     catPage.addChild(bg);
 
-    catWalkRightTexture = loadCatWalkRightSprite();
-    catR1 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
-    catR2 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
-    catR3 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
-    catR4 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
+    // catWalkRightTexture = loadCatWalkRightSprite();
+    // catR1 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
+    // catR2 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
+    // catR3 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
+    // catR4 = catWalkRightAnim(randomInt(0, 465), randomInt(80, 475));
 
-    catWalkLeftTexture = loadCatWalkLeftSprite();
-    catL1 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
-    catL2 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
-    catL3 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
-    catL4 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
+    // catWalkLeftTexture = loadCatWalkLeftSprite();
+    // catL1 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
+    // catL2 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
+    // catL3 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
+    // catL4 = catWalkLeftAnim(randomInt(0, 465), randomInt(80, 475));
 
-    cats = [catR1, catR2, catR3, catR4];
-    cats2 = [catL1, catL2, catL3, catL4];
+    // cats = [catR1, catR2, catR3, catR4];
+    // cats2 = [catL1, catL2, catL3, catL4];
+
+    catDownTexture = loadCatDown();
+    let newCat = new Cat(catDownTexture, 1/12, randomInt(0, 465), randomInt(80, 475), 1);
+    newCat.play();
+    catPage.addChild(newCat);
 
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", catPage, createStartPage, buttonWidth, buttonHeight);
 }
@@ -999,6 +1006,23 @@ function loadCatWalkLeftSprite() {
     return catWalkLeft;
 }
 
+function loadCatDown() {
+    let catDownSheet = BaseTexture.fromImage("cat");
+    let catDownWidth = 60; // originally 30
+    let catDownHeight = 66; // originally 33
+    catDown = [];
+    let numFrames = 3;
+    catDown.push(
+        new Texture(catDownSheet, new Rectangle(554, 258, catDownWidth, catDownHeight)), // frame 0, 187, 69
+        new Texture(catDownSheet, new Rectangle(614, 258, catDownWidth, catDownHeight)),  // 220
+        new Texture(catDownSheet, new Rectangle(674, 258, catDownWidth, catDownHeight)),   // 253
+        new Texture(catDownSheet, new Rectangle(614, 258, catDownWidth, catDownHeight)),   // 253
+        new Texture(catDownSheet, new Rectangle(554, 258, catDownWidth, catDownHeight))   // 253
+    );
+
+    return catDown;
+}
+
 /*****************************
   CATS WALK ANIMATION
 ****************************/
@@ -1077,65 +1101,6 @@ function catWalkLeftAnim(x, y) {
   OTHER FUNCTIONS
 ****************************/
 
-// // creating a Random function so we can use it to spawn sprites at random locations
-// function randomInt(min, max) {
-//     // Math.ceil returns the smallest int greater than or equal to the given number
-//     min = Math.ceil(min);
-//     max = Math.floor(max);
-
-//     // [min, max)
-//     let num = Math.floor(Math.random() * (max - min)) + min;
-    
-//     return num;
-// }
-
-// // changes the background color by drawing a white rectangle
-// function changeBackground(color, stroke){
-//     // bg = new Graphics();
-//     bg.beginFill(color);
-//     bg.lineStyle(1, stroke, 1);  // stroke width, color, alpha
-//     bg.drawRect(1, 0, canvasWidth - 1, canvasHeight - 1);
-//     bg.endFill();
-//     bg.x = 0;
-//     bg.y = 0;
-// }
-
-// // adding a makeButton function so we can easily create a button by giving it
-// // certain parameter info
-// function makeButton(x, y, xOffset, color, text, pageName, targetFunction) {
-//     let menuButton = new Graphics();
-//     menuButton.beginFill(color);
-//     menuButton.lineStyle(1, 0x000000, 0.9); // stroke width, color, alpha
-//     menuButton.drawRect(0, 0, buttonWidth, buttonHeight);
-//     menuButton.endFill();
-//     menuButton.x = x;
-//     menuButton.y = y;
-//     menuButton.interactive = true;
-//     menuButton.buttonMode = true;
-//     menuButton.on("pointerup", targetFunction); // targetFunction = function of the page you want to go to
-//     pageName.addChild(menuButton); // add the button on to the specific page
-
-//     // text style for the button text
-//     let textStyle = new PIXI.TextStyle({
-//         fill: 0xFFFFFF,
-//         strokeThickness: 1,
-//         dropShadow: true,
-//         dropShadowBlur: 0,
-//         dropShadowDistance: 2,
-//         fontSize: 20,
-//         fontFamily: "VT323",
-//     });
-
-//     let menuButtonText = new PIXI.Text(text);
-//     menuButtonText.style = textStyle;
-//     menuButtonText.x = menuButton.x + xOffset;
-//     menuButtonText.y = menuButton.y + 10;
-//     menuButtonText.interactive = true;
-//     menuButtonText.buttonMode = true;
-//     menuButtonText.on("pointerup", targetFunction);
-//     pageName.addChild(menuButtonText);
-// }
-
 // spawn a new bun at a random location
 function generateBun() {
     let xVal = randomInt(0, 380);
@@ -1161,7 +1126,6 @@ function resize() {
     let limit = 1;
     let currentSize = 0.25;
     if (hoppingBun.scale.x < 0.6) {
-        // currentSize = currentSize + 0.1;
         hoppingBun.scale.x *= 1.25;
         hoppingBun.scale.y *= 1.25;
     }
@@ -1171,8 +1135,6 @@ function resize() {
         hoppingBun.scale.x = currentSize;
         hoppingBun.scale.y = currentSize;
     }
-
-    console.log(hoppingBun.scale.x);
 }
 
 // used kittykatattack's contain() function as reference, but is heavily modified
@@ -1235,7 +1197,7 @@ function gameLoop() {
     }
 
     if (catPage.visible) {
-        loopArray(cats, dt, 1, -1, 1, 25);
-        loopArray(cats2, dt, -1, 1, 2, 25);
+        // loopArray(cats, dt, 1, -1, 1, 25);
+        // loopArray(cats2, dt, -1, 1, 2, 25);
     }
 }
