@@ -1,5 +1,6 @@
 import {randomInt, changeBackground, makeButton} from './utilities.js';
-import {Animal, addAnimalSpriteToStage} from './classes.js';
+// import {Animal} from './classes.js';
+import {Dog} from './Dog.js';
 export {setup, gameLoop};
 
 // Testing if pixi is loaded properly
@@ -249,23 +250,28 @@ function createDogPage() {
     // wd1 = walkAnim(randomInt(0, 465), randomInt(80, 475));
     // wd2 = walkAnim(randomInt(0, 465), randomInt(80, 475));
 
-    // wd1 = new Animal(walkTexture, 1, 100, 100, dogPage);
-    let test = addAnimalSpriteToStage(dogPage, sitTexture, 1/3, 100, 100);
-    // let test = new Animal(walkTexture, 1/3, 100, 100);
-    // test.testing();
-
-    let dogStartSprite = new Sprite(sitTexture[0]);
-    dogStartSprite.x = 135; //220
-    dogStartSprite.y = 157;
-    // dogStartSprite.scale.x = 1.8;
-    // dogStartSprite.scale.y = 1.8;
-    dogStartSprite.interactive = true;
-    dogStartSprite.buttonMode = true;
-    dogStartSprite.on("pointerup", createDogPage);
-    dogPage.addChild(dogStartSprite);
-
-    console.log("ewfwefwfew");
+    // let test = addAnimalSpriteToStage(dogPage, sitTexture, 1/3, 100, 100);
+    // let test = new Animal(walkTexture, 1/4, 1, 100, 100);
+    let wd1 = new Dog(walkTexture, 2/5, 1, randomInt(0, 465), randomInt(80, 475));
+    let wd2 = new Dog(walkTexture, 2/5, 1, randomInt(0, 465), randomInt(80, 475));
+    wd1.play();
+    wd2.play();
+    // console.log(test.x);
+    // console.log(test.y);
+    dogPage.addChild(wd1);
+    dogPage.addChild(wd2);
     debugger;
+
+    // // DELETE LATER
+    // let dogStartSprite = new Sprite(sitTexture[0]);
+    // dogStartSprite.x = 135; //220
+    // dogStartSprite.y = 157;
+    // // dogStartSprite.scale.x = 1.8;
+    // // dogStartSprite.scale.y = 1.8;
+    // dogStartSprite.interactive = true;
+    // dogStartSprite.buttonMode = true;
+    // dogStartSprite.on("pointerup", createDogPage);
+    // dogPage.addChild(dogStartSprite);
 
     // walkFlippedTexture = loadWalkingReversedSprite();
     // wdF1 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
@@ -274,8 +280,8 @@ function createDogPage() {
     // insert the sprites into the arrays
     // dogs2 = [wdF1, wdF2];
     // dogs = [wd1, wd2];
-    dogs = [];
-    dogs2 = [];
+    dogs = [wd1, wd2];
+    dogs2 = [wd1];
 
     // sitAnim(randomInt(0, 465), randomInt(80, 475));
 
@@ -1160,13 +1166,13 @@ function contain(sprite, container, velocity, flipVal1, flipVal2, fromEdge) {
 
 // loops through an array and checks the ORIGINAL direction of the sprite upon being spawned
 // also calls the contain function so we can make the sprite move AND check for collision
-function loopArray(array, velocity, flipVal1, flipVal2, dir, fromEdge) {
+function loopArray(array, velocity, flipVal1, flipVal2, direction, fromEdge) {
     for (let sprite of array) {
-        if (dir == 1) {
+        if (sprite.direction == 1) {
             sprite.x += sprite.vy;
         }
 
-        else if (dir == 2) {
+        else if (sprite.direction == 2) {
             sprite.x -= sprite.vy;
         }
 

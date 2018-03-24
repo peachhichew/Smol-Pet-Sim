@@ -1,4 +1,4 @@
-export {randomInt, changeBackground, makeButton}
+export {randomInt, changeBackground, makeButton};
 
 // creating a Random function so we can use it to spawn sprites at random locations
 function randomInt(min, max) {
