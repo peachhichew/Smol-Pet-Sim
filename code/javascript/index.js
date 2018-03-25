@@ -1,4 +1,4 @@
-import {randomInt, changeBackground, makeButton} from './utilities.js';
+import {randomInt, changeBackground, makeButton, keyboard} from './utilities.js';
 import {Dog} from './Dog.js';
 import {Bun} from './Bun.js';
 import {Cat} from './Cat.js';
@@ -43,6 +43,7 @@ let catDownTexture, catDown, catUp, catUpTexture, catLeft, catLeftTexture, catRi
 
 // arrays to keep track of the sprite textures
 let walk, walkFlipped, sit, sitFlipped, bark, barkFlipped, catWalkLeft, catWalkRight;
+let newCat;
 
 // variable for the background
 const bg = new Graphics();
@@ -372,7 +373,68 @@ function createCatPage() {
     catUpTexture = loadCatUp();
     catLeftTexture = loadCatLeft();
     catRightTexture = loadCatRight();
-    let newCat = new Cat(catRightTexture, 1/12, randomInt(0, 465), randomInt(80, 475), 1);
+
+    newCat = new Cat(catRightTexture, 1/12, randomInt(0, 465), randomInt(80, 475), 1);
+    newCat.vx = 0;
+    newCat.vy = 0;
+
+    //Capture the keyboard arrow keys
+    let left = keyboard(37),
+    up = keyboard(38),
+    right = keyboard(39),
+    down = keyboard(40);
+
+    //Left arrow key `press` method
+    left.press = () => {
+        //Change the cat's velocity when the key is pressed
+        // leftCat.play();
+        newCat.vx = -1;
+        newCat.vy = 0;
+    };
+
+    //Left arrow key `release` method
+    left.release = () => {
+        //If the left arrow has been released, and the right arrow isn't down,
+        //and the cat isn't moving vertically:
+        //Stop the cat
+        if (!right.isDown && newCat.vy === 0) {
+            newCat.vx = 0;
+        }
+    };
+
+    //Up
+    up.press = () => {
+        newCat.vy = -1;
+        newCat.vx = 0;
+    };
+    up.release = () => {
+        if (!down.isDown && newCat.vx === 0) {
+            newCat.vy = 0;
+        }
+    };
+
+    //Right
+    right.press = () => {
+        newCat.vx = 1;
+        newCat.vy = 0;
+    };
+    right.release = () => {
+        if (!left.isDown && newCat.vy === 0) {
+            newCat.vx = 0;
+        }
+    };
+
+    //Down
+    down.press = () => {
+        newCat.vy = 1;
+        newCat.vx = 0;
+    };
+    down.release = () => {
+        if (!up.isDown && newCat.vx === 0) {
+            newCat.vy = 0;
+        }
+    };
+
     newCat.play();
     catPage.addChild(newCat);
 
@@ -1245,5 +1307,9 @@ function gameLoop() {
     if (catPage.visible) {
         // loopArray(cats, dt, 1, -1, 1, 25);
         // loopArray(cats2, dt, -1, 1, 2, 25);
+        newCat.x += newCat.vx;
+        newCat.y += newCat.vy;
+        console.log(newCat.x);
+        console.log(newCat.y);
     }
 }

@@ -14,7 +14,7 @@ class Dog extends Animal {
         this.clickedSit = false;
         this.scale.x = scale;
         this.scale.y = scale;
-        this.anchor.set(0.5);
+        // this.anchor.set(0.5);
     }
 
     dogSit(sitTexture, walkTexture) {

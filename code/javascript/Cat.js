@@ -12,5 +12,8 @@ class Cat extends Animal {
         this.scale.y = scale;
         this.x = x;
         this.y = y;
+        this.direction = 1;
+        this.vx = this.speed * this.direction;
+        this.vy = 0;
     }
 }
