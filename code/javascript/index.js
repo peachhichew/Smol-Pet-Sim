@@ -45,6 +45,19 @@ let catDownTexture, catDown, catUp, catUpTexture, catLeft, catLeftTexture, catRi
 let walk, walkFlipped, sit, sitFlipped, bark, barkFlipped, catWalkLeft, catWalkRight;
 let newCat;
 
+let barking = false;
+
+const bgMusic = new Howl({
+    src: ['../audio/random_silly_chip_song.ogg'],
+    autoplay: true, 
+    loop: true, 
+    volume: 0   // set to 0.6
+ }); ;
+
+const buttonPressed = new Howl({
+    src: ['../audio/toggle_switch_2.mp3']
+});
+
 // variable for the background
 const bg = new Graphics();
 
@@ -104,6 +117,8 @@ function setup() {
     startPage.addChild(bg);
 
     createStartPage();
+
+    bgMusic.play();
     
     app.ticker.add(gameLoop);
 }
@@ -113,6 +128,8 @@ function setup() {
 ****************************/
 
 function createStartPage() {
+    buttonPressed.play();
+
     // make every other page invisible except the start page
     startPage.visible = true;
     dogPage.visible = false;
@@ -121,6 +138,9 @@ function createStartPage() {
     creditsPage.visible = false;
     notesPage.visible = false;
     notesPage2.visible = false;
+
+    barking = false;
+    console.log("start: " + barking);
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     startPage.addChild(bg);
@@ -235,6 +255,8 @@ function createStartPage() {
 ****************************/
 
 function createDogPage() {
+    buttonPressed.play();
+
     startPage.visible = false;
     dogPage.visible = true;
     bunPage.visible = false;
@@ -245,6 +267,10 @@ function createDogPage() {
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     dogPage.addChild(bg);
+
+    barking = true;
+    console.log("dogPage: " + barking);
+
     // load the sprite sheets into the window 
     walkTexture = loadWalkingSprite();
     sitTexture = loadSittingSprite();
@@ -253,6 +279,7 @@ function createDogPage() {
     walkFlippedTexture = loadWalkingReversedSprite();
     sitFlippedTexture = loadSittingFlippedSprite();
     barkFlippedTexture = loadBarkingFlippedSprite();
+
 
     // call the animation functions
     // wd1 = walkAnim(randomInt(0, 465), randomInt(80, 475));
@@ -265,12 +292,17 @@ function createDogPage() {
     wd1.play();
     wd2.play();
 
-    let helperFunction = function() {
+    let makeSit = function() {
         wd1.dogSit(sitTexture, walkTexture);
     };
 
+    // let doBark = function() {
+    //     wd2.dogBark();
+    // }
+
     // dog disappears??
-    wd1.on("pointerup", helperFunction);
+    wd1.on("pointerup", makeSit);
+    // wd2.dogBark();
 
     dogPage.addChild(wd1);
     dogPage.addChild(wd2);
@@ -304,6 +336,8 @@ function createDogPage() {
 ******************************/
 
 function createBunPage() {
+    buttonPressed.play();
+
     startPage.visible = false;
     dogPage.visible = false;
     bunPage.visible = true;
@@ -343,6 +377,8 @@ function createBunPage() {
 ******************************/
 
 function createCatPage() {
+    buttonPressed.play();
+
     startPage.visible = false;
     dogPage.visible = false;
     bunPage.visible = false;
@@ -377,6 +413,15 @@ function createCatPage() {
     newCat = new Cat(catRightTexture, 1/12, randomInt(0, 465), randomInt(80, 475), 1);
     newCat.vx = 0;
     newCat.vy = 0;
+
+    let meow = function() {
+        const catMeow = new Howl({
+            src: ['../audio/Blastwave_FX_CatMeow_SFXB.203.mp3']
+        });
+
+        catMeow.play();
+    }
+    newCat.on("pointerdown", meow);
 
     //Capture the keyboard arrow keys
     let left = keyboard(37),
@@ -446,6 +491,8 @@ function createCatPage() {
 ******************************/
 
 function createCreditsPage() {
+    buttonPressed.play();
+
     startPage.visible = false;
     dogPage.visible = false;
     bunPage.visible = false;
@@ -736,6 +783,21 @@ function loadSittingFlippedSprite() {
 
 // load sprite sheet for barking
 function loadBarkingSprite() {
+    if (barking == true) {
+        const dogBarking = new Howl({
+            src: ['../audio/animals_dog_bark_springer_spaniel_003.mp3'],
+            loop: true, 
+            autoplay: true
+        });
+    
+        dogBarking.play();
+    }
+
+    if (barking == false) {
+        console.log("meeow");
+        //how to get dogs to stop barking??
+    }
+
     let dogBarkSheet = BaseTexture.fromImage("dog");
     let dogBarkWidth = 84.4;  // originally 42.2
     let dogBarkHeight = 56; // originally 28
@@ -1211,6 +1273,12 @@ function catWalkLeftAnim(x, y) {
 
 // spawn a new bun at a random location
 function generateBun() {
+    const thump = new Howl({
+        src: ['../audio/zapsplat_foley_feet_jump_land_carpeted_wood_floor_hard_003_16317.mp3']
+    });
+
+    thump.play();
+
     let xVal = randomInt(0, 380);
     let yVal = randomInt(80, 430);
     hoppingBun = new Bun(hopTexture, 1/10, xVal, yVal, 0.25);
@@ -1231,6 +1299,12 @@ function resize() {
     // let limit = randomInt(1, 4);
     // hoppingBun.scale.x = limit*0.25;
     // hoppingBun.scale.y = limit*0.25;
+    const spoink = new Howl({
+        src: ['../audio/cartoon_spring_bounce_twang_008.mp3']
+    });
+
+    spoink.play();
+
     let limit = 1;
     let currentSize = 0.25;
     if (hoppingBun.scale.x < 0.6) {
@@ -1309,7 +1383,7 @@ function gameLoop() {
         // loopArray(cats2, dt, -1, 1, 2, 25);
         newCat.x += newCat.vx;
         newCat.y += newCat.vy;
-        console.log(newCat.x);
-        console.log(newCat.y);
+        // console.log(newCat.x);
+        // console.log(newCat.y);
     }
 }

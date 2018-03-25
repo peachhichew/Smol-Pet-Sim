@@ -51,4 +51,14 @@ class Dog extends Animal {
             }
         }
     }
+
+    dogBark() {
+        const dogBarking = new Howl({
+            src: ['../audio/animals_dog_bark_springer_spaniel_003.mp3'],
+            autoplay: true, 
+            loop: true
+        });
+
+        dogBarking.play();
+    }
 }

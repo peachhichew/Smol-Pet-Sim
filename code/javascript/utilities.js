@@ -95,3 +95,11 @@ function keyboard(keyCode) {
     );
     return key;
   }
+
+  function buttonSound() {
+    const buttonPressed = new Howl({
+      src: ['../audio/toggle_switch_2.mp3']
+    });
+
+    buttonPressed.play();
+  }
