@@ -39,7 +39,7 @@ let barkTexture, barkingDog, barkFlippedTexture, barkingDogFlipped;
 let hopTexture, hoppingBun;
 // texture for walking cat and the cat sprites
 let catWalkRightTexture, catWalkLeftTexture, catL1, catL2, catL3, catL4, catR1, catR2, catR3, catR4;
-let catDownTexture, catDown;
+let catDownTexture, catDown, catUp, catUpTexture, catLeft, catLeftTexture, catRightTexture, catRight;
 
 // arrays to keep track of the sprite textures
 let walk, walkFlipped, sit, sitFlipped, bark, barkFlipped, catWalkLeft, catWalkRight;
@@ -369,7 +369,10 @@ function createCatPage() {
     // cats2 = [catL1, catL2, catL3, catL4];
 
     catDownTexture = loadCatDown();
-    let newCat = new Cat(catDownTexture, 1/12, randomInt(0, 465), randomInt(80, 475), 1);
+    catUpTexture = loadCatUp();
+    catLeftTexture = loadCatLeft();
+    catRightTexture = loadCatRight();
+    let newCat = new Cat(catRightTexture, 1/12, randomInt(0, 465), randomInt(80, 475), 1);
     newCat.play();
     catPage.addChild(newCat);
 
@@ -1011,7 +1014,6 @@ function loadCatDown() {
     let catDownWidth = 60; // originally 30
     let catDownHeight = 66; // originally 33
     catDown = [];
-    let numFrames = 3;
     catDown.push(
         new Texture(catDownSheet, new Rectangle(554, 258, catDownWidth, catDownHeight)), // frame 0, 187, 69
         new Texture(catDownSheet, new Rectangle(614, 258, catDownWidth, catDownHeight)),  // 220
@@ -1021,6 +1023,50 @@ function loadCatDown() {
     );
 
     return catDown;
+}
+
+function loadCatUp() {
+    let catUpSheet = BaseTexture.fromImage("cat");
+    let catUpWidth = 60; // originally 30
+    let catUpHeight = 66; // originally 33
+    catUp = [];
+    catUp.push(
+        new Texture(catUpSheet, new Rectangle(554, 446, catUpWidth, catUpHeight)), // frame 0, 187, 69
+        new Texture(catUpSheet, new Rectangle(614, 446, catUpWidth, catUpHeight)),  // 220
+        new Texture(catUpSheet, new Rectangle(674, 446, catUpWidth, catUpHeight)),   // 253
+        new Texture(catUpSheet, new Rectangle(614, 446, catUpWidth, catUpHeight)),   // 253
+        new Texture(catUpSheet, new Rectangle(554, 446, catUpWidth, catUpHeight))   // 253
+    );
+
+    return catUp;
+}
+
+function loadCatLeft() {
+    let catLeftSheet = BaseTexture.fromImage("cat");
+    let catLeftWidth = 60; // originally 30
+    let catLeftHeight = 66; // originally 33
+    catLeft = [];
+    catLeft.push(
+        new Texture(catLeftSheet, new Rectangle(563, 324, catLeftWidth, catLeftHeight)), // frame 0, 187, 69
+        new Texture(catLeftSheet, new Rectangle(623, 324, catLeftWidth, catLeftHeight)),  // 220
+        new Texture(catLeftSheet, new Rectangle(690, 324, catLeftWidth, catLeftHeight)),   // 253
+    );
+
+    return catLeft;
+}
+
+function loadCatRight() {
+    let catRightSheet = BaseTexture.fromImage("cat");
+    let catRightWidth = 60; // originally 30
+    let catRightHeight = 66; // originally 33
+    catRight = [];
+    catRight.push(
+        new Texture(catRightSheet, new Rectangle(563, 390, catRightWidth, catRightHeight)), // frame 0, 187, 69
+        new Texture(catRightSheet, new Rectangle(626, 390, catRightWidth, catRightHeight)),  // 220
+        new Texture(catRightSheet, new Rectangle(690, 390, catRightWidth, catRightHeight)),   // 253
+    );
+
+    return catRight;
 }
 
 /*****************************
