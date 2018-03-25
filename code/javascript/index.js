@@ -798,6 +798,10 @@ function loadBarkingSprite() {
         dogBarking.play();
     }
 
+    else {
+        dogBarking.pause();
+    }
+
     let dogBarkSheet = BaseTexture.fromImage("dog");
     let dogBarkWidth = 84.4;  // originally 42.2
     let dogBarkHeight = 56; // originally 28
