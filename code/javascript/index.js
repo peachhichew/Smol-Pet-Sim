@@ -148,7 +148,8 @@ function createStartPage() {
     barking = false;
 
     if (barking == false) {
-        dogBarking.pause();
+        dogBarking.mute();
+        dogBarking.stop();
     }
 
     console.log("start: " + barking);
@@ -799,7 +800,8 @@ function loadBarkingSprite() {
     }
 
     else {
-        dogBarking.pause();
+        dogBarking.mute();
+        dogBarking.stop();
     }
 
     let dogBarkSheet = BaseTexture.fromImage("dog");
