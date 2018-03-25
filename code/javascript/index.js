@@ -58,6 +58,12 @@ const buttonPressed = new Howl({
     src: ['../audio/toggle_switch_2.mp3']
 });
 
+const dogBarking = new Howl({
+    src: ['../audio/animals_dog_bark_springer_spaniel_003.mp3'],
+    loop: true, 
+    autoplay: true
+});
+
 // variable for the background
 const bg = new Graphics();
 
@@ -140,6 +146,11 @@ function createStartPage() {
     notesPage2.visible = false;
 
     barking = false;
+
+    if (barking == false) {
+        dogBarking.pause();
+    }
+
     console.log("start: " + barking);
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
@@ -784,18 +795,7 @@ function loadSittingFlippedSprite() {
 // load sprite sheet for barking
 function loadBarkingSprite() {
     if (barking == true) {
-        const dogBarking = new Howl({
-            src: ['../audio/animals_dog_bark_springer_spaniel_003.mp3'],
-            loop: true, 
-            autoplay: true
-        });
-    
         dogBarking.play();
-    }
-
-    if (barking == false) {
-        console.log("meeow");
-        //how to get dogs to stop barking??
     }
 
     let dogBarkSheet = BaseTexture.fromImage("dog");
