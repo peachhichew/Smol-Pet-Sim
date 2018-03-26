@@ -1,4 +1,4 @@
-import {Animal} from './classes.js';
+import {Animal} from './Animal.js';
 export {Bun};
 
 class Bun extends Animal {

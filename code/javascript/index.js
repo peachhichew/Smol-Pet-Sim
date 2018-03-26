@@ -1,4 +1,5 @@
 import {randomInt, changeBackground, makeButton, keyboard} from './utilities.js';
+// import {createInstructionsPage} from './instructions.js';
 import {Dog} from './Dog.js';
 import {Bun} from './Bun.js';
 import {Cat} from './Cat.js';
@@ -68,7 +69,7 @@ const dogBarking = new Howl({
 const bg = new Graphics();
 
 // container to hold the different pages
-let dogPage, startPage, bunPage, catPage, creditsPage, notesPage, notesPage2;
+let dogPage, startPage, bunPage, catPage, creditsPage, instructionsPage;
 
 // arrays that hold the cat + dog sprites
 let dogs, dogs2, cats, cats2;
@@ -110,14 +111,10 @@ function setup() {
     creditsPage.visible = false;
     stage.addChild(creditsPage);
 
-    // NOTES PAGES
-    notesPage = new Container();
-    notesPage.visible = false;
-    stage.addChild(notesPage);
-
-    notesPage2 = new Container();
-    notesPage2.visible = false;
-    stage.addChild(notesPage2);
+    // INSTRUCTIONS PAGES
+    instructionsPage = new Container();
+    instructionsPage.visible = false;
+    stage.addChild(instructionsPage);
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     startPage.addChild(bg);
@@ -142,8 +139,7 @@ function createStartPage() {
     bunPage.visible = false;
     catPage.visible = false;
     creditsPage.visible = false;
-    notesPage.visible = false;
-    notesPage2.visible = false;
+    instructionsPage.visible = false;
 
     barking = false;
 
@@ -193,14 +189,14 @@ function createStartPage() {
     startPage.addChild(credits);
 
     // HIDE FOR NOW -- ADD INSTRUCTIONS LATER?
-    // let notes = new PIXI.Text("Notes");
-    // notes.style = infoStyle;
-    // notes.x = 450;
-    // notes.y = 478;
-    // notes.interactive = true;
-    // notes.buttonMode = true;
-    // notes.on("pointerup", createNotesPage);
-    // startPage.addChild(notes);
+    let notes = new PIXI.Text("Notes");
+    notes.style = infoStyle;
+    notes.x = 450;
+    notes.y = 478;
+    notes.interactive = true;
+    notes.buttonMode = true;
+    notes.on("pointerup", createInstructionsPage);
+    startPage.addChild(notes);
 
     let directions = new PIXI.Text("(Click each animal to visit its page!)");
     directions.style = infoStyle;
@@ -274,8 +270,7 @@ function createDogPage() {
     bunPage.visible = false;
     catPage.visible = false;
     creditsPage.visible = false;
-    notesPage.visible = false;
-    notesPage2.visible = false;
+    instructionsPage.visible = false;
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     dogPage.addChild(bg);
@@ -355,8 +350,7 @@ function createBunPage() {
     bunPage.visible = true;
     catPage.visible = false;
     creditsPage.visible = false;
-    notesPage.visible = false;
-    notesPage2.visible = false;
+    instructionsPage.visible = false;
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     bunPage.addChild(bg);
@@ -396,8 +390,7 @@ function createCatPage() {
     bunPage.visible = false;
     catPage.visible = true;
     creditsPage.visible = false;
-    notesPage.visible = false;
-    notesPage2.visible = false;
+    instructionsPage.visible = false;
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     catPage.addChild(bg);
@@ -434,6 +427,8 @@ function createCatPage() {
         catMeow.play();
     }
     newCat.on("pointerdown", meow);
+
+    // Arrow controls reference kittykatattack's keyboard movement section
 
     //Capture the keyboard arrow keys
     let left = keyboard(37),
@@ -510,8 +505,7 @@ function createCreditsPage() {
     bunPage.visible = false;
     createCatPage.visible = false;
     creditsPage.visible = true;
-    notesPage.visible = false;
-    notesPage2.visible = false;
+    instructionsPage.visible = false;
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     creditsPage.addChild(bg);
@@ -571,20 +565,21 @@ function createCreditsPage() {
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", creditsPage, createStartPage, buttonWidth, buttonHeight);
 }
 
-/*****************************
-  CREATE NOTES PAGE
-******************************/
+/********************************
+    CREATE INSTRUCTIONS PAGE
+********************************/
 
-function createNotesPage() {
+function createInstructionsPage() {
+    buttonPressed.play();
+
     startPage.visible = false;
     dogPage.visible = false;
     bunPage.visible = false;
     creditsPage.visible = false;
-    notesPage.visible = true;
-    notesPage2.visible = false;
+    instructionsPage.visible = true;
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
-    notesPage.addChild(bg);
+    instructionsPage.addChild(bg);
 
     let titleStyle = new PIXI.TextStyle({
         fill: 0x000000,
@@ -592,20 +587,20 @@ function createNotesPage() {
         fontFamily: "VT323",
     });
 
-    let title = new PIXI.Text("Notes");
+    let title = new PIXI.Text("Instructions");
     title.style = titleStyle;
-    title.x = 220;
+    title.x = 175;
     title.y = 65;
-    notesPage.addChild(title);
+    instructionsPage.addChild(title);
 
-    let inspirationTitle = new PIXI.Text("Inspiration", {
+    let dogTitle = new PIXI.Text("Dog Page", {
         fill: 0xFFC43C,
         fontSize: 25,
         fontFamily: "VT323"
     });
-    inspirationTitle.x = 20;
-    inspirationTitle.y = 100;
-    notesPage.addChild(inspirationTitle);
+    dogTitle.x = 20;
+    dogTitle.y = 100;
+    instructionsPage.addChild(dogTitle);
 
     let paraStyle = new PIXI.TextStyle({
         fill: 0x000000,
@@ -616,110 +611,46 @@ function createNotesPage() {
         leading: 8
     });
 
-    let inspiration = new PIXI.Text("   After looking at many pixelated animal gifs and sprites during my free time, I was suddenly " +  
-    "inspired to create a pet simulator (hence the name 'Smol Pet Sim'). I remembered how I always wanted a " + 
-    "pet when I was younger and was heavily drawn to online games such as Webkinz or Neopets. After bugging my mum " + 
-    "for years, we finally got a cat (her name is Cookie!) in 2010 and that was one of the happiest days of my life.\n" + 
-    "   In this project, I wanted to recreate some of the online pet interaction experience and to see how far " + 
-    "I could get with the programming knowledge I accumulated in three semesters of college. Although the idea " +
-    "behind Smol Pet Sim wasn't terribly complicated, the execution process was more than challenging. ");
-    inspiration.style = paraStyle;
-    inspiration.x = 30;
-    inspiration.y = 130;
-    notesPage.addChild(inspiration);
+    let dogInstructions = new PIXI.Text("   Click on the initially walking dogs to make them sit or walk again. Click on the " +
+    "already sitting ones to make them bark!");
+    dogInstructions.style = paraStyle;
+    dogInstructions.x = 30;
+    dogInstructions.y = 130;
+    instructionsPage.addChild(dogInstructions);
 
-    // drawing the arrow at the bottom of the page using PIXI.Graphics
-    let arrow = new Graphics();
-    arrow.lineStyle(1, 0x7db4dd, 1);
-    arrow.beginFill(0x7db4dd);
-    arrow.moveTo(0, 20);
-    arrow.lineTo(15, 0);
-    arrow.lineTo(15, 10);
-    arrow.lineTo(40, 10);
-    arrow.lineTo(40, 30);
-    arrow.lineTo(15, 30);
-    arrow.lineTo(15, 40);
-    arrow.endFill();
-    arrow.x = 490;
-    arrow.y = 465;
-    arrow.scale.x = -0.65;
-    arrow.scale.y = 0.65;
-    arrow.buttonMode = true;
-    arrow.interactive = true;
-    arrow.on("pointerup", createNotesPage2);
-    notesPage.addChild(arrow);
-    
-    makeButton(10, 10, 8, 0x58C4C6, "Main menu", notesPage, createStartPage, buttonWidth, buttonHeight);
-}
-
-function createNotesPage2() {
-    startPage.visible = false;
-    dogPage.visible = false;
-    bunPage.visible = false;
-    creditsPage.visible = false;
-    notesPage.visible = false;
-    notesPage2.visible = true;
-
-    changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
-    notesPage2.addChild(bg);
-
-    let learnedTitle = new PIXI.Text("Process + Above & Beyond", {
+    let catTitle = new PIXI.Text("Cat Page", {
         fill: 0xFD4B65,
         fontSize: 25,
         fontFamily: "VT323"
     });
-    learnedTitle.x = 20;
-    learnedTitle.y = 70;
-    notesPage2.addChild(learnedTitle);
+    catTitle.x = 20;
+    catTitle.y = 220;
+    instructionsPage.addChild(catTitle);
 
-    let paraStyle = new PIXI.TextStyle({
-        fill: 0x000000,
-        fontSize: 20,
-        fontFamily: "VT323",   // changing later
-        wordWrap: true,
-        wordWrapWidth: 450,
-        leading: 8
+    let catInstructions = new PIXI.Text("   Use the arrow keys to make the cat move around the screen and collect fish. Click on the cat to make her meow.");
+    catInstructions.style = paraStyle;
+    catInstructions.x = 30;
+    catInstructions.y = 250;
+    instructionsPage.addChild(catInstructions);
+
+    let bunTitle = new PIXI.Text("Rabbit Page", {
+        fill: 0x7db4dd,
+        fontSize: 25,
+        fontFamily: "VT323"
     });
+    bunTitle.x = 20;
+    bunTitle.y = 340;
+    instructionsPage.addChild(bunTitle);
 
-    let learnedText = new PIXI.Text("   I wanted the outcome to look exactly like how I pictured it in my head, or as close to it as possible. To do this, I had to: \n" + 
-    " • Get more comfortable with JavaScript and learn\n   Pixi.js syntax \n" + 
-    " • Learn different methods for animating sprites from\n   sprite sheets using Pixi.js \n" +
-    " • Learn to display Pixi objects without an actual\n   renderer object, which was confusing at first\n" +  
-    " • Make all sprites, Graphics, and Text objects\n   interactive using the mouse \n" + 
-    " • Create multiple states/scenes whose visibility could\n   be turned on/off");
-    learnedText.style = paraStyle;
-    learnedText.x = 30;
-    learnedText.y = 100;
-    notesPage2.addChild(learnedText);
-
-    let learnedText2 = new PIXI.Text("   To learn more about the resources I used to create this project, please visit the Credits page.");
-    learnedText2.style = paraStyle;
-    learnedText2.x = 30;
-    learnedText2.y = 405;
-    notesPage2.addChild(learnedText2);
-
-    // drawing a back arrow on the page
-    let arrow = new Graphics();
-    arrow.lineStyle(1, 0x7db4dd, 1);
-    arrow.beginFill(0x7db4dd);
-    arrow.moveTo(0, 20);
-    arrow.lineTo(15, 0);
-    arrow.lineTo(15, 10);
-    arrow.lineTo(40, 10);
-    arrow.lineTo(40, 30);
-    arrow.lineTo(15, 30);
-    arrow.lineTo(15, 40);
-    arrow.endFill();
-    arrow.x = 10;
-    arrow.y = 465;
-    arrow.scale.x = 0.65;
-    arrow.scale.y = 0.65;
-    arrow.buttonMode = true;
-    arrow.interactive = true;
-    arrow.on("pointerup", createNotesPage);
-    notesPage2.addChild(arrow);
-
-    makeButton(10, 10, 8, 0x58C4C6, "Main menu", notesPage2, createStartPage, buttonWidth, buttonHeight);
+    let bunInstructions = new PIXI.Text("   Click and drag on the rabbit to move to a new location on the " + 
+    "screen. Resize the rabbit by using the 'Resize' button. Clicking on the 'More buns!' button will spawn" + 
+    " a new rabbit on the screen.");
+    bunInstructions.style = paraStyle;
+    bunInstructions.x = 30;
+    bunInstructions.y = 370;
+    instructionsPage.addChild(bunInstructions);
+    
+    makeButton(10, 10, 8, 0x58C4C6, "Main menu", instructionsPage, createStartPage, buttonWidth, buttonHeight);
 }
 
 /*****************************
