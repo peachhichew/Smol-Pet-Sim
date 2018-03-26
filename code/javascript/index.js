@@ -311,7 +311,6 @@ function createDogPage() {
     dogPage.addChild(bg);
 
     barking = true;
-    console.log("dogPage: " + barking);
 
     // load the sprite sheets into the window 
     walkTexture = loadWalkingSprite();
@@ -320,16 +319,13 @@ function createDogPage() {
 
     walkFlippedTexture = loadWalkingReversedSprite();
     sitFlippedTexture = loadSittingFlippedSprite();
-    barkFlippedTexture = loadBarkingFlippedSprite();
-
+    barkFlippedTexture = loadBarkingFlippedSprite();    
 
     // call the animation functions
     // wd1 = walkAnim(randomInt(0, 465), randomInt(80, 475));
     // wd2 = walkAnim(randomInt(0, 465), randomInt(80, 475));
 
-    // let test = addAnimalSpriteToStage(dogPage, sitTexture, 1/3, 100, 100);
-    // let test = new Animal(walkTexture, 1/4, 1, 100, 100);
-    let wd1 = new Dog(walkTexture, 2/5, 1, randomInt(0, 465), randomInt(80, 475), 1);
+    let wd1 = new Dog(walkTexture, 1/5, 1, randomInt(0, 465), randomInt(80, 475), 1);
     let wd2 = new Dog(barkTexture, 1/4, 0, randomInt(0, 465), randomInt(80, 475), 1);
     wd1.play();
     wd2.play();
@@ -338,19 +334,23 @@ function createDogPage() {
         wd1.dogSit(sitTexture, walkTexture);
     };
 
-    // let doBark = function() {
-    //     wd2.dogBark();
-    // }
+    let makeSitFromBark = function() {
+        wd2.dogSit(sitTexture, barkTexture);
+    };
 
     // dog disappears??
     wd1.on("pointerup", makeSit);
-    // wd2.dogBark();
+    wd2.on("pointerup", makeSitFromBark);
 
     dogPage.addChild(wd1);
     dogPage.addChild(wd2);
 
-    let wdF1 = new Dog(walkFlippedTexture, 2/5, -1, randomInt(0, 465), randomInt(80, 475), 1);
-    let wdF2 = new Dog(walkFlippedTexture, 2/5, -1, randomInt(0, 465), randomInt(80, 475), 1);    
+    let wdF1 = new Dog(walkFlippedTexture, 1/5, -1, randomInt(0, 465), randomInt(80, 475), 1);
+    let wdF2 = new Dog(barkFlippedTexture, 1/4, 0, randomInt(0, 465), randomInt(80, 475), 1);  
+    
+    wdF1.on("pointerup", function() {wdF1.dogSit(sitFlippedTexture, walkFlippedTexture);});
+    wdF2.on("pointerup", function() {wdF2.dogSit(sitFlippedTexture, barkFlippedTexture);});
+    
     // wdF1 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
     // wdF2 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
 
@@ -368,7 +368,6 @@ function createDogPage() {
     let sittingDog = new Dog(sitTexture, 1/9, 0, randomInt(0, 465), randomInt(80, 475));
     sittingDog.play();
     dogPage.addChild(sittingDog);
-
 
     makeButton(10, 10, 8, 0x58C4C6, "Main menu", dogPage, createStartPage, buttonWidth, buttonHeight);
 }
@@ -979,6 +978,15 @@ function sitAnimFlipped(x, y) {
 }
 
 function barkAnim(x, y) {
+    if (barking == true) {
+        dogBarking.play();
+    }
+
+    else {
+        dogBarking.mute();
+        dogBarking.stop();
+    }
+    
     barkingDog = new PIXI.extras.AnimatedSprite(barkTexture);
     barkingDog.x = x;
     barkingDog.y = y;
@@ -990,6 +998,14 @@ function barkAnim(x, y) {
 }
 
 function barkAnimFlipped(x, y) {
+    if (barking == true) {
+        dogBarking.play();
+    }
+
+    else {
+        dogBarking.mute();
+        dogBarking.stop();
+    }
     barkingDogFlipped = new PIXI.extras.AnimatedSprite(barkFlippedTexture);
     barkingDogFlipped.x = x;
     barkingDogFlipped.y = y;
