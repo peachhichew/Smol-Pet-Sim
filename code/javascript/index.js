@@ -141,7 +141,7 @@ function setup() {
     app.ticker.add(gameLoop);
 }
 
-// window.onfocus = setup;
+window.onfocus = setup;
 
 function paused() {
     pausedPage.visible = true;
@@ -168,7 +168,7 @@ function paused() {
     pausedPage.addChild(titleText1);
 }
 
-// window.onblur = paused;
+window.onblur = paused;
 
 /*****************************
   CREATE START PAGE 
@@ -605,7 +605,7 @@ function createCreditsPage() {
     spriteTitle.y = 100;
     creditsPage.addChild(spriteTitle);
 
-    let spriteText = new PIXI.Text(" • Cat: Biofunk95 @ DeviantArt (https://goo.gl/CUgsek) \n • Dog: Davidalix @ Spriters-Resource \n       (https://goo.gl/aKfHHF) \n • Bunny: Pastella @ Rebloggy (https://goo.gl/FRa4r6)");
+    let spriteText = new PIXI.Text(" • Cat: Biofunk95 @ DeviantArt (https://goo.gl/CUgsek) \n • Dog: Davidalix @ Spriters-Resource \n       (https://goo.gl/aKfHHF) \n • Bunny: Pastella @ Rebloggy (https://goo.gl/FRa4r6) \n • Fish: Reddit/Minecraft (http://i.imgur.com/KjDDO.gif)");
     spriteText.style = paraStyle;
     spriteText.x = 30;
     spriteText.y = 130;
@@ -617,13 +617,13 @@ function createCreditsPage() {
         fontFamily: "VT323"
     });
     resourcesTitle.x = 20;
-    resourcesTitle.y = 240;
+    resourcesTitle.y = 250;
     creditsPage.addChild(resourcesTitle);
 
     let resourcesText = new PIXI.Text("   The following resources were used for the creation of this project: \n • Pixi.js (http://www.pixijs.com/)\n • Kittykatattack's Pixi Tutorial on GitHub \n  (https://goo.gl/fHJfFL) \n • Tonethar's Circle Blast Tutorial \n  (https://goo.gl/x896Vg) \n • HowlerJS (https://howlerjs.com/) \n • Sound effects: OpenGameArt, Zapsplat, FreeSFX");
     resourcesText.style = paraStyle;
     resourcesText.x = 30;
-    resourcesText.y = 270;
+    resourcesText.y = 280;
     creditsPage.addChild(resourcesText);
 
     let titleStyle = new PIXI.TextStyle({
