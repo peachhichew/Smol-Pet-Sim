@@ -69,7 +69,7 @@ const dogBarking = new Howl({
 const bg = new Graphics();
 
 // container to hold the different pages
-let dogPage, startPage, bunPage, catPage, creditsPage, instructionsPage;
+let dogPage, startPage, bunPage, catPage, creditsPage, instructionsPage, pausedPage;
 
 // arrays that hold the cat + dog sprites
 let dogs, dogs2, cats, cats2;
@@ -116,6 +116,11 @@ function setup() {
     instructionsPage.visible = false;
     stage.addChild(instructionsPage);
 
+    // PAUSED PAGE
+    pausedPage = new Container();
+    pausedPage.visible = false;
+    stage.addChild(pausedPage);
+
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     startPage.addChild(bg);
 
@@ -125,6 +130,35 @@ function setup() {
     
     app.ticker.add(gameLoop);
 }
+
+window.onfocus = setup;
+
+function paused() {
+    pausedPage.visible = true;
+    startPage.visible = false;
+    dogPage.visible = false;
+    bunPage.visible = false;
+    catPage.visible = false;
+    creditsPage.visible = false;
+    instructionsPage.visible = false;
+
+    changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
+    pausedPage.addChild(bg);
+
+    let titleStyle = new PIXI.TextStyle({
+        fill: 0x000000,
+        fontSize: 35,
+        fontFamily: "VT323",   // changing later
+    });
+
+    let titleText1 = new PIXI.Text("Currently paused");
+    titleText1.style = titleStyle;
+    titleText1.x = 140;
+    titleText1.y = 250;
+    pausedPage.addChild(titleText1);
+}
+
+window.onblur = paused;
 
 /*****************************
   CREATE START PAGE 
@@ -544,7 +578,7 @@ function createCreditsPage() {
     resourcesTitle.y = 240;
     creditsPage.addChild(resourcesTitle);
 
-    let resourcesText = new PIXI.Text("   The following resources were used to learn more about Pixi.js: \n • Pixi.js (http://www.pixijs.com/)\n • Kittykatattack's Pixi Tutorial on GitHub \n  (https://goo.gl/fHJfFL) \n • Tonethar's Circle Blast Tutorial \n  (https://goo.gl/x896Vg)");
+    let resourcesText = new PIXI.Text("   The following resources were used for the creation of this project: \n • Pixi.js (http://www.pixijs.com/)\n • Kittykatattack's Pixi Tutorial on GitHub \n  (https://goo.gl/fHJfFL) \n • Tonethar's Circle Blast Tutorial \n  (https://goo.gl/x896Vg) \n • HowlerJS (https://howlerjs.com/)");
     resourcesText.style = paraStyle;
     resourcesText.x = 30;
     resourcesText.y = 270;
