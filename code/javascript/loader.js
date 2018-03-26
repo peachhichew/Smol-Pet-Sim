@@ -1,5 +1,7 @@
 import {setup} from './index.js';
 
+//  preloading spritesheets and font
+
 WebFont.load({
     google: {
       families: ['VT323']

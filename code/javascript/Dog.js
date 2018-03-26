@@ -1,6 +1,9 @@
 import {Animal} from './Animal.js';
 export {Dog};
 
+// Dog class
+// Extends the Animal class but has its own special properties such as speed, direction, vx, and booleans
+
 class Dog extends Animal {
     constructor(textures, animSpeed, speed, direction, x, y, scale) {
         super(textures, animSpeed, direction, x, y);
@@ -15,11 +18,14 @@ class Dog extends Animal {
         this.clickedSit = false;
         this.scale.x = scale;
         this.scale.y = scale;
-        // this.anchor.set(0.5);
     }
 
+    // dogSit method
+    // params: sitTexture, walkTexture
+    // returns: none
+    // purpose: checks to see whether or not the sprite has been pressed once or twice. if pressed once, 
+    // the dog will sit. if pressed again, the dog will continue walking.
     dogSit(sitTexture, walkTexture) {
-        debugger;
         if (!this.clicked) {
             this.textures = sitTexture; 
             this.animationSpeed = 1/5;
@@ -50,15 +56,5 @@ class Dog extends Animal {
                 this.clickedSit = true;
             }
         }
-    }
-
-    dogBark() {
-        const dogBarking = new Howl({
-            src: ['../audio/animals_dog_bark_springer_spaniel_003.mp3'],
-            autoplay: true, 
-            loop: true
-        });
-
-        dogBarking.play();
     }
 }

@@ -1,6 +1,9 @@
 export {randomInt, changeBackground, makeButton, keyboard, hitTestRectangle};
 
-// creating a Random function so we can use it to spawn sprites at random locations
+// randomInt method
+// params: min and max limits
+// returns: randomly generated number
+// purpose: creating a Random function so we can use it to spawn sprites at random locations
 function randomInt(min, max) {
     // Math.ceil returns the smallest int greater than or equal to the given number
     min = Math.ceil(min);
@@ -12,7 +15,10 @@ function randomInt(min, max) {
     return num;
 }
 
-// changes the background color by drawing a white rectangle
+// changeBackground method
+// params: bg object, color, stroke color, canvas width and height
+// returns: none
+// purpose: changes the background color by drawing a white rectangle to the screen
 function changeBackground(bg, color, stroke, canvasWidth, canvasHeight){
     // bg = new PIXI.Graphics(); //unnecessary!!!
     bg.beginFill(color);
@@ -23,8 +29,10 @@ function changeBackground(bg, color, stroke, canvasWidth, canvasHeight){
     bg.y = 0;
 }
 
-// adding a makeButton function so we can easily create a button by giving it
-// certain parameter info
+// makeButton method
+// params: x,y location, xOffset, button color, button text, page name, function to trigger, button width and height
+// returns: none
+// purpose: draws a clickable button onto the screen
 function makeButton(x, y, xOffset, color, text, pageName, targetFunction, w, h) {
     let menuButton = new PIXI.Graphics();
     menuButton.beginFill(color);
@@ -59,97 +67,108 @@ function makeButton(x, y, xOffset, color, text, pageName, targetFunction, w, h) 
     pageName.addChild(menuButtonText);
 }
 
+// credit goes back to kittykatattack's keyboard movement code snippet
+// keyboard method
+// params: ASCII key code
+// returns: key pressed
+// purpose: used to attach event listeners to the key you want to listen for
 function keyboard(keyCode) {
-    let key = {};
-    key.code = keyCode;
-    key.isDown = false;
-    key.isUp = true;
-    key.press = undefined;
-    key.release = undefined;
-    //The `downHandler`
-    key.downHandler = event => {
-      if (event.keyCode === key.code) {
-        if (key.isUp && key.press) key.press();
-        key.isDown = true;
-        key.isUp = false;
-      }
-      event.preventDefault();
-    };
-  
-    //The `upHandler`
-    key.upHandler = event => {
-      if (event.keyCode === key.code) {
-        if (key.isDown && key.release) key.release();
-        key.isDown = false;
-        key.isUp = true;
-      }
-      event.preventDefault();
-    };
-  
-    //Attach event listeners
-    window.addEventListener(
-      "keydown", key.downHandler.bind(key), false
-    );
-    window.addEventListener(
-      "keyup", key.upHandler.bind(key), false
-    );
-    return key;
-  }
+  let key = {};
+  key.code = keyCode;
+  key.isDown = false;
+  key.isUp = true;
+  key.press = undefined;
+  key.release = undefined;
+  //The `downHandler`
+  key.downHandler = event => {
+    if (event.keyCode === key.code) {
+      if (key.isUp && key.press) key.press();
+      key.isDown = true;
+      key.isUp = false;
+    }
+    event.preventDefault();
+  };
 
-  function buttonSound() {
-    const buttonPressed = new Howl({
-      src: ['../audio/toggle_switch_2.mp3']
-    });
+  //The `upHandler`
+  key.upHandler = event => {
+    if (event.keyCode === key.code) {
+      if (key.isDown && key.release) key.release();
+      key.isDown = false;
+      key.isUp = true;
+    }
+    event.preventDefault();
+  };
 
-    buttonPressed.play();
-  }
+  //Attach event listeners
+  window.addEventListener(
+    "keydown", key.downHandler.bind(key), false
+  );
+  window.addEventListener(
+    "keyup", key.upHandler.bind(key), false
+  );
+  return key;
+}
 
-  function hitTestRectangle(r1, r2) {
-    //Define the variables we'll need to calculate
-    let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
-  
-    //hit will determine whether there's a collision
-    hit = false;
-  
-    //Find the center points of each sprite
-    r1.centerX = r1.x + r1.width / 2;
-    r1.centerY = r1.y + r1.height / 2;
-    r2.centerX = r2.x + r2.width / 2;
-    r2.centerY = r2.y + r2.height / 2;
-  
-    //Find the half-widths and half-heights of each sprite
-    r1.halfWidth = r1.width / 2;
-    r1.halfHeight = r1.height / 2;
-    r2.halfWidth = r2.width / 2;
-    r2.halfHeight = r2.height / 2;
-  
-    //Calculate the distance vector between the sprites
-    vx = r1.centerX - r2.centerX;
-    vy = r1.centerY - r2.centerY;
-  
-    //Figure out the combined half-widths and half-heights
-    combinedHalfWidths = r1.halfWidth + r2.halfWidth;
-    combinedHalfHeights = r1.halfHeight + r2.halfHeight;
-  
-    //Check for a collision on the x axis
-    if (Math.abs(vx) < combinedHalfWidths) {
-  
-      //A collision might be occuring. Check for a collision on the y axis
-      if (Math.abs(vy) < combinedHalfHeights) {
-  
-        //There's definitely a collision happening
-        hit = true;
-      } else {
-  
-        //There's no collision on the y axis
-        hit = false;
-      }
+// // 
+// function buttonSound() {
+//   const buttonPressed = new Howl({
+//     src: ['../audio/toggle_switch_2.mp3']
+//   });
+
+//   buttonPressed.play();
+// }
+
+// collision detection method written by kittykatattack
+// hitTestRectangle method
+// params: two sprites
+// returns: whether or not a collision has occurred
+// purpose: checks for a collision between two sprites
+function hitTestRectangle(r1, r2) {
+  //Define the variables we'll need to calculate
+  let hit, combinedHalfWidths, combinedHalfHeights, vx, vy;
+
+  //hit will determine whether there's a collision
+  hit = false;
+
+  //Find the center points of each sprite
+  r1.centerX = r1.x + r1.width / 2;
+  r1.centerY = r1.y + r1.height / 2;
+  r2.centerX = r2.x + r2.width / 2;
+  r2.centerY = r2.y + r2.height / 2;
+
+  //Find the half-widths and half-heights of each sprite
+  r1.halfWidth = r1.width / 2;
+  r1.halfHeight = r1.height / 2;
+  r2.halfWidth = r2.width / 2;
+  r2.halfHeight = r2.height / 2;
+
+  //Calculate the distance vector between the sprites
+  vx = r1.centerX - r2.centerX;
+  vy = r1.centerY - r2.centerY;
+
+  //Figure out the combined half-widths and half-heights
+  combinedHalfWidths = r1.halfWidth + r2.halfWidth;
+  combinedHalfHeights = r1.halfHeight + r2.halfHeight;
+
+  //Check for a collision on the x axis
+  if (Math.abs(vx) < combinedHalfWidths) {
+
+    //A collision might be occuring. Check for a collision on the y axis
+    if (Math.abs(vy) < combinedHalfHeights) {
+
+      //There's definitely a collision happening
+      hit = true;
     } else {
-  
-      //There's no collision on the x axis
+
+      //There's no collision on the y axis
       hit = false;
     }
-  
-    //`hit` will be either `true` or `false`
-    return hit;
-  };
+  } else {
+
+    //There's no collision on the x axis
+    hit = false;
+  }
+
+  //`hit` will be either `true` or `false`
+  return hit;
+};

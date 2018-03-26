@@ -144,6 +144,7 @@ function setup() {
 window.onfocus = setup;
 
 function paused() {
+    bgMusic.pause();
     pausedPage.visible = true;
     startPage.visible = false;
     dogPage.visible = false;
