@@ -12,6 +12,7 @@ WebFont.load({
         .add("dogFlipped", "../images/pupper/shiba2-flipped copy.png")
         .add("bunny", "../images/bun/bun.png")
         .add("cat", "../images/catses/catses3.png")
+        .add("fish", "../images/fish.png")
         .on("progress",e=>{console.log(`progress=${e.progress}`)})
         .load(setup);
     }

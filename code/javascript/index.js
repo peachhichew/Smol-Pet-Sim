@@ -1,8 +1,9 @@
-import {randomInt, changeBackground, makeButton, keyboard} from './utilities.js';
+import {randomInt, changeBackground, makeButton, keyboard, hitTestRectangle} from './utilities.js';
 // import {createInstructionsPage} from './instructions.js';
 import {Dog} from './Dog.js';
 import {Bun} from './Bun.js';
 import {Cat} from './Cat.js';
+import {Fish} from './Fish.js';
 export {setup, gameLoop};
 
 // Testing if pixi is loaded properly
@@ -41,6 +42,7 @@ let hopTexture, hoppingBun;
 // texture for walking cat and the cat sprites
 let catWalkRightTexture, catWalkLeftTexture, catL1, catL2, catL3, catL4, catR1, catR2, catR3, catR4;
 let catDownTexture, catDown, catUp, catUpTexture, catLeft, catLeftTexture, catRightTexture, catRight;
+let fishTexture, fishArray;
 
 // arrays to keep track of the sprite textures
 let walk, walkFlipped, sit, sitFlipped, bark, barkFlipped, catWalkLeft, catWalkRight;
@@ -73,6 +75,8 @@ let dogPage, startPage, bunPage, catPage, creditsPage, instructionsPage, pausedP
 
 // arrays that hold the cat + dog sprites
 let dogs, dogs2, cats, cats2;
+
+let addFishToArray = [];
 
 // width of each button on the project
 let buttonWidth = 90;
@@ -158,7 +162,7 @@ function paused() {
     pausedPage.addChild(titleText1);
 }
 
-window.onblur = paused;
+// window.onblur = paused;
 
 /*****************************
   CREATE START PAGE 
@@ -522,6 +526,33 @@ function createCatPage() {
             newCat.vy = 0;
         }
     };
+
+    let fishBunch = loadFishSprite();
+    let fishSprite = new Sprite(fishBunch[0]);
+    fishSprite.x = randomInt(0, 465);
+    fishSprite.y = randomInt(80, 475);
+    fishSprite.scale.x = 0.12;
+    fishSprite.scale.y = 0.12;
+    catPage.addChild(fishSprite);
+
+    let fishSprite1 = new Sprite(fishBunch[0]);
+    fishSprite1.x = randomInt(0, 465);
+    fishSprite1.y = randomInt(80, 475);
+    fishSprite1.scale.x = 0.12;
+    fishSprite1.scale.y = 0.12;
+    catPage.addChild(fishSprite);
+
+    // testArray = testArray.concat(addFish(5), fishBunch, randomInt(0, 465), randomInt(80, 475), 0.15);
+    for (let i = 0; i < 5; i++) {
+        let fishSprite = new Sprite(fishBunch[0]);
+        fishSprite.x = randomInt(0, 465);
+        fishSprite.y = randomInt(80, 475);
+        fishSprite.scale.x = 0.12;
+        fishSprite.scale.y = 0.12;
+        catPage.addChild(fishSprite);
+    }
+
+    // let meowFish = [addFishToArray[0], addFishToArray[1], addFishToArray[2], addFishToArray[3], addFishToArray[4]];
 
     newCat.play();
     catPage.addChild(newCat);
@@ -1259,6 +1290,20 @@ function catWalkLeftAnim(x, y) {
     return walkingLeftCat;
 }
 
+//  load sprite sheet for fish 
+function loadFishSprite() {
+    let fishSheet = BaseTexture.fromImage("../images/fish.png");
+    let fishWidth = 240;  // originally 42
+    let fishHeight = 220; // 24
+    let numFrames = 1;
+    fishArray = [];
+    for (let i = 0; i < numFrames; i++) {
+        let frame = new Texture(fishSheet, new Rectangle(i * fishWidth, 0, fishWidth, fishHeight)); // 240
+        fishArray.push(frame);
+    }
+    return fishArray;
+}
+
 /*****************************
   OTHER FUNCTIONS
 ****************************/
@@ -1377,5 +1422,10 @@ function gameLoop() {
         newCat.y += newCat.vy;
         // console.log(newCat.x);
         // console.log(newCat.y);
+        for (let fish in addFishToArray) {
+            if (hitTestRectangle(fish, newCat)) {
+                alert('hit');
+            }
+        }
     }
 }
