@@ -174,6 +174,7 @@ function createStartPage() {
     catPage.visible = false;
     creditsPage.visible = false;
     instructionsPage.visible = false;
+    pausedPage.visible = false;
 
     barking = false;
 
@@ -222,15 +223,14 @@ function createStartPage() {
     credits.on("pointerup", createCreditsPage);
     startPage.addChild(credits);
 
-    // HIDE FOR NOW -- ADD INSTRUCTIONS LATER?
-    let notes = new PIXI.Text("Notes");
-    notes.style = infoStyle;
-    notes.x = 450;
-    notes.y = 478;
-    notes.interactive = true;
-    notes.buttonMode = true;
-    notes.on("pointerup", createInstructionsPage);
-    startPage.addChild(notes);
+    let instructions = new PIXI.Text("Instructions");
+    instructions.style = infoStyle;
+    instructions.x = 395;
+    instructions.y = 478;
+    instructions.interactive = true;
+    instructions.buttonMode = true;
+    instructions.on("pointerup", createInstructionsPage);
+    startPage.addChild(instructions);
 
     let directions = new PIXI.Text("(Click each animal to visit its page!)");
     directions.style = infoStyle;
@@ -305,6 +305,7 @@ function createDogPage() {
     catPage.visible = false;
     creditsPage.visible = false;
     instructionsPage.visible = false;
+    pausedPage.visible = false;    
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     dogPage.addChild(bg);
@@ -385,6 +386,7 @@ function createBunPage() {
     catPage.visible = false;
     creditsPage.visible = false;
     instructionsPage.visible = false;
+    pausedPage.visible = false;    
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     bunPage.addChild(bg);
@@ -425,6 +427,7 @@ function createCatPage() {
     catPage.visible = true;
     creditsPage.visible = false;
     instructionsPage.visible = false;
+    pausedPage.visible = false;    
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     catPage.addChild(bg);
@@ -540,6 +543,7 @@ function createCreditsPage() {
     createCatPage.visible = false;
     creditsPage.visible = true;
     instructionsPage.visible = false;
+    pausedPage.visible = false;
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     creditsPage.addChild(bg);
@@ -611,7 +615,8 @@ function createInstructionsPage() {
     bunPage.visible = false;
     creditsPage.visible = false;
     instructionsPage.visible = true;
-
+    pausedPage.visible = false;
+    
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     instructionsPage.addChild(bg);
 
