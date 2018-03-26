@@ -54,7 +54,7 @@ const bgMusic = new Howl({
     src: ['../audio/random_silly_chip_song.ogg'],
     autoplay: true, 
     loop: true, 
-    volume: 0   // set to 0.6
+    volume: 0.6
  }); ;
 
 const buttonPressed = new Howl({
@@ -64,7 +64,13 @@ const buttonPressed = new Howl({
 const dogBarking = new Howl({
     src: ['../audio/animals_dog_bark_springer_spaniel_003.mp3'],
     loop: true, 
-    autoplay: true
+    autoplay: true, 
+    volume: 0.4
+});
+
+const munchSound = new Howl({
+    src: ['../audio/munch.mp3'],
+    loop: false
 });
 
 // variable for the background
@@ -135,7 +141,7 @@ function setup() {
     app.ticker.add(gameLoop);
 }
 
-window.onfocus = setup;
+// window.onfocus = setup;
 
 function paused() {
     pausedPage.visible = true;
@@ -187,7 +193,7 @@ function createStartPage() {
         dogBarking.stop();
     }
 
-    console.log("start: " + barking);
+    // console.log("start: " + barking);
 
     changeBackground(bg, 0xFFFFFF, 0x000000, canvasWidth, canvasHeight);
     startPage.addChild(bg);
@@ -329,8 +335,8 @@ function createDogPage() {
     // wd1 = walkAnim(randomInt(0, 465), randomInt(80, 475));
     // wd2 = walkAnim(randomInt(0, 465), randomInt(80, 475));
 
-    let wd1 = new Dog(walkTexture, 1/5, 1, randomInt(0, 465), randomInt(80, 475), 1);
-    let wd2 = new Dog(barkTexture, 1/4, 0, randomInt(0, 465), randomInt(80, 475), 1);
+    let wd1 = new Dog(walkTexture, 1/5, 1.5, 1, randomInt(0, 465), randomInt(80, 475), 1);
+    let wd2 = new Dog(barkTexture, 1/4, 0, 0, randomInt(0, 465), randomInt(80, 475), 1);
     wd1.play();
     wd2.play();
 
@@ -349,10 +355,10 @@ function createDogPage() {
     dogPage.addChild(wd1);
     dogPage.addChild(wd2);
 
-    let wdF1 = new Dog(walkFlippedTexture, 1/5, -1, randomInt(0, 465), randomInt(80, 475), 1);
-    let wdF2 = new Dog(barkFlippedTexture, 1/4, 0, randomInt(0, 465), randomInt(80, 475), 1);  
+    let wdF1 = new Dog(walkTexture, 1/5, 1.5, 1, randomInt(0, 465), randomInt(80, 475), 1);
+    let wdF2 = new Dog(barkFlippedTexture, 1/4, 0, 0, randomInt(0, 465), randomInt(80, 475), 1);  
     
-    wdF1.on("pointerup", function() {wdF1.dogSit(sitFlippedTexture, walkFlippedTexture);});
+    wdF1.on("pointerup", function() {wdF1.dogSit(sitTexture, walkTexture);});
     wdF2.on("pointerup", function() {wdF2.dogSit(sitFlippedTexture, barkFlippedTexture);});
     
     // wdF1 = walkFlippedAnim(randomInt(0, 465), randomInt(80, 475));
@@ -364,12 +370,12 @@ function createDogPage() {
     dogPage.addChild(wdF2);
 
     // insert the sprites into the arrays
-    dogs2 = [wdF1, wdF2];
-    dogs = [wd1, wd2];
+    dogs2 = [wdF2];
+    dogs = [wd1, wd2, wdF1];
 
     // sitAnim(randomInt(0, 465), randomInt(80, 475));
     // sitAnimFlipped(randomInt(0, 465), randomInt(80, 475));
-    let sittingDog = new Dog(sitTexture, 1/9, 0, randomInt(0, 465), randomInt(80, 475));
+    let sittingDog = new Dog(sitTexture, 1/9, 0, 0, randomInt(0, 465), randomInt(80, 475));
     sittingDog.play();
     dogPage.addChild(sittingDog);
 
@@ -479,9 +485,10 @@ function createCatPage() {
     //Left arrow key `press` method
     left.press = () => {
         //Change the cat's velocity when the key is pressed
-        // leftCat.play();
+        newCat.textures = catLeftTexture;
         newCat.vx = -1;
         newCat.vy = 0;
+        newCat.play();
     };
 
     //Left arrow key `release` method
@@ -490,57 +497,58 @@ function createCatPage() {
         //and the cat isn't moving vertically:
         //Stop the cat
         if (!right.isDown && newCat.vy === 0) {
+            newCat.textures = catLeftTexture;
             newCat.vx = 0;
+            newCat.stop();
         }
     };
 
     //Up
     up.press = () => {
+        newCat.textures = catUpTexture;
         newCat.vy = -1;
         newCat.vx = 0;
+        newCat.play();
     };
     up.release = () => {
         if (!down.isDown && newCat.vx === 0) {
+            newCat.textures = catUpTexture;
             newCat.vy = 0;
+            newCat.stop();
         }
     };
 
     //Right
     right.press = () => {
+        newCat.textures = catRightTexture;
         newCat.vx = 1;
         newCat.vy = 0;
+        newCat.play();
     };
     right.release = () => {
         if (!left.isDown && newCat.vy === 0) {
+            newCat.textures = catRightTexture;
             newCat.vx = 0;
+            newCat.stop();
         }
     };
 
     //Down
     down.press = () => {
+        newCat.textures = catDownTexture;
         newCat.vy = 1;
         newCat.vx = 0;
+        newCat.play();
     };
     down.release = () => {
         if (!up.isDown && newCat.vx === 0) {
+            newCat.textures = catDownTexture;
             newCat.vy = 0;
+            newCat.stop();
         }
     };
 
     let fishBunch = loadFishSprite();
-    let fishSprite = new Sprite(fishBunch[0]);
-    fishSprite.x = randomInt(0, 465);
-    fishSprite.y = randomInt(80, 475);
-    fishSprite.scale.x = 0.12;
-    fishSprite.scale.y = 0.12;
-    catPage.addChild(fishSprite);
-
-    let fishSprite1 = new Sprite(fishBunch[0]);
-    fishSprite1.x = randomInt(0, 465);
-    fishSprite1.y = randomInt(80, 475);
-    fishSprite1.scale.x = 0.12;
-    fishSprite1.scale.y = 0.12;
-    catPage.addChild(fishSprite);
 
     // testArray = testArray.concat(addFish(5), fishBunch, randomInt(0, 465), randomInt(80, 475), 0.15);
     for (let i = 0; i < 5; i++) {
@@ -550,9 +558,9 @@ function createCatPage() {
         fishSprite.scale.x = 0.12;
         fishSprite.scale.y = 0.12;
         catPage.addChild(fishSprite);
+        addFishToArray.push(fishSprite);
     }
 
-    // let meowFish = [addFishToArray[0], addFishToArray[1], addFishToArray[2], addFishToArray[3], addFishToArray[4]];
 
     newCat.play();
     catPage.addChild(newCat);
@@ -612,7 +620,7 @@ function createCreditsPage() {
     resourcesTitle.y = 240;
     creditsPage.addChild(resourcesTitle);
 
-    let resourcesText = new PIXI.Text("   The following resources were used for the creation of this project: \n • Pixi.js (http://www.pixijs.com/)\n • Kittykatattack's Pixi Tutorial on GitHub \n  (https://goo.gl/fHJfFL) \n • Tonethar's Circle Blast Tutorial \n  (https://goo.gl/x896Vg) \n • HowlerJS (https://howlerjs.com/)");
+    let resourcesText = new PIXI.Text("   The following resources were used for the creation of this project: \n • Pixi.js (http://www.pixijs.com/)\n • Kittykatattack's Pixi Tutorial on GitHub \n  (https://goo.gl/fHJfFL) \n • Tonethar's Circle Blast Tutorial \n  (https://goo.gl/x896Vg) \n • HowlerJS (https://howlerjs.com/) \n • Sound effects: OpenGameArt, Zapsplat, FreeSFX");
     resourcesText.style = paraStyle;
     resourcesText.x = 30;
     resourcesText.y = 270;
@@ -818,6 +826,15 @@ function loadBarkingSprite() {
 
 // load flipped sprite sheet for barking
 function loadBarkingFlippedSprite() {
+    if (barking == true) {
+        dogBarking.play();
+    }
+
+    else {
+        dogBarking.mute();
+        dogBarking.stop();
+    }
+
     let dogBark2 = BaseTexture.fromImage("dogFlipped");
     let dogBark2Width = 84; // 42
     let dogBark2Height = 56;    // 28
@@ -1383,17 +1400,17 @@ function contain(sprite, container, velocity, flipVal1, flipVal2, fromEdge) {
 function loopArray(array, velocity, flipVal1, flipVal2, direction, fromEdge) {
     for (let sprite of array) {
         if (sprite.direction == 1) {
-            sprite.x += sprite.vy;
+            sprite.x += sprite.vx;
         }
 
         else if (sprite.direction == 2) {
-            sprite.x -= sprite.vy;
+            sprite.x -= sprite.vx;
         }
 
         let hitEdge = contain(sprite, bg, velocity, flipVal1, flipVal2, fromEdge);
 
         if (hitEdge === "left" || hitEdge === "right") {
-            sprite.vy *= -1;    // negate the velocities to make the sprites go in the opposite direction
+            sprite.vx *= -1;    // negate the velocities to make the sprites go in the opposite direction
         }
     }
 }
@@ -1420,11 +1437,10 @@ function gameLoop() {
         // loopArray(cats2, dt, -1, 1, 2, 25);
         newCat.x += newCat.vx;
         newCat.y += newCat.vy;
-        // console.log(newCat.x);
-        // console.log(newCat.y);
-        for (let fish in addFishToArray) {
+        for (let fish of addFishToArray) {
             if (hitTestRectangle(fish, newCat)) {
-                alert('hit');
+                // munchSound.play();
+                catPage.removeChild(fish);
             }
         }
     }
